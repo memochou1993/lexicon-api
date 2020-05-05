@@ -15,7 +15,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TeamSeeder::class,
             ProjectSeeder::class,
+            LanguageSeeder::class,
             ModelHasUserSeeder::class,
+            ModelHasLanguageSeeder::class,
         ]);
     }
 }

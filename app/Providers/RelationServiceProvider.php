@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
@@ -31,6 +32,7 @@ class RelationServiceProvider extends ServiceProvider
             'user' => User::class,
             'team' => Team::class,
             'project' => Project::class,
+            'language' => Language::class,
         ]);
     }
 }
