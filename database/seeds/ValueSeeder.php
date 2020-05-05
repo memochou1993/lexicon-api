@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Key;
+use App\Models\Value;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
-class KeySeeder extends Seeder
+class ValueSeeder extends Seeder
 {
     use HasStaticAttributes;
 
@@ -16,12 +16,12 @@ class KeySeeder extends Seeder
      */
     public function run()
     {
-        $projects = app(ProjectSeeder::class)->projects;
+        $keys = app(KeySeeder::class)->keys;
 
-        $this->keys = $projects->reduce(function ($carry, $project) {
+        $this->values = $keys->reduce(function ($carry, $key) {
             return $carry->merge(
-                $project->keys()->saveMany(
-                    factory(Key::class, 10)->make()
+                $key->values()->saveMany(
+                    factory(Value::class, 6)->make()
                 )
             );
         }, app(Collection::class));

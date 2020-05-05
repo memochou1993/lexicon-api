@@ -23,5 +23,9 @@ class ModelHasFormSeeder extends Seeder
         app(LanguageSeeder::class)->languages->each(function ($language) use ($forms) {
             $language->forms()->saveMany($forms);
         });
+
+        app(ValueSeeder::class)->values->each(function ($value, $index) use ($forms) {
+            $value->forms()->save($forms->get($index % $forms->count()));
+        });
     }
 }

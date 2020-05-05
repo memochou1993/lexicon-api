@@ -18,4 +18,12 @@ class Project extends Model
     {
         return $this->hasMany(Key::class);
     }
+
+    /**
+     * Get all of the values for the project.
+     */
+    public function values()
+    {
+        return $this->hasManyThrough(Value::class, Key::class);
+    }
 }

@@ -23,5 +23,9 @@ class ModelHasLanguageSeeder extends Seeder
         app(ProjectSeeder::class)->projects->each(function ($project) use ($languages) {
             $project->languages()->saveMany($languages);
         });
+
+        app(ValueSeeder::class)->values->each(function ($value, $index) use ($languages) {
+            $value->languages()->save($languages->get($index % $languages->count()));
+        });
     }
 }
