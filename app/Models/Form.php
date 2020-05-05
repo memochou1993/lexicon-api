@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasForms;
 use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model
+class Form extends Model
 {
-    use HasForms;
-
     /**
      * Indicates if the model should be timestamped.
      *

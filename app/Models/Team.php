@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasForms;
 use App\Traits\HasLanguages;
 use App\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
+    use HasForms;
     use HasLanguages;
     use HasUsers;
 
