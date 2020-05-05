@@ -24,6 +24,8 @@ Route::namespace('API')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        //
+        Route::apiResources([
+            'projects' => 'ProjectController',
+        ]);
     });
 });

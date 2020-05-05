@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthRequest extends FormRequest
+class ProjectIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +25,20 @@ class AuthRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => [
-                'required',
+            'per_page' => [
+                'min:1',
+                'numeric',
             ],
-            'password' => [
+            'relations' => [
+                new In([
+                    'keys',
+                    'languages',
+                    'team',
+                    'users',
+                ]),
+            ],
+            'team_id' => [
+                'numeric',
                 'required',
             ],
         ];
@@ -41,7 +52,8 @@ class AuthRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'device' => $this->device ?? '',
+            'per_page' => $this->per_page ?? 10,
+            'relations' => collect($this->relations)->explode(',')->toArray(),
         ]);
     }
 }

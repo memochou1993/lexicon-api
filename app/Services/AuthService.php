@@ -16,7 +16,7 @@ class AuthService
     /**
      * Instantiate a new service instance.
      *
-     * @param User $user
+     * @param  User  $user
      */
     public function __construct(
         User $user

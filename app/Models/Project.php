@@ -12,6 +12,14 @@ class Project extends Model
     use HasUsers;
 
     /**
+     * Get the team that owns the project.
+     */
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    /**
      * Get the keys for the project.
      */
     public function keys()
