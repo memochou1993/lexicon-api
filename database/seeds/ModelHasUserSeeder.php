@@ -19,5 +19,9 @@ class ModelHasUserSeeder extends Seeder
         app(TeamSeeder::class)->teams->each(function ($team) use ($users) {
             $team->users()->saveMany($users);
         });
+
+        app(ProjectSeeder::class)->projects->each(function ($project) use ($users) {
+            $project->users()->saveMany($users);
+        });
     }
 }

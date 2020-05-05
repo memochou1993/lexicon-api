@@ -47,4 +47,12 @@ class User extends Authenticatable
     {
         return $this->morphedByMany(Team::class, 'model', 'model_has_users');
     }
+
+    /**
+     * Get all of the projects that are assigned this user.
+     */
+    public function projects()
+    {
+        return $this->morphedByMany(Project::class, 'model', 'model_has_users');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -29,6 +30,7 @@ class RelationServiceProvider extends ServiceProvider
         Relation::morphMap([
             'user' => User::class,
             'team' => Team::class,
+            'project' => Project::class,
         ]);
     }
 }
