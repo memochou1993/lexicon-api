@@ -31,10 +31,13 @@ class ProjectIndexRequest extends FormRequest
             ],
             'relations' => [
                 new In([
-                    'keys',
-                    'languages',
-                    'team',
                     'users',
+                    'team',
+                    'languages',
+                    'keys',
+                    'values',
+                    'values.languages',
+                    'values.forms',
                 ]),
             ],
             'team_id' => [

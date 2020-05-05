@@ -12,6 +12,15 @@ class Project extends Model
     use HasUsers;
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'team_id',
+    ];
+
+    /**
      * Get the team that owns the project.
      */
     public function team()
