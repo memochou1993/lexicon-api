@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             LanguageSeeder::class,
             FormSeeder::class,
+            KeySeeder::class,
             ModelHasUserSeeder::class,
             ModelHasLanguageSeeder::class,
             ModelHasFormSeeder::class,

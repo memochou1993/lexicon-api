@@ -10,4 +10,12 @@ class Project extends Model
 {
     use HasLanguages;
     use HasUsers;
+
+    /**
+     * Get the keys for the project.
+     */
+    public function keys()
+    {
+        return $this->hasMany(Key::class);
+    }
 }
