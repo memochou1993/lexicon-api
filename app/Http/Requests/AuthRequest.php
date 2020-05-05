@@ -30,9 +30,18 @@ class AuthRequest extends FormRequest
             'password' => [
                 'required',
             ],
-            'device' => [
-                'required',
-            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'device' => $this->device ?? '',
+        ]);
     }
 }
