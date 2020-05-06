@@ -18,6 +18,7 @@ class Value extends Model
      */
     protected $hidden = [
         'key_id',
+        'laravel_through_key',
     ];
 
     /**

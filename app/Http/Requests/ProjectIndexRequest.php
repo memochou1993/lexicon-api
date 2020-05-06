@@ -35,9 +35,6 @@ class ProjectIndexRequest extends FormRequest
                     'team',
                     'languages',
                     'keys',
-                    'values',
-                    'values.languages',
-                    'values.forms',
                 ]),
             ],
             'team_id' => [
@@ -75,11 +72,6 @@ class ProjectIndexRequest extends FormRequest
     private function prepareRelations()
     {
         $relations = collect($this->relations)->explode(',');
-
-        $relations->when($relations->contains('values'), function ($relations) {
-            $relations->push('values.languages');
-            $relations->push('values.forms');
-        });
 
         $this->merge([
             'relations' => $relations->toArray(),
