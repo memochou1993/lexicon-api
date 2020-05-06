@@ -40,10 +40,48 @@ class ProjectControllerTest extends TestCase
 
         $this->json('GET', 'api/projects', [
             'team_id' => $team->id,
+            'relations' => 'users, team, languages, keys',
         ])
             ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    [
+                        'users',
+                        'team',
+                        'languages',
+                        'keys',
+                    ],
+                ],
+            ])
             ->assertJson([
                 'data' => $team->projects->toArray(),
+            ]);
+
+        $this->assertCount(1, $team->refresh()->projects);
+    }
+
+    /**
+     * @return void
+     */
+    public function testShow()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('GET', 'api/projects/'.$project->id, [
+            'relations' => 'users, team, languages, keys',
+        ])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    'users',
+                    'team',
+                    'languages',
+                    'keys',
+                ],
+            ])
+            ->assertJson([
+                'data' => $project->toArray(),
             ]);
 
         $this->assertCount(1, $team->refresh()->projects);
