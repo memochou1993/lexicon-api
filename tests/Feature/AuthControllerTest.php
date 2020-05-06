@@ -37,6 +37,22 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testLoginFail()
+    {
+        $user = factory(User::class)->make();
+
+        $response = $this->json('POST', 'api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @return void
+     */
     public function testUser()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());
@@ -53,6 +69,17 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUserFail()
+    {
+        $response = $this->json('GET', 'api/auth/user');
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @return void
+     */
     public function testLogout()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());
@@ -63,5 +90,16 @@ class AuthControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(0, $user->refresh()->tokens);
+    }
+
+    /**
+     * @return void
+     */
+    public function testLogoutFail()
+    {
+        $response = $this->json('POST', 'api/auth/logout');
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 }
