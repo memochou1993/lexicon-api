@@ -10,7 +10,8 @@ use App\Http\Requests\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource as Resource;
 use App\Models\Project;
 use App\Services\ProjectService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
@@ -52,7 +53,7 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(ProjectStoreRequest $request)
     {
@@ -78,9 +79,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  ProjectUpdateRequest  $request
+     * @param  Project  $project
+     * @return Resource
      */
     public function update(ProjectUpdateRequest $request, Project $project)
     {
@@ -92,11 +93,13 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Project  $project
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        // TODO
+        $this->projectService->destroy($project);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

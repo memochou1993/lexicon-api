@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
@@ -40,7 +41,7 @@ class ProjectControllerTest extends TestCase
 
         $this->json('GET', 'api/projects', [
             'team_id' => $team->id,
-            'relations' => 'users, team, languages, keys',
+            'relations' => 'users,team,languages,keys',
         ])
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -56,8 +57,6 @@ class ProjectControllerTest extends TestCase
             ->assertJson([
                 'data' => $team->projects->toArray(),
             ]);
-
-        $this->assertCount(1, $team->refresh()->projects);
     }
 
     /**
@@ -87,7 +86,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/1', [
-            'relations' => 'users, team, languages, keys',
+            'relations' => 'users,team,languages,keys',
         ])
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -101,8 +100,6 @@ class ProjectControllerTest extends TestCase
             ->assertJson([
                 'data' => $project->toArray(),
             ]);
-
-        $this->assertCount(1, $team->refresh()->projects);
     }
 
     /**
@@ -113,7 +110,7 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
-        $project = factory(Team::class)->make()->toArray();
+        $project = factory(Project::class)->make()->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
             ->assertStatus(Response::HTTP_OK)
@@ -122,5 +119,35 @@ class ProjectControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('projects', $project);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDestroy()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->users()->attach($this->user->id);
+        $project->languages()->save(factory(Language::class)->make());
+
+        $this->json('DELETE', 'api/projects/1')
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDeleted($project);
+
+        // TODO
+        // $this->assertDatabaseMissing('model_has_users', [
+        //     'user_id' => $this->user->id,
+        //     'model_type' => 'team',
+        //     'model_id' => $project->id,
+        // ]);
+
+        // TODO
+        // $this->assertDatabaseMissing('model_has_languages', [
+        //     'language_id' => $this->language->id,
+        //     'model_type' => 'team',
+        //     'model_id' => $project->id,
+        // ]);
     }
 }

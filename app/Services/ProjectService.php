@@ -77,4 +77,13 @@ class ProjectService
 
         return $project;
     }
+
+    /**
+     * @param  Project  $project
+     * @return bool
+     */
+    public  function destroy(Project $project): bool
+    {
+        return $this->project->destroy($project->id);
+    }
 }
