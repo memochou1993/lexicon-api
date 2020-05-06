@@ -10,27 +10,27 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectService
 {
     /**
-     * @var Project
-     */
-    private Project $project;
-
-    /**
      * @var Team
      */
     private Team $team;
 
     /**
+     * @var Project
+     */
+    private Project $project;
+
+    /**
      * Instantiate a new service instance.
      *
-     * @param  Project  $project
      * @param  Team  $team
+     * @param  Project  $project
      */
     public function __construct(
-        Project $project,
-        Team $team
+        Team $team,
+        Project $project
     ) {
-        $this->project = $project;
         $this->team = $team;
+        $this->project = $project;
     }
 
     /**
@@ -85,5 +85,23 @@ class ProjectService
     public  function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $language_ids
+     */
+    public  function attachLanguage(Project $project, array $language_ids): void
+    {
+        $project->languages()->syncWithoutDetaching($language_ids);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  int  $language_id
+     */
+    public  function detachLanguage(Project $project, int $language_id): void
+    {
+        $project->languages()->detach($language_id);
     }
 }

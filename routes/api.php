@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('API')->group(function () {
+Route::namespace('Api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
         Route::middleware('auth:sanctum')->group(function () {
@@ -26,6 +26,15 @@ Route::namespace('API')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResources([
             'projects' => 'ProjectController',
+        ]);
+
+        Route::apiResources([
+            'projects.languages' => 'ProjectLanguageController',
+        ], [
+            'only' => [
+                'store',
+                'destroy',
+            ],
         ]);
     });
 });
