@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    use HasLanguages;
     use HasUsers;
+    use HasLanguages;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -18,6 +18,7 @@ class Project extends Model
      */
     protected $hidden = [
         'team_id',
+        'pivot',
     ];
 
     /**

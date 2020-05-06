@@ -12,4 +12,13 @@ class Form extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'pivot',
+    ];
 }

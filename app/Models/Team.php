@@ -9,9 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
-    use HasForms;
-    use HasLanguages;
     use HasUsers;
+    use HasLanguages;
+    use HasForms;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'pivot',
+    ];
 
     /**
      * Get the projects for the team.

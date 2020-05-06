@@ -17,8 +17,12 @@ class ValueResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
-            'languages' => LanguageResource::collection($this->whenLoaded('languages')),
-            'forms' => FormResource::collection($this->whenLoaded('forms')),
+            'language' => $this->whenLoaded('languages', function () {
+                return new LanguageResource($this->languages->first());
+            }),
+            'form' => $this->whenLoaded('forms', function () {
+                return new FormResource($this->forms->first());
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

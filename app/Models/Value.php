@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Value extends Model
 {
-    use HasForms;
     use HasLanguages;
+    use HasForms;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'key_id',
+    ];
 
     /**
      * Get the key that owns the value.

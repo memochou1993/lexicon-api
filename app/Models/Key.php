@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Key extends Model
 {
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'project_id',
+    ];
+
+    /**
      * Get the project that owns the key.
      */
     public function project()
