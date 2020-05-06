@@ -63,4 +63,18 @@ class ProjectService
     {
         return $this->team->find($teamId)->projects()->create($data);
     }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $data
+     * @return Model
+     */
+    public  function update(Project $project, array $data): Model
+    {
+        $project = $this->project->find($project->id);
+
+        $project->update($data);
+
+        return $project;
+    }
 }

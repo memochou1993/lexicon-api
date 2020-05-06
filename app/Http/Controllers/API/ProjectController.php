@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectIndexRequest;
 use App\Http\Requests\ProjectShowRequest;
 use App\Http\Requests\ProjectStoreRequest;
+use App\Http\Requests\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource as Resource;
 use App\Models\Project;
 use App\Services\ProjectService;
@@ -81,9 +82,11 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProjectUpdateRequest $request, Project $project)
     {
-        // TODO
+        $project = $this->projectService->update($project, $request->all());
+
+        return new Resource($project);
     }
 
     /**
