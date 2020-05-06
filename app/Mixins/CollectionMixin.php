@@ -3,7 +3,7 @@
 namespace App\Mixins;
 
 use Closure;
-use Ramsey\Collection\Collection;
+use Illuminate\Support\Collection;
 
 class CollectionMixin
 {

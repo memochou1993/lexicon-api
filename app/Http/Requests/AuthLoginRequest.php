@@ -40,6 +40,14 @@ class AuthLoginRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $this->prepareDevice();
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareDevice()
+    {
         $this->merge([
             'device' => $this->device ?? '',
         ]);

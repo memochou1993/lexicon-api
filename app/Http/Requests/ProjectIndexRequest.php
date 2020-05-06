@@ -41,6 +41,7 @@ class ProjectIndexRequest extends FormRequest
                 ]),
             ],
             'team_id' => [
+                'exists:teams,id',
                 'numeric',
                 'required',
             ],
@@ -54,9 +55,34 @@ class ProjectIndexRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $this->preparePerPage();
+        $this->prepareRelations();
+    }
+
+    /**
+     * @return void
+     */
+    private function preparePerPage()
+    {
         $this->merge([
             'per_page' => $this->per_page ?? 10,
-            'relations' => collect($this->relations)->explode(',')->toArray(),
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareRelations()
+    {
+        $relations = collect($this->relations)->explode(',');
+
+        $relations->when($relations->contains('values'), function ($relations) {
+            $relations->push('values.languages');
+            $relations->push('values.forms');
+        });
+
+        $this->merge([
+            'relations' => $relations->toArray(),
         ]);
     }
 }
