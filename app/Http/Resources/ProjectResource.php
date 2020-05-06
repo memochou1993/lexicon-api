@@ -19,6 +19,7 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'users' => UserResource::collection($this->whenLoaded('users')),
             'team' => new TeamResource($this->whenLoaded('team')),
+            'languages' => LanguageResource::collection($this->whenLoaded('languages')),
             'keys' => KeyResource::collection($this->whenLoaded('keys')),
             'values' => ValueResource::collection($this->whenLoaded('values')),
             'created_at' => $this->created_at,

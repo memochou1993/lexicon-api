@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 
 class ProjectService
 {
@@ -38,8 +39,18 @@ class ProjectService
      * @param  int  $per_page
      * @return LengthAwarePaginator
      */
-    public function getProjectsByTeamId(int $team_id, array $relations, int $per_page): LengthAwarePaginator
+    public function getByTeam(int $team_id, array $relations, int $per_page): LengthAwarePaginator
     {
         return $this->team->find($team_id)->projects()->with($relations)->paginate($per_page);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $relations
+     * @return Model
+     */
+    public  function get(Project $project, array $relations): Model
+    {
+        return $this->project->with($relations)->find($project->id);
     }
 }

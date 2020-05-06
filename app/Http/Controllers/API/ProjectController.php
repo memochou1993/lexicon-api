@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectIndexRequest;
-use App\Http\Resources\ProjectResource;
+use App\Http\Requests\ProjectShowRequest;
+use App\Http\Resources\ProjectResource as Resource;
+use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -35,13 +37,13 @@ class ProjectController extends Controller
      */
     public function index(ProjectIndexRequest $request)
     {
-        $projects = $this->projectService->getProjectsByTeamId(
+        $projects = $this->projectService->getByTeam(
             $request->team_id,
             $request->relations,
             $request->per_page
         );
 
-        return ProjectResource::collection($projects);
+        return Resource::collection($projects);
     }
 
     /**
@@ -68,12 +70,15 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  ProjectShowRequest  $request
+     * @param  Project  $project
+     * @return Resource
      */
-    public function show($id)
+    public function show(ProjectShowRequest $request, Project $project)
     {
-        // TODO
+        $project = $this->projectService->get($project, $request->relations);
+
+        return new Resource($project);
     }
 
     /**
