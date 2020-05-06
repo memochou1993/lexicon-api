@@ -63,6 +63,24 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testStore()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = factory(Project::class)->make();
+        $project->team()->associate($team->id)->makeVisible('team_id');
+
+        $this->json('POST', 'api/projects', $project->toArray())
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'data' => $project->makeHidden('team_id')->toArray(),
+            ]);
+
+        $this->assertCount(1, $team->refresh()->projects);
+    }
+
+    /**
+     * @return void
+     */
     public function testShow()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

@@ -53,4 +53,14 @@ class ProjectService
     {
         return $this->project->with($relations)->find($project->id);
     }
+
+    /**
+     * @param  int  $teamId
+     * @param  array  $data
+     * @return Model
+     */
+    public  function storeByTeam(int $teamId, array $data): Model
+    {
+        return $this->team->find($teamId)->projects()->create($data);
+    }
 }

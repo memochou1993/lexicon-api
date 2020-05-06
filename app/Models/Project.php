@@ -12,6 +12,15 @@ class Project extends Model
     use HasLanguages;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
