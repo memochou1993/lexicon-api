@@ -86,7 +86,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/1', [
-            'relations' => 'users,team,languages,keys',
+            'relations' => 'users,team,languages,keys,values',
         ])
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -95,6 +95,7 @@ class ProjectControllerTest extends TestCase
                     'team',
                     'languages',
                     'keys',
+                    'values',
                 ],
             ])
             ->assertJson([
@@ -109,7 +110,6 @@ class ProjectControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
-
         $project = factory(Project::class)->make()->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
@@ -128,26 +128,26 @@ class ProjectControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->users()->attach($this->user->id);
-        $project->languages()->save(factory(Language::class)->make());
+        $language = $project->languages()->save(factory(Language::class)->make());
+
+        $this->assertCount(1, $project->users);
+        $this->assertCount(1, $project->languages);
 
         $this->json('DELETE', 'api/projects/1')
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($project);
 
-        // TODO
-        // $this->assertDatabaseMissing('model_has_users', [
-        //     'user_id' => $this->user->id,
-        //     'model_type' => 'team',
-        //     'model_id' => $project->id,
-        // ]);
+        $this->assertDatabaseMissing('model_has_users', [
+            'user_id' => $this->user->id,
+            'model_type' => 'project',
+            'model_id' => $project->id,
+        ]);
 
-        // TODO
-        // $this->assertDatabaseMissing('model_has_languages', [
-        //     'language_id' => $this->language->id,
-        //     'model_type' => 'team',
-        //     'model_id' => $project->id,
-        // ]);
+        $this->assertDatabaseMissing('model_has_languages', [
+            'language_id' => $language->id,
+            'model_type' => 'project',
+            'model_id' => $project->id,
+        ]);
     }
 }
