@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LanguageStoreRequest;
+use App\Http\Requests\LanguageUpdateRequest;
 use App\Http\Resources\LanguageResource as Resource;
+use App\Models\Language;
 use App\Services\LanguageService;
 use Illuminate\Http\Request;
 
@@ -45,13 +47,15 @@ class LanguageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  LanguageUpdateRequest  $request
+     * @param  Language  $language
+     * @return Resource
      */
-    public function update(Request $request, $id)
+    public function update(LanguageUpdateRequest $request, Language $language)
     {
-        // TODO
+        $language = $this->languageService->update($language, $request->all());
+
+        return new Resource($language);
     }
 
     /**

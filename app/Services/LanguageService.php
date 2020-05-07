@@ -45,4 +45,18 @@ class LanguageService
 
         return $language;
     }
+
+    /**
+     * @param  Language  $language
+     * @param  array  $data
+     * @return Model
+     */
+    public function update(Language $language, array $data): Model
+    {
+        $language = $this->language->find($language->id);
+
+        $language->update($data);
+
+        return $language;
+    }
 }

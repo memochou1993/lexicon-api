@@ -49,7 +49,7 @@ class ProjectService
      * @param  array  $relations
      * @return Model
      */
-    public  function get(Project $project, array $relations): Model
+    public function get(Project $project, array $relations): Model
     {
         return $this->project->with($relations)->find($project->id);
     }
@@ -59,7 +59,7 @@ class ProjectService
      * @param  array  $data
      * @return Model
      */
-    public  function storeByTeam(int $teamId, array $data): Model
+    public function storeByTeam(int $teamId, array $data): Model
     {
         return $this->team->find($teamId)->projects()->create($data);
     }
@@ -69,7 +69,7 @@ class ProjectService
      * @param  array  $data
      * @return Model
      */
-    public  function update(Project $project, array $data): Model
+    public function update(Project $project, array $data): Model
     {
         $project = $this->project->find($project->id);
 
@@ -82,7 +82,7 @@ class ProjectService
      * @param  Project  $project
      * @return bool
      */
-    public  function destroy(Project $project): bool
+    public function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
     }
@@ -91,7 +91,7 @@ class ProjectService
      * @param  Project  $project
      * @param  array  $language_ids
      */
-    public  function attachLanguage(Project $project, array $language_ids): void
+    public function attachLanguage(Project $project, array $language_ids): void
     {
         $project->languages()->syncWithoutDetaching($language_ids);
     }
@@ -100,7 +100,7 @@ class ProjectService
      * @param  Project  $project
      * @param  int  $language_id
      */
-    public  function detachLanguage(Project $project, int $language_id): void
+    public function detachLanguage(Project $project, int $language_id): void
     {
         $project->languages()->detach($language_id);
     }
