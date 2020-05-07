@@ -71,10 +71,8 @@ class ProjectIndexRequest extends FormRequest
      */
     private function prepareRelations()
     {
-        $relations = collect($this->relations)->explode(',');
-
         $this->merge([
-            'relations' => $relations->toArray(),
+            'relations' => $relations = collect($this->relations)->explode(',')->toArray(),
         ]);
     }
 }

@@ -31,7 +31,7 @@ class AuthControllerTest extends TestCase
                 'access_token',
             ]);
 
-        $this->assertCount(1, $user->refresh()->tokens);
+        $this->assertCount(1, $user->tokens);
     }
 
     /**
@@ -89,7 +89,7 @@ class AuthControllerTest extends TestCase
         $response
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertCount(0, $user->refresh()->tokens);
+        $this->assertCount(0, $user->tokens);
     }
 
     /**

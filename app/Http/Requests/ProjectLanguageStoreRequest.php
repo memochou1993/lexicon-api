@@ -39,18 +39,16 @@ class ProjectLanguageStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareRelations();
+        $this->prepareLanguageIds();
     }
 
     /**
      * @return void
      */
-    private function prepareRelations()
+    private function prepareLanguageIds()
     {
-        $language_ids = collect($this->language_ids)->explode(',');
-
         $this->merge([
-            'language_ids' => $language_ids->toArray(),
+            'language_ids' => collect($this->language_ids)->explode(',')->toArray(),
         ]);
     }
 }
