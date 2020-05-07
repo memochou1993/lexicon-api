@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectLanguageStoreRequest extends FormRequest
 {
@@ -26,8 +27,8 @@ class ProjectLanguageStoreRequest extends FormRequest
         return [
             'language_ids' => [
                 'array',
-                'exists:languages,id',
                 'required',
+                Rule::exists('languages', 'id'),
             ],
         ];
     }

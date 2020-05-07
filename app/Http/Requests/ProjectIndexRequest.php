@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectIndexRequest extends FormRequest
 {
@@ -38,9 +39,9 @@ class ProjectIndexRequest extends FormRequest
                 ]),
             ],
             'team_id' => [
-                'exists:teams,id',
                 'numeric',
                 'required',
+                Rule::exists('teams', 'id'),
             ],
         ];
     }

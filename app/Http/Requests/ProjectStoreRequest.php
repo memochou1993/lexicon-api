@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectStoreRequest extends FormRequest
 {
@@ -26,11 +27,14 @@ class ProjectStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
+                Rule::unique('projects','name')->where(function ($query) {
+                    $query->where('team_id', $this->team_id);
+                }),
             ],
             'team_id' => [
-                'exists:teams,id',
                 'numeric',
                 'required',
+                Rule::exists('teams', 'id'),
             ],
         ];
     }
