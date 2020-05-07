@@ -24,17 +24,9 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResources([
-            'projects' => 'ProjectController',
-        ]);
-
-        Route::apiResources([
-            'projects.languages' => 'ProjectLanguageController',
-        ], [
-            'only' => [
-                'store',
-                'destroy',
-            ],
-        ]);
+        Route::apiResource('projects', 'ProjectController');
+        Route::apiResource('languages', 'LanguageController');
+        Route::apiResource('projects.languages', 'ProjectLanguageController')
+            ->only('store', 'destroy');
     });
 });
