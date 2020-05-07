@@ -8,7 +8,9 @@ use App\Http\Requests\LanguageUpdateRequest;
 use App\Http\Resources\LanguageResource as Resource;
 use App\Models\Language;
 use App\Services\LanguageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LanguageController extends Controller
 {
@@ -61,11 +63,13 @@ class LanguageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Language  $language
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Language $language)
     {
-        // TODO
+        $this->languageService->destroy($language);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

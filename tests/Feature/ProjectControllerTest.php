@@ -110,7 +110,10 @@ class ProjectControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
-        $project = factory(Project::class)->make()->toArray();
+
+        $project = factory(Project::class)->make([
+            'name' => 'New Project',
+        ])->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
             ->assertStatus(Response::HTTP_OK)

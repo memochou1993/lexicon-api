@@ -59,4 +59,13 @@ class LanguageService
 
         return $language;
     }
+
+    /**
+     * @param  Language  $language
+     * @return bool
+     */
+    public function destroy(Language $language): bool
+    {
+        return $this->language->destroy($language->id);
+    }
 }
