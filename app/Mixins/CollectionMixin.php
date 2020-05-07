@@ -7,6 +7,9 @@ use Illuminate\Support\Collection;
 
 class CollectionMixin
 {
+    /**
+     * @var Collection
+     */
     private Collection $items;
 
     /**

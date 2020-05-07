@@ -15,6 +15,6 @@ class FormSeeder extends Seeder
      */
     public function run()
     {
-        $this->forms = factory(Form::class, 2)->create();
+        $this->forms = factory(Form::class, 2)->withoutEvents()->create();
     }
 }

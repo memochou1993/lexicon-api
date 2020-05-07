@@ -21,7 +21,7 @@ class ValueSeeder extends Seeder
         $this->values = $keys->reduce(function ($carry, $key) {
             return $carry->merge(
                 $key->values()->saveMany(
-                    factory(Value::class, 6)->make()
+                    factory(Value::class, 6)->withoutEvents()->make()
                 )
             );
         }, app(Collection::class));

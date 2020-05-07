@@ -21,7 +21,7 @@ class ProjectSeeder extends Seeder
         $this->projects = $teams->reduce(function ($carry, $team) {
             return $carry->merge(
                 $team->projects()->saveMany(
-                    factory(Project::class, 5)->make()
+                    factory(Project::class, 5)->withoutEvents()->make()
                 )
             );
         }, app(Collection::class));

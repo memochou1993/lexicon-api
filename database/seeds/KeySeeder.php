@@ -21,7 +21,7 @@ class KeySeeder extends Seeder
         $this->keys = $projects->reduce(function ($carry, $project) {
             return $carry->merge(
                 $project->keys()->saveMany(
-                    factory(Key::class, 10)->make()
+                    factory(Key::class, 10)->withoutEvents()->make()
                 )
             );
         }, app(Collection::class));

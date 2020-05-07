@@ -15,6 +15,6 @@ class LanguageSeeder extends Seeder
      */
     public function run()
     {
-        $this->languages = factory(Language::class, 3)->create();
+        $this->languages = factory(Language::class, 3)->withoutEvents()->create();
     }
 }

@@ -15,6 +15,6 @@ class TeamSeeder extends Seeder
      */
     public function run()
     {
-        $this->teams = factory(Team::class, 2)->create();
+        $this->teams = factory(Team::class, 2)->withoutEvents()->create();
     }
 }

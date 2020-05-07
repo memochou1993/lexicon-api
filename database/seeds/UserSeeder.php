@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
 
-        $users = factory(User::class, 5)->create();
+        $users = factory(User::class, 5)->withoutEvents()->create();
 
         $this->users = app(Collection::class)->merge([$admin, ...$users]);
     }
