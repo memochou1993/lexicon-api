@@ -96,7 +96,12 @@ class LanguageControllerTest extends TestCase
             ->toArray();
 
         $this->json('POST', 'api/languages', $language)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
 
         $this->assertCount(1, $team->languages);
     }

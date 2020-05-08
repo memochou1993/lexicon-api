@@ -97,7 +97,12 @@ class ProjectControllerTest extends TestCase
             ->associate($team->id);
 
         $this->json('POST', 'api/projects', $project->toArray())
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
 
         $this->assertCount(1, $team->projects);
     }
