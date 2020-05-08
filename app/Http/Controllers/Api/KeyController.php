@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KeyIndexRequest;
 use App\Http\Requests\KeyShowRequest;
+use App\Http\Requests\KeyStoreRequest;
 use App\Http\Resources\KeyResource as Resource;
 use App\Models\Key;
 use App\Services\KeyService;
@@ -49,12 +50,17 @@ class KeyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  KeyStoreRequest  $request
+     * @return Resource
      */
-    public function store(Request $request)
+    public function store(KeyStoreRequest $request)
     {
-        // TODO
+        $key = $this->keyService->storeByProject(
+            $request->project_id,
+            $request->all()
+        );
+
+        return new Resource($key);
     }
 
     /**

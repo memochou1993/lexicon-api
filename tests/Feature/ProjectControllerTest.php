@@ -92,9 +92,9 @@ class ProjectControllerTest extends TestCase
             ->make([
                 'name' => 'Unique Project',
             ])
-            ->makeVisible('team_id')
             ->team()
-            ->associate($team->id);
+            ->associate($team->id)
+            ->makeVisible('team_id');
 
         $this->json('POST', 'api/projects', $project->toArray())
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

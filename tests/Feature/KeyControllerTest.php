@@ -80,4 +80,53 @@ class KeyControllerTest extends TestCase
                 'data' => $key->toArray(),
             ]);
     }
+
+    /**
+     * @return void
+     */
+    public function testStore()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = factory(Key::class)->make();
+        $key->project()->associate($project->id)->makeVisible('project_id');
+
+        $this->json('POST', 'api/keys', $key->toArray())
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'data' => $key->makeHidden('project_id')->toArray(),
+            ]);
+
+        $this->assertDatabaseHas('keys', $key->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->keys()->save(factory(Key::class)->make([
+            'name' => 'Unique Key',
+        ]));
+
+        $key = factory(Key::class)
+            ->make([
+                'name' => 'Unique Key',
+            ])
+            ->project()
+            ->associate($project->id)
+            ->makeVisible('project_id');
+
+        $this->json('POST', 'api/keys', $key->toArray())
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
+
+        $this->assertCount(1, $project->keys);
+    }
 }
