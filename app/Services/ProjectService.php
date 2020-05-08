@@ -45,16 +45,6 @@ class ProjectService
     }
 
     /**
-     * @param  Project  $project
-     * @param  array  $relations
-     * @return Model
-     */
-    public function get(Project $project, array $relations): Model
-    {
-        return $this->project->with($relations)->find($project->id);
-    }
-
-    /**
      * @param  int  $teamId
      * @param  array  $data
      * @return Model
@@ -62,6 +52,16 @@ class ProjectService
     public function storeByTeam(int $teamId, array $data): Model
     {
         return $this->team->find($teamId)->projects()->create($data);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $relations
+     * @return Model
+     */
+    public function get(Project $project, array $relations): Model
+    {
+        return $this->project->with($relations)->find($project->id);
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LanguageIndexRequest;
+use App\Http\Requests\LanguageShowRequest;
 use App\Http\Requests\LanguageStoreRequest;
 use App\Http\Requests\LanguageUpdateRequest;
 use App\Http\Resources\LanguageResource as Resource;
@@ -10,6 +12,7 @@ use App\Models\Language;
 use App\Services\LanguageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class LanguageController extends Controller
@@ -33,10 +36,18 @@ class LanguageController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  LanguageIndexRequest  $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(LanguageIndexRequest $request)
     {
-        // TODO
+        $language = $this->languageService->getByTeam(
+            $request->team_id,
+            $request->relations,
+            $request->per_page,
+        );
+
+        return Resource::collection($language);
     }
 
     /**
@@ -57,11 +68,15 @@ class LanguageController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * @param  LanguageShowRequest  $request
+     * @param  Language  $language
+     * @return Resource
      */
-    public function show()
+    public function show(LanguageShowRequest $request, Language $language)
     {
-        // TODO
+        $language = $this->languageService->get($language, $request->relations);
+
+        return new Resource($language);
     }
 
     /**

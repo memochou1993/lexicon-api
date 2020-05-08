@@ -34,6 +34,31 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testIndex()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('GET', 'api/languages', [
+            'team_id' => $team->id,
+            'relations' => 'forms',
+        ])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    [
+                        'forms',
+                    ],
+                ],
+            ])
+            ->assertJson([
+                'data' => $team->languages->toArray(),
+            ]);
+    }
+
+    /**
+     * @return void
+     */
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -74,6 +99,28 @@ class LanguageControllerTest extends TestCase
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertCount(1, $team->languages);
+    }
+
+    /**
+     * @return void
+     */
+    public function testShow()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('GET', 'api/languages/1', [
+            'relations' => 'forms',
+        ])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    'forms',
+                ],
+            ])
+            ->assertJson([
+                'data' => $language->toArray(),
+            ]);
     }
 
     /**
