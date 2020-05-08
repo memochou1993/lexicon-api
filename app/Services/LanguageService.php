@@ -3,15 +3,15 @@
 namespace App\Services;
 
 use App\Models\Language;
-use App\Models\Project;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 
 class LanguageService
 {
     /**
-     * @var Project
+     * @var Team
      */
-    private Project $project;
+    private Team $team;
 
     /**
      * @var Language
@@ -21,29 +21,25 @@ class LanguageService
     /**
      * Instantiate a new service instance.
      *
-     * @param  Project  $project
+     * @param  Team  $team
      * @param  Language  $language
      */
     public function __construct(
-        Project $project,
+        Team $team,
         Language $language
     ) {
-        $this->project = $project;
+        $this->team = $team;
         $this->language = $language;
     }
 
     /**
-     * @param  int  $project_id
+     * @param  int  $team_id
      * @param  array  $data
      * @return Model
      */
-    public function storeByProject(int $project_id, array $data): Model
+    public function storeByTeam(int $team_id, array $data): Model
     {
-        $project = $this->project->find($project_id);
-        $language = $project->languages()->create($data);
-        $project->team->languages()->attach($language->id);
-
-        return $language;
+        return $this->team->find($team_id)->languages()->create($data);
     }
 
     /**

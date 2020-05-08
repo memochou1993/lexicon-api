@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,11 +28,17 @@ class LanguageStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
+                Rule::unique('languages','name')->where(function ($query) {
+                    $query->whereIn(
+                        'id',
+                        Team::findOrNew($this->team_id)->languages()->pluck('id')->toArray()
+                    );
+                }),
             ],
-            'project_id' => [
+            'team_id' => [
                 'numeric',
                 'required',
-                Rule::exists('projects', 'id'),
+                Rule::exists('teams', 'id'),
             ],
         ];
     }

@@ -37,20 +37,43 @@ class LanguageControllerTest extends TestCase
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
+
         $language = factory(Language::class)->make([
-            'project_id' => 1,
+            'team_id' => 1,
         ]);
 
         $this->json('POST', 'api/languages', $language->toArray())
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $language->makeHidden('project_id')->toArray(),
+                'data' => $language->makeHidden('team_id')->toArray(),
             ]);
 
         $this->assertDatabaseHas('languages', $language->toArray());
 
-        $this->assertCount(1, $project->languages);
+        $this->assertCount(1, $team->languages);
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->languages()->save(factory(Language::class)->make([
+            'name' => 'Unique Language',
+        ]));
+
+        $language = factory(Language::class)
+            ->make([
+                'name' => 'Unique Language',
+                'team_id' => $team->id,
+            ])
+            ->toArray();
+
+        $this->json('POST', 'api/languages', $language)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $this->assertCount(1, $team->languages);
     }
 
     /**

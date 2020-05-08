@@ -66,6 +66,7 @@ class ProjectControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = factory(Project::class)->make();
+
         $project->team()->associate($team->id)->makeVisible('team_id');
 
         $this->json('POST', 'api/projects', $project->toArray())
@@ -75,6 +76,30 @@ class ProjectControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('projects', $project->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make([
+            'name' => 'Unique Project',
+        ]));
+
+        $project = factory(Project::class)
+            ->make([
+                'name' => 'Unique Project',
+            ])
+            ->makeVisible('team_id')
+            ->team()
+            ->associate($team->id);
+
+        $this->json('POST', 'api/projects', $project->toArray())
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $this->assertCount(1, $team->projects);
     }
 
     /**

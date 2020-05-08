@@ -38,8 +38,8 @@ class LanguageController extends Controller
      */
     public function store(LanguageStoreRequest $request)
     {
-        $language = $this->languageService->storeByProject(
-            $request->project_id,
+        $language = $this->languageService->storeByteam(
+            $request->team_id,
             $request->all()
         );
 
