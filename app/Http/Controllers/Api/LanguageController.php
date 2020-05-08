@@ -31,6 +31,15 @@ class LanguageController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     */
+    public function index()
+    {
+        // TODO
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  LanguageStoreRequest  $request
@@ -38,12 +47,21 @@ class LanguageController extends Controller
      */
     public function store(LanguageStoreRequest $request)
     {
-        $language = $this->languageService->storeByteam(
+        $language = $this->languageService->storeByTeam(
             $request->team_id,
             $request->all()
         );
 
         return new Resource($language);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     */
+    public function show()
+    {
+        // TODO
     }
 
     /**

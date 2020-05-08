@@ -17,6 +17,8 @@ class KeyResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'project' => new ProjectResource($this->whenLoaded('project')),
+            'values' => ProjectResource::collection($this->whenLoaded('values')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
