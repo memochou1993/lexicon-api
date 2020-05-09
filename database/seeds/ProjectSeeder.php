@@ -9,6 +9,8 @@ class ProjectSeeder extends Seeder
 {
     use HasStaticAttributes;
 
+    public const DATA_AMOUNT = 5;
+
     /**
      * Run the database seeds.
      *
@@ -18,12 +20,12 @@ class ProjectSeeder extends Seeder
     {
         $teams = app(TeamSeeder::class)->teams;
 
-        $this->projects = $teams->reduce(function ($carry, $team) {
-            return $carry->merge(
-                $team->projects()->saveMany(
-                    factory(Project::class, 5)->withoutEvents()->make()
-                )
-            );
+        $projects = $teams->reduce(function ($carry, $team) {
+            $projects = factory(Project::class, self::DATA_AMOUNT)->withoutEvents()->make();
+
+            return $carry->merge($team->projects()->saveMany($projects));
         }, app(Collection::class));
+
+        $this->set('projects', $projects);
     }
 }

@@ -10,6 +10,8 @@ class UserSeeder extends Seeder
 {
     use HasStaticAttributes;
 
+    public const DATA_AMOUNT = 5;
+
     /**
      * Run the database seeds.
      *
@@ -23,8 +25,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
 
-        $users = factory(User::class, 5)->withoutEvents()->create();
+        $users = factory(User::class, self::DATA_AMOUNT)->withoutEvents()->create();
 
-        $this->users = app(Collection::class)->merge([$admin, ...$users]);
+        $this->set('users', app(Collection::class)->merge([$admin, ...$users]));
     }
 }

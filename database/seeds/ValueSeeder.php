@@ -18,12 +18,14 @@ class ValueSeeder extends Seeder
     {
         $keys = app(KeySeeder::class)->keys;
 
-        $this->values = $keys->reduce(function ($carry, $key) {
-            return $carry->merge(
-                $key->values()->saveMany(
-                    factory(Value::class, 6)->withoutEvents()->make()
-                )
-            );
+        $values = $keys->reduce(function ($carry, $key) {
+            $values = factory(Value::class, LanguageSeeder::DATA_AMOUNT * FormSeeder::DATA_AMOUNT)
+                ->withoutEvents()
+                ->make();
+
+            return $carry->merge($key->values()->saveMany($values));
         }, app(Collection::class));
+
+        $this->set('values', $values);
     }
 }
