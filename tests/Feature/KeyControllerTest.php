@@ -129,4 +129,60 @@ class KeyControllerTest extends TestCase
 
         $this->assertCount(1, $project->keys);
     }
+
+    /**
+     * @return void
+     */
+    public function testUpdate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->keys()->save(factory(Key::class)->make());
+
+        $key = factory(Key::class)->make([
+            'name' => 'New Key',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/keys/1', $key)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'data' => $key,
+            ]);
+
+        $this->assertDatabaseHas('keys', $key);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->keys()->saveMany(factory(Key::class, 2)->make());
+
+        $key = factory(Key::class)->make([
+            'name' => 'New Key 1',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/keys/1', $key)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'data' => $key,
+            ]);
+
+        $key = factory(Key::class)->make([
+            'name' => 'Key 2',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/keys/1', $key)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('keys', $key);
+    }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class LanguageUpdateRequest extends FormRequest
+class KeyUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,12 +27,9 @@ class LanguageUpdateRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('languages','name')->where(function ($query) {
-                    $query->whereIn(
-                        'id',
-                        $this->language->teams()->first()->languages()->pluck('id')->toArray()
-                    );
-                })->ignore($this->language->id),
+                Rule::unique('keys','name')->where(function ($query) {
+                    $query->where('project_id', $this->key->project->id);
+                })->ignore($this->key->id),
             ],
         ];
     }

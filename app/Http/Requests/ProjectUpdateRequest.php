@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectUpdateRequest extends FormRequest
 {
@@ -26,6 +27,9 @@ class ProjectUpdateRequest extends FormRequest
         return [
             'name' => [
                 'required',
+                Rule::unique('projects','name')->where(function ($query) {
+                    $query->where('team_id', $this->project->team_id);
+                })->ignore($this->project->id),
             ],
         ];
     }

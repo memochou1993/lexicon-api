@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\KeyIndexRequest;
 use App\Http\Requests\KeyShowRequest;
 use App\Http\Requests\KeyStoreRequest;
+use App\Http\Requests\KeyUpdateRequest;
 use App\Http\Resources\KeyResource as Resource;
 use App\Models\Key;
 use App\Services\KeyService;
@@ -80,13 +81,15 @@ class KeyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  KeyUpdateRequest  $request
+     * @param  Key  $key
+     * @return Resource
      */
-    public function update(Request $request, $id)
+    public function update(KeyUpdateRequest $request, Key $key)
     {
-        // TODO
+        $key = $this->keyService->update($key, $request->all());
+
+        return new Resource($key);
     }
 
     /**

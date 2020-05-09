@@ -133,7 +133,8 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        factory(Language::class)->create();
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->languages()->save(factory(Language::class)->make());
 
         $language = factory(Language::class)->make([
             'name' => 'New Language',
@@ -151,10 +152,41 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUpdateDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->languages()->saveMany(factory(Language::class, 2)->make());
+
+        $language = factory(Language::class)->make([
+            'name' => 'New Language 1',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/languages/1', $language)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'data' => $language,
+            ]);
+
+        $language = factory(Language::class)->make([
+            'name' => 'Language 2',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/languages/1', $language)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('languages', $language);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
-        // TODO
-
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $language = $project->languages()->save(factory(Language::class)->make());

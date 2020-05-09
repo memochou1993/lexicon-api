@@ -157,6 +157,39 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUpdateDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team->projects()->saveMany(factory(Project::class, 2)->make());
+
+        $project = factory(Project::class)->make([
+            'name' => 'New Project 1',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/projects/1', $project)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'data' => $project,
+            ]);
+
+        $project = factory(Project::class)->make([
+            'name' => 'Project 2',
+        ])->toArray();
+
+        $this->json('PATCH', 'api/projects/1', $project)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('projects', $project);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

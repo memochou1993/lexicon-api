@@ -33,4 +33,12 @@ class Language extends Model
     protected $hidden = [
         'pivot',
     ];
+
+    /**
+     * Get all of the teams that are assigned this languages.
+     */
+    public function teams()
+    {
+        return $this->morphedByMany(Team::class, 'model', 'model_has_languages');
+    }
 }
