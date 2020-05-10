@@ -52,6 +52,26 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testStoreSync()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->users()->save(factory(User::class)->make());
+
+        $this->assertCount(2, $project->users);
+
+        $this->json('POST', 'api/projects/1/users', [
+            'user_ids' => 1,
+            'sync' => true,
+        ])
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertCount(1, $project->refresh()->users);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

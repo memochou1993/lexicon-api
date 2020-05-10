@@ -25,6 +25,9 @@ class ProjectUserStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'sync' => [
+                'bool',
+            ],
             'user_ids' => [
                 'array',
                 'required',
@@ -40,7 +43,18 @@ class ProjectUserStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $this->prepareSync();
         $this->prepareUserIds();
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareSync()
+    {
+        $this->merge([
+            'sync' => $this->sync ?? false,
+        ]);
     }
 
     /**

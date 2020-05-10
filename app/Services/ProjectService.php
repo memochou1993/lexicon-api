@@ -90,10 +90,11 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  array  $user_ids
+     * @param  bool  $sync
      */
-    public function attachUser(Project $project, array $user_ids): void
+    public function attachUser(Project $project, array $user_ids, bool $sync): void
     {
-        $project->users()->syncWithoutDetaching($user_ids);
+        $project->users()->sync($user_ids, $sync);
     }
 
     /**
@@ -112,12 +113,7 @@ class ProjectService
      */
     public function attachLanguage(Project $project, array $language_ids, bool $sync): void
     {
-        if ($sync) {
-            $project->languages()->sync($language_ids);
-            return;
-        }
-
-        $project->languages()->syncWithoutDetaching($language_ids);
+        $project->languages()->sync($language_ids, $sync);
     }
 
     /**

@@ -94,12 +94,7 @@ class LanguageService
      */
     public function attachForm(Language $language, array $form_ids, bool $sync): void
     {
-        if ($sync) {
-            $language->forms()->sync($form_ids);
-            return;
-        }
-
-        $language->forms()->syncWithoutDetaching($form_ids);
+        $language->forms()->sync($form_ids, $sync);
     }
 
     /**

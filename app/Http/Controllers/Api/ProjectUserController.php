@@ -35,7 +35,11 @@ class ProjectUserController extends Controller
      */
     public function store(ProjectUserStoreRequest $request, Project $project)
     {
-        $this->projectService->attachUser($project, $request->user_ids);
+        $this->projectService->attachUser(
+            $project,
+            $request->user_ids,
+            $request->sync
+        );
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
