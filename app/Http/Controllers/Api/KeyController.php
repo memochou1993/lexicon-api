@@ -10,8 +10,10 @@ use App\Http\Requests\KeyUpdateRequest;
 use App\Http\Resources\KeyResource as Resource;
 use App\Models\Key;
 use App\Services\KeyService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class KeyController extends Controller
 {
@@ -95,11 +97,13 @@ class KeyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Key  $key
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Key $key)
     {
-        // TODO
+        $this->keyService->destroy($key);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

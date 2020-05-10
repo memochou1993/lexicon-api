@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Form;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
@@ -190,22 +191,17 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $language = $project->languages()->save(factory(Language::class)->make());
+        $form = $language->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/languages/1')
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($language);
 
-        $this->assertDatabaseMissing('model_has_languages', [
-            'language_id' => $language->id,
-            'model_type' => 'team',
-            'model_id' => $team->id,
-        ]);
-
-        $this->assertDatabaseMissing('model_has_languages', [
-            'language_id' => $language->id,
-            'model_type' => 'project',
-            'model_id' => $project->id,
+        $this->assertDatabaseMissing('model_has_forms', [
+            'form_id' => $form->id,
+            'model_type' => 'language',
+            'model_id' => $language->id,
         ]);
     }
 }
