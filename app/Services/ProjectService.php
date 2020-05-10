@@ -89,6 +89,24 @@ class ProjectService
 
     /**
      * @param  Project  $project
+     * @param  array  $user_ids
+     */
+    public function attachUser(Project $project, array $user_ids): void
+    {
+        $project->users()->syncWithoutDetaching($user_ids);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  int  $user_id
+     */
+    public function detachUser(Project $project, int $user_id): void
+    {
+        $project->users()->detach($user_id);
+    }
+
+    /**
+     * @param  Project  $project
      * @param  array  $language_ids
      */
     public function attachLanguage(Project $project, array $language_ids): void
