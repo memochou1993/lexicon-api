@@ -86,4 +86,22 @@ class LanguageService
     {
         return $this->language->destroy($language->id);
     }
+
+    /**
+     * @param  Language  $project
+     * @param  array  $form_ids
+     */
+    public function attachForm(Language $project, array $form_ids): void
+    {
+        $project->forms()->syncWithoutDetaching($form_ids);
+    }
+
+    /**
+     * @param  Language  $project
+     * @param  int  $form_id
+     */
+    public function detachForm(Language $project, int $form_id): void
+    {
+        $project->forms()->detach($form_id);
+    }
 }
