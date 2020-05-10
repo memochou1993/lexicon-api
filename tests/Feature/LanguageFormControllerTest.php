@@ -55,6 +55,27 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testStoreSync()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $language = $project->languages()->save(factory(Language::class)->make());
+        $language->forms()->saveMany(factory(Form::class, 2)->make());
+
+        $this->assertCount(2, $language->forms);
+
+        $this->json('POST', 'api/languages/1/forms', [
+            'form_ids' => 1,
+            'sync' => true,
+        ])
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertCount(1, $language->refresh()->forms);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

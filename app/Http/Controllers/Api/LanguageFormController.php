@@ -35,7 +35,11 @@ class LanguageFormController extends Controller
      */
     public function store(LanguageFormStoreRequest $request, Language $language)
     {
-        $this->languageService->attachForm($language, $request->form_ids);
+        $this->languageService->attachForm(
+            $language,
+            $request->form_ids,
+            $request->sync
+        );
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

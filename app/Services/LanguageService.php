@@ -88,20 +88,26 @@ class LanguageService
     }
 
     /**
-     * @param  Language  $project
+     * @param  Language  $language
      * @param  array  $form_ids
+     * @param  bool  $sync
      */
-    public function attachForm(Language $project, array $form_ids): void
+    public function attachForm(Language $language, array $form_ids, bool $sync): void
     {
-        $project->forms()->syncWithoutDetaching($form_ids);
+        if ($sync) {
+            $language->forms()->sync($form_ids);
+            return;
+        }
+
+        $language->forms()->syncWithoutDetaching($form_ids);
     }
 
     /**
-     * @param  Language  $project
+     * @param  Language  $language
      * @param  int  $form_id
      */
-    public function detachForm(Language $project, int $form_id): void
+    public function detachForm(Language $language, int $form_id): void
     {
-        $project->forms()->detach($form_id);
+        $language->forms()->detach($form_id);
     }
 }
