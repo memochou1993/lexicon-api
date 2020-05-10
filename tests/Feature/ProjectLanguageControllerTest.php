@@ -53,6 +53,26 @@ class ProjectLanguageControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testStoreSync()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->languages()->saveMany(factory(Language::class, 2)->make());
+
+        $this->assertCount(2, $project->languages);
+
+        $this->json('POST', 'api/projects/1/languages', [
+            'language_ids' => 1,
+            'sync' => true,
+        ])
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertCount(1, $project->refresh()->languages);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

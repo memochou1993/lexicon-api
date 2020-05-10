@@ -108,9 +108,15 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  array  $language_ids
+     * @param  bool  $sync
      */
-    public function attachLanguage(Project $project, array $language_ids): void
+    public function attachLanguage(Project $project, array $language_ids, bool $sync): void
     {
+        if ($sync) {
+            $project->languages()->sync($language_ids);
+            return;
+        }
+
         $project->languages()->syncWithoutDetaching($language_ids);
     }
 

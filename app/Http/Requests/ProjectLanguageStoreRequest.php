@@ -30,6 +30,9 @@ class ProjectLanguageStoreRequest extends FormRequest
                 'required',
                 Rule::exists('languages', 'id'),
             ],
+            'sync' => [
+                'bool',
+            ],
         ];
     }
 
@@ -41,6 +44,7 @@ class ProjectLanguageStoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->prepareLanguageIds();
+        $this->prepareSync();
     }
 
     /**
@@ -50,6 +54,16 @@ class ProjectLanguageStoreRequest extends FormRequest
     {
         $this->merge([
             'language_ids' => collect($this->language_ids)->explode(',')->toArray(),
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareSync()
+    {
+        $this->merge([
+            'sync' => $this->sync ?? false,
         ]);
     }
 }
