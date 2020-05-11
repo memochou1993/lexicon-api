@@ -31,6 +31,7 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('languages', 'LanguageController');
         Route::apiResource('languages.forms', 'LanguageFormController')
             ->only('store', 'destroy');
+        Route::apiResource('forms', 'FormController');
         Route::apiResource('keys', 'KeyController');
     });
 });
