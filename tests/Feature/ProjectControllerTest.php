@@ -75,6 +75,8 @@ class ProjectControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('projects', $project->toArray());
+
+        $this->assertCount(1, $team->projects);
     }
 
     /**

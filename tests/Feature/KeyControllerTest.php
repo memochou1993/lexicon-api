@@ -98,6 +98,8 @@ class KeyControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('keys', $key->toArray());
+
+        $this->assertCount(1, $project->keys);
     }
 
     /**
