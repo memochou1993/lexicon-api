@@ -17,6 +17,7 @@ class ValueResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
+            'key' => new KeyResource($this->whenLoaded('key')),
             'language' => $this->whenLoaded('languages', function () {
                 return new LanguageResource($this->languages->first());
             }),

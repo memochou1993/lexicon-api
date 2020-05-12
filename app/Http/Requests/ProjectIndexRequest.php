@@ -35,7 +35,6 @@ class ProjectIndexRequest extends FormRequest
                     'users',
                     'team',
                     'languages',
-                    'keys',
                 ]),
             ],
             'team_id' => [
@@ -73,7 +72,7 @@ class ProjectIndexRequest extends FormRequest
     private function prepareRelations()
     {
         $this->merge([
-            'relations' => $relations = collect($this->relations)->explode(',')->toArray(),
+            'relations' => collect($this->relations)->explode(',')->toArray(),
         ]);
     }
 }
