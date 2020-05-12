@@ -23,6 +23,7 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::apiResource('teams', 'TeamController');
         Route::apiResource('projects', 'ProjectController');
         Route::apiResource('projects.users', 'ProjectUserController')
             ->only('store', 'destroy');

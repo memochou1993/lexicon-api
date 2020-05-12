@@ -14,6 +14,15 @@ class Team extends Model
     use HasForms;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
