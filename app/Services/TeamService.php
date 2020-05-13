@@ -86,4 +86,23 @@ class TeamService
     {
         return $this->team->destroy($team->id);
     }
+
+    /**
+     * @param  Team  $team
+     * @param  array  $user_ids
+     * @param  bool  $sync
+     */
+    public function attachUser(Team $team, array $user_ids, bool $sync): void
+    {
+        $team->users()->sync($user_ids, $sync);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  int  $user_id
+     */
+    public function detachUser(Team $team, int $user_id): void
+    {
+        $team->users()->detach($user_id);
+    }
 }
