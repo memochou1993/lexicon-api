@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FormUpdateRequest extends FormRequest
+class AuthRegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,12 +26,16 @@ class FormUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                Rule::unique('forms', 'name')->where(function ($query) {
-                    $query->whereIn(
-                        'id',
-                        $this->form->teams()->first()->forms()->pluck('id')->toArray()
-                    );
-                })->ignore($this->form->id),
+                'required',
+            ],
+            'email' => [
+                'email',
+                'required',
+                Rule::unique('users', 'email'),
+            ],
+            'password' => [
+                'min:8',
+                'required',
             ],
         ];
     }

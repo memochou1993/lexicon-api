@@ -28,7 +28,7 @@ class FormStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('forms','name')->where(function ($query) {
+                Rule::unique('forms', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
                         Team::findOrNew($this->team_id)->forms()->pluck('id')->toArray()

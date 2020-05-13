@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\AuthRegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
@@ -47,6 +49,17 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
         ]);
+    }
+
+    /**
+     * @param  AuthRegisterRequest  $request
+     * @return UserResource
+     */
+    public function register(AuthRegisterRequest $request)
+    {
+        $user = $this->authService->storeUser($request->all());
+
+        return new UserResource($user);
     }
 
     /**

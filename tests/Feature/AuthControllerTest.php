@@ -53,6 +53,53 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testRegister()
+    {
+        $user = factory(User::class)
+            ->make([
+                'email_verified_at' => null,
+                'password' => 'password',
+            ])
+            ->makeVisible('password');
+
+        $response = $this->json('POST', 'api/auth/register', $user->toArray());
+
+        $response
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'data' => $user->makeHidden('password')->toArray(),
+            ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRegisterDuplicate()
+    {
+        factory(User::class)->create([
+            'email' => 'unique@email.com',
+        ]);
+
+        $user = factory(User::class)
+            ->make([
+                'email' => 'unique@email.com',
+                'email_verified_at' => null,
+                'password' => 'password',
+            ])
+            ->makeVisible('password');
+
+        $this->json('POST', 'api/auth/register', $user->toArray())
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'email',
+                ],
+            ]);
+    }
+
+    /**
+     * @return void
+     */
     public function testUser()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());

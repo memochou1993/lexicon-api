@@ -26,7 +26,7 @@ class KeyUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                Rule::unique('keys','name')->where(function ($query) {
+                Rule::unique('keys', 'name')->where(function ($query) {
                     $query->where('project_id', $this->key->project->id);
                 })->ignore($this->key->id),
             ],

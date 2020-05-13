@@ -42,6 +42,15 @@ class AuthService
     }
 
     /**
+     * @param  array  $data
+     * @return User
+     */
+    public function storeUser(array $data): User
+    {
+        return $this->user->create($data);
+    }
+
+    /**
      * @return User
      */
     public function getUser(): User

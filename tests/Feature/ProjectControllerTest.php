@@ -41,14 +41,13 @@ class ProjectControllerTest extends TestCase
 
         $this->json('GET', 'api/projects', [
             'team_id' => $team->id,
-            'relations' => 'users,team,languages',
+            'relations' => 'users,languages',
         ])
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 'data' => [
                     [
                         'users',
-                        'team',
                         'languages',
                     ],
                 ],

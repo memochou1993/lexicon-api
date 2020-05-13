@@ -28,7 +28,7 @@ class LanguageStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('languages','name')->where(function ($query) {
+                Rule::unique('languages', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
                         Team::findOrNew($this->team_id)->languages()->pluck('id')->toArray()
