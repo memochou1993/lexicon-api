@@ -27,7 +27,6 @@ class FormUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 Rule::unique('forms','name')->where(function ($query) {
                     $query->whereIn(
                         'id',

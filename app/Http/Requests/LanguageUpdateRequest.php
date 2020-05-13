@@ -27,7 +27,6 @@ class LanguageUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 Rule::unique('languages','name')->where(function ($query) {
                     $query->whereIn(
                         'id',

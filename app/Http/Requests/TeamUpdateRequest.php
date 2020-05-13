@@ -27,7 +27,6 @@ class TeamUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 Rule::unique('teams', 'name')->ignore($this->team->id),
             ],
         ];
