@@ -33,7 +33,6 @@ class ProjectIndexRequest extends FormRequest
             'relations' => [
                 new In([
                     'users',
-                    'team',
                     'languages',
                 ]),
             ],
