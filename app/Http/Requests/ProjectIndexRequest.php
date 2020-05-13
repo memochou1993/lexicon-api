@@ -28,6 +28,7 @@ class ProjectIndexRequest extends FormRequest
         return [
             'per_page' => [
                 'min:1',
+                'max:100',
                 'numeric',
             ],
             'relations' => [
