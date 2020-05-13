@@ -27,8 +27,7 @@ class FormIndexRequest extends FormRequest
     {
         return [
             'per_page' => [
-                'min:1',
-                'max:100',
+                'between:1,100',
                 'numeric',
             ],
             'relations' => [
