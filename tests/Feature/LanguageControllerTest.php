@@ -179,8 +179,6 @@ class LanguageControllerTest extends TestCase
                     'name',
                 ],
             ]);
-
-        $this->assertDatabaseHas('languages', $language);
     }
 
     /**

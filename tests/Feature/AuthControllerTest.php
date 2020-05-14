@@ -18,11 +18,13 @@ class AuthControllerTest extends TestCase
      */
     public function testLogin()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create([
+            'password' => 'password',
+        ]);
 
         $response = $this->json('POST', 'api/auth/login', [
             'email' => $user->email,
-            'password' => 'password'
+            'password' => 'password',
         ]);
 
         $response

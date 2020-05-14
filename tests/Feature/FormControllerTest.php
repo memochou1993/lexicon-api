@@ -171,8 +171,6 @@ class FormControllerTest extends TestCase
                     'name',
                 ],
             ]);
-
-        $this->assertDatabaseHas('forms', $form);
     }
 
     /**

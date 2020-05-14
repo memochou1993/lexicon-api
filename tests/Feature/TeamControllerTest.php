@@ -173,8 +173,6 @@ class TeamControllerTest extends TestCase
                     'name',
                 ],
             ]);
-
-        $this->assertDatabaseHas('teams', $team);
     }
 
     /**

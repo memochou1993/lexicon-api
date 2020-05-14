@@ -181,8 +181,6 @@ class ProjectControllerTest extends TestCase
                     'name',
                 ],
             ]);
-
-        $this->assertDatabaseHas('projects', $project);
     }
 
     /**

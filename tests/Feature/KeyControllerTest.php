@@ -184,7 +184,5 @@ class KeyControllerTest extends TestCase
                     'name',
                 ],
             ]);
-
-        $this->assertDatabaseHas('keys', $key);
     }
 }

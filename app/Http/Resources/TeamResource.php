@@ -18,9 +18,9 @@ class TeamResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'users' => UserResource::collection($this->whenLoaded('users')),
-            'projects' => UserResource::collection($this->whenLoaded('projects')),
-            'languages' => UserResource::collection($this->whenLoaded('languages')),
-            'forms' => UserResource::collection($this->whenLoaded('forms')),
+            'projects' => ProjectResource::collection($this->whenLoaded('projects')),
+            'languages' => LanguageResource::collection($this->whenLoaded('languages')),
+            'forms' => FormResource::collection($this->whenLoaded('forms')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
