@@ -25,13 +25,13 @@ class ProjectUserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'sync' => [
-                'bool',
-            ],
             'user_ids' => [
                 'array',
                 'required',
                 Rule::exists('users', 'id'),
+            ],
+            'sync' => [
+                'bool',
             ],
         ];
     }
@@ -43,18 +43,8 @@ class ProjectUserStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareSync();
         $this->prepareUserIds();
-    }
-
-    /**
-     * @return void
-     */
-    private function prepareSync()
-    {
-        $this->merge([
-            'sync' => $this->sync ?? false,
-        ]);
+        $this->prepareSync();
     }
 
     /**
@@ -64,6 +54,16 @@ class ProjectUserStoreRequest extends FormRequest
     {
         $this->merge([
             'user_ids' => collect($this->user_ids)->explode(',')->toArray(),
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareSync()
+    {
+        $this->merge([
+            'sync' => $this->sync ?? false,
         ]);
     }
 }

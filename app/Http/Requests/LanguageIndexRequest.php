@@ -26,6 +26,11 @@ class LanguageIndexRequest extends FormRequest
     public function rules()
     {
         return [
+            'team_id' => [
+                'numeric',
+                'required',
+                Rule::exists('teams', 'id'),
+            ],
             'per_page' => [
                 'between:1,100',
                 'numeric',
@@ -34,11 +39,6 @@ class LanguageIndexRequest extends FormRequest
                 new In([
                     'forms',
                 ]),
-            ],
-            'team_id' => [
-                'numeric',
-                'required',
-                Rule::exists('teams', 'id'),
             ],
         ];
     }

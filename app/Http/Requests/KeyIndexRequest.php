@@ -26,14 +26,14 @@ class KeyIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'per_page' => [
-                'between:1,100',
-                'numeric',
-            ],
             'project_id' => [
                 'numeric',
                 'required',
                 Rule::exists('teams', 'id'),
+            ],
+            'per_page' => [
+                'between:1,100',
+                'numeric',
             ],
             'relations' => [
                 new In([
