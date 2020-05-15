@@ -12,6 +12,15 @@ class Value extends Model
     use HasForms;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'text',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array

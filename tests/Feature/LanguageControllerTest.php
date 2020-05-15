@@ -64,9 +64,10 @@ class LanguageControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $language = factory(Language::class)->make([
-            'team_id' => 1,
-        ]);
+        $language = factory(Language::class)
+            ->make([
+                'team_id' => 1,
+            ]);
 
         $this->json('POST', 'api/languages', $language->toArray())
             ->assertStatus(Response::HTTP_CREATED)
@@ -137,9 +138,11 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->languages()->save(factory(Language::class)->make());
 
-        $language = factory(Language::class)->make([
-            'name' => 'New Language',
-        ])->toArray();
+        $language = factory(Language::class)
+            ->make([
+                'name' => 'New Language',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_OK)
@@ -158,9 +161,11 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->languages()->saveMany(factory(Language::class, 2)->make());
 
-        $language = factory(Language::class)->make([
-            'name' => 'New Language 1',
-        ])->toArray();
+        $language = factory(Language::class)
+            ->make([
+                'name' => 'New Language 1',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_OK)

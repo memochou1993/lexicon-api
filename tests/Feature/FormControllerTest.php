@@ -58,9 +58,10 @@ class FormControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $form = factory(Form::class)->make([
-            'team_id' => 1,
-        ]);
+        $form = factory(Form::class)
+            ->make([
+                'team_id' => 1,
+            ]);
 
         $this->json('POST', 'api/forms', $form->toArray())
             ->assertStatus(Response::HTTP_CREATED)
@@ -129,9 +130,11 @@ class FormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->forms()->save(factory(Form::class)->make());
 
-        $form = factory(Form::class)->make([
-            'name' => 'New Form',
-        ])->toArray();
+        $form = factory(Form::class)
+            ->make([
+                'name' => 'New Form',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/forms/1', $form)
             ->assertStatus(Response::HTTP_OK)
@@ -150,9 +153,11 @@ class FormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->forms()->saveMany(factory(Form::class, 2)->make());
 
-        $form = factory(Form::class)->make([
-            'name' => 'New Form 1',
-        ])->toArray();
+        $form = factory(Form::class)
+            ->make([
+                'name' => 'New Form 1',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/forms/1', $form)
             ->assertStatus(Response::HTTP_OK)

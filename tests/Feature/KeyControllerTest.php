@@ -60,36 +60,16 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testShow()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-
-        $this->json('GET', 'api/keys/1', [
-            'relations' => 'project,values',
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data' => [
-                    'project',
-                    'values',
-                ],
-            ])
-            ->assertJson([
-                'data' => $key->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = factory(Key::class)->make();
-        $key->project()->associate($project->id)->makeVisible('project_id');
+
+        $key = factory(Key::class)
+            ->make()
+            ->project()
+            ->associate($project->id)
+            ->makeVisible('project_id');
 
         $this->json('POST', 'api/keys', $key->toArray())
             ->assertStatus(Response::HTTP_CREATED)
@@ -135,15 +115,41 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testShow()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('GET', 'api/keys/1', [
+            'relations' => 'project,values',
+        ])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    'project',
+                    'values',
+                ],
+            ])
+            ->assertJson([
+                'data' => $key->toArray(),
+            ]);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $key = factory(Key::class)->make([
-            'name' => 'New Key',
-        ])->toArray();
+        $key = factory(Key::class)
+            ->make([
+                'name' => 'New Key',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_OK)
@@ -163,9 +169,11 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->saveMany(factory(Key::class, 2)->make());
 
-        $key = factory(Key::class)->make([
-            'name' => 'New Key 1',
-        ])->toArray();
+        $key = factory(Key::class)
+            ->make([
+                'name' => 'New Key 1',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_OK)

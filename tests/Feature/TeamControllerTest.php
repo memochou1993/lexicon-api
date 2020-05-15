@@ -64,7 +64,9 @@ class TeamControllerTest extends TestCase
      */
     public function testStore()
     {
-        $team = factory(Team::class)->make()->toArray();
+        $team = factory(Team::class)
+            ->make()
+            ->toArray();
 
         $this->json('POST', 'api/teams', $team)
             ->assertStatus(Response::HTTP_CREATED)
@@ -86,9 +88,11 @@ class TeamControllerTest extends TestCase
             'name' => 'Unique Team',
         ]));
 
-        $team = factory(Team::class)->make([
-            'name' => 'Unique Team',
-        ])->toArray();
+        $team = factory(Team::class)
+            ->make([
+                'name' => 'Unique Team',
+            ])
+            ->toArray();
 
         $this->json('POST', 'api/teams', $team)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -132,9 +136,11 @@ class TeamControllerTest extends TestCase
     {
         $this->user->teams()->save(factory(Team::class)->make());
 
-        $team = factory(Team::class)->make([
-            'name' => 'New Team',
-        ])->toArray();
+        $team = factory(Team::class)
+            ->make([
+                'name' => 'New Team',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_OK)
@@ -152,9 +158,11 @@ class TeamControllerTest extends TestCase
     {
         $this->user->teams()->saveMany(factory(Team::class, 2)->make());
 
-        $team = factory(Team::class)->make([
-            'name' => 'New Team 1',
-        ])->toArray();
+        $team = factory(Team::class)
+            ->make([
+                'name' => 'New Team 1',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_OK)

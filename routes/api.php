@@ -37,5 +37,6 @@ Route::namespace('Api')->group(function () {
             ->only('store', 'destroy');
         Route::apiResource('forms', 'FormController');
         Route::apiResource('keys', 'KeyController');
+        Route::apiResource('values', 'ValueController');
     });
 });

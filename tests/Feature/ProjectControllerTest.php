@@ -63,9 +63,12 @@ class ProjectControllerTest extends TestCase
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = factory(Project::class)->make();
 
-        $project->team()->associate($team->id)->makeVisible('team_id');
+        $project = factory(Project::class)
+            ->make()
+            ->team()
+            ->associate($team->id)
+            ->makeVisible('team_id');
 
         $this->json('POST', 'api/projects', $project->toArray())
             ->assertStatus(Response::HTTP_CREATED)
@@ -139,9 +142,11 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
-        $project = factory(Project::class)->make([
-            'name' => 'New Project',
-        ])->toArray();
+        $project = factory(Project::class)
+            ->make([
+                'name' => 'New Project',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
             ->assertStatus(Response::HTTP_OK)
@@ -160,9 +165,11 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->saveMany(factory(Project::class, 2)->make());
 
-        $project = factory(Project::class)->make([
-            'name' => 'New Project 1',
-        ])->toArray();
+        $project = factory(Project::class)
+            ->make([
+                'name' => 'New Project 1',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
             ->assertStatus(Response::HTTP_OK)

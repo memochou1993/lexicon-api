@@ -75,9 +75,11 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = factory(User::class)->make([
-            'name' => 'New User',
-        ])->toArray();
+        $user = factory(User::class)
+            ->make([
+                'name' => 'New User',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/users/1', $user)
             ->assertStatus(Response::HTTP_OK)
@@ -95,9 +97,11 @@ class UserControllerTest extends TestCase
             'email' => 'unique@email.com',
         ]);
 
-        $user = factory(User::class)->make([
-            'email' => 'new@email.com',
-        ])->toArray();
+        $user = factory(User::class)
+            ->make([
+                'email' => 'new@email.com',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/users/1', $user)
             ->assertStatus(Response::HTTP_OK)
