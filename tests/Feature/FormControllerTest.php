@@ -60,7 +60,7 @@ class FormControllerTest extends TestCase
 
         $form = factory(Form::class)
             ->make([
-                'team_id' => 1,
+                'team_id' => $team->id,
             ]);
 
         $this->json('POST', 'api/forms', $form->toArray())
@@ -165,9 +165,11 @@ class FormControllerTest extends TestCase
                 'data' => $form,
             ]);
 
-        $form = factory(Form::class)->make([
-            'name' => 'Form 2',
-        ])->toArray();
+        $form = factory(Form::class)
+            ->make([
+                'name' => 'Form 2',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/forms/1', $form)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

@@ -58,7 +58,7 @@ class TeamUserControllerTest extends TestCase
         $this->assertCount(2, $team->users);
 
         $this->json('POST', 'api/teams/1/users', [
-            'user_ids' => 1,
+            'user_ids' => $this->user->id,
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);

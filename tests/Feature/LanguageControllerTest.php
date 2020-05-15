@@ -66,7 +66,7 @@ class LanguageControllerTest extends TestCase
 
         $language = factory(Language::class)
             ->make([
-                'team_id' => 1,
+                'team_id' => $team->id,
             ]);
 
         $this->json('POST', 'api/languages', $language->toArray())
@@ -173,9 +173,11 @@ class LanguageControllerTest extends TestCase
                 'data' => $language,
             ]);
 
-        $language = factory(Language::class)->make([
-            'name' => 'Language 2',
-        ])->toArray();
+        $language = factory(Language::class)
+            ->make([
+                'name' => 'Language 2',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

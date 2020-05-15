@@ -60,12 +60,12 @@ class LanguageFormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $language = $project->languages()->save(factory(Language::class)->make());
-        $language->forms()->saveMany(factory(Form::class, 2)->make());
+        $form = $language->forms()->saveMany(factory(Form::class, 2)->make());
 
         $this->assertCount(2, $language->forms);
 
         $this->json('POST', 'api/languages/1/forms', [
-            'form_ids' => 1,
+            'form_ids' => $form->pluck('id')->first(),
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);

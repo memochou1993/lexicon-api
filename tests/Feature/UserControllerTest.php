@@ -109,9 +109,11 @@ class UserControllerTest extends TestCase
                 'data' => $user,
             ]);
 
-        $user = factory(User::class)->make([
-            'email' => 'unique@email.com',
-        ])->toArray();
+        $user = factory(User::class)
+            ->make([
+                'email' => 'unique@email.com',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/users/1', $user)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

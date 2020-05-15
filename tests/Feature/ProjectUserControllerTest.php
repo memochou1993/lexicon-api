@@ -61,7 +61,7 @@ class ProjectUserControllerTest extends TestCase
         $this->assertCount(2, $project->users);
 
         $this->json('POST', 'api/projects/1/users', [
-            'user_ids' => 1,
+            'user_ids' => $this->user->id,
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);

@@ -170,9 +170,11 @@ class TeamControllerTest extends TestCase
                 'data' => $team,
             ]);
 
-        $team = factory(Team::class)->make([
-            'name' => 'Team 2',
-        ])->toArray();
+        $team = factory(Team::class)
+            ->make([
+                'name' => 'Team 2',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

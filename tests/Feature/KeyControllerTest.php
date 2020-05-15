@@ -66,9 +66,9 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $key = factory(Key::class)
-            ->make()
-            ->project()
-            ->associate($project->id)
+            ->make([
+                'project_id' => $project->id,
+            ])
             ->makeVisible('project_id');
 
         $this->json('POST', 'api/keys', $key->toArray())
@@ -96,9 +96,8 @@ class KeyControllerTest extends TestCase
         $key = factory(Key::class)
             ->make([
                 'name' => 'Unique Key',
+                'project_id' => $project->id,
             ])
-            ->project()
-            ->associate($project->id)
             ->makeVisible('project_id');
 
         $this->json('POST', 'api/keys', $key->toArray())
@@ -181,9 +180,11 @@ class KeyControllerTest extends TestCase
                 'data' => $key,
             ]);
 
-        $key = factory(Key::class)->make([
-            'name' => 'Key 2',
-        ])->toArray();
+        $key = factory(Key::class)
+            ->make([
+                'name' => 'Key 2',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

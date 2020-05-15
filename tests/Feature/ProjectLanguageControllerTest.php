@@ -57,12 +57,12 @@ class ProjectLanguageControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->languages()->saveMany(factory(Language::class, 2)->make());
+        $language = $project->languages()->saveMany(factory(Language::class, 2)->make());
 
         $this->assertCount(2, $project->languages);
 
         $this->json('POST', 'api/projects/1/languages', [
-            'language_ids' => 1,
+            'language_ids' => $language->pluck('id')->first(),
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);

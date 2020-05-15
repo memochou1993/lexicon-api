@@ -65,9 +65,9 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
         $project = factory(Project::class)
-            ->make()
-            ->team()
-            ->associate($team->id)
+            ->make([
+                'team_id' => $team->id,
+            ])
             ->makeVisible('team_id');
 
         $this->json('POST', 'api/projects', $project->toArray())
@@ -94,9 +94,8 @@ class ProjectControllerTest extends TestCase
         $project = factory(Project::class)
             ->make([
                 'name' => 'Unique Project',
+                'team_id' => $team->id,
             ])
-            ->team()
-            ->associate($team->id)
             ->makeVisible('team_id');
 
         $this->json('POST', 'api/projects', $project->toArray())
@@ -177,9 +176,11 @@ class ProjectControllerTest extends TestCase
                 'data' => $project,
             ]);
 
-        $project = factory(Project::class)->make([
-            'name' => 'Project 2',
-        ])->toArray();
+        $project = factory(Project::class)
+            ->make([
+                'name' => 'Project 2',
+            ])
+            ->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

@@ -18,9 +18,7 @@ class AuthControllerTest extends TestCase
      */
     public function testLogin()
     {
-        $user = factory(User::class)->create([
-            'password' => 'password',
-        ]);
+        $user = factory(User::class)->create();
 
         $response = $this->json('POST', 'api/auth/login', [
             'email' => $user->email,
@@ -45,7 +43,7 @@ class AuthControllerTest extends TestCase
 
         $response = $this->json('POST', 'api/auth/login', [
             'email' => $user->email,
-            'password' => 'password'
+            'password' => 'secret',
         ]);
 
         $response
@@ -60,7 +58,6 @@ class AuthControllerTest extends TestCase
         $user = factory(User::class)
             ->make([
                 'email_verified_at' => null,
-                'password' => 'password',
             ])
             ->makeVisible('password');
 
@@ -86,7 +83,6 @@ class AuthControllerTest extends TestCase
             ->make([
                 'email' => 'unique@email.com',
                 'email_verified_at' => null,
-                'password' => 'password',
             ])
             ->makeVisible('password');
 

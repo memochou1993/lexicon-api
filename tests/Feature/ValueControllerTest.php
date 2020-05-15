@@ -67,18 +67,17 @@ class ValueControllerTest extends TestCase
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $value = factory(Value::class)
             ->make([
-                'language_id' => 1,
-                'form_id' => 1,
+                'key_id' => $key->id,
+                'language_id' => $language->id,
+                'form_id' => $form->id,
             ])
-            ->key()
-            ->associate($key->id)
             ->makeVisible('key_id');
 
         $this->json('POST', 'api/values', $value->toArray())
