@@ -92,20 +92,10 @@ class TeamControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $this->user->teams()->saveMany(factory(Team::class, 2)->make());
+        $teams = $this->user->teams()->saveMany(factory(Team::class, 2)->make());
 
         $team = factory(Team::class)->make([
-            'name' => 'New Team 1',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/teams/1', $team)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $team,
-            ]);
-
-        $team = factory(Team::class)->make([
-            'name' => 'Team 2',
+            'name' => $teams->last()->name,
         ])->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)

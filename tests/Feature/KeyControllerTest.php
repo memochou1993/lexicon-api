@@ -84,20 +84,10 @@ class KeyControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->saveMany(factory(Key::class, 2)->make());
+        $keys = $project->keys()->saveMany(factory(Key::class, 2)->make());
 
         $key = factory(Key::class)->make([
-            'name' => 'New Key 1',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/keys/1', $key)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $key,
-            ]);
-
-        $key = factory(Key::class)->make([
-            'name' => 'Key 2',
+            'name' => $keys->last()->name,
         ])->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)

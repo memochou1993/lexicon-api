@@ -77,20 +77,10 @@ class FormControllerTest extends TestCase
     public function testUpdateDuplicate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->forms()->saveMany(factory(Form::class, 2)->make());
+        $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
 
         $form = factory(Form::class)->make([
-            'name' => 'New Form 1',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/forms/1', $form)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $form,
-            ]);
-
-        $form = factory(Form::class)->make([
-            'name' => 'Form 2',
+            'name' => $forms->last()->name,
         ])->toArray();
 
         $this->json('PATCH', 'api/forms/1', $form)

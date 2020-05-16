@@ -91,22 +91,10 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        factory(User::class)->create([
-            'email' => 'unique@email.com',
-        ]);
+        $user = factory(User::class)->create();
 
         $user = factory(User::class)->make([
-            'email' => 'new@email.com',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/users/1', $user)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $user,
-            ]);
-
-        $user = factory(User::class)->make([
-            'email' => 'unique@email.com',
+            'email' => $user->email,
         ])->toArray();
 
         $this->json('PATCH', 'api/users/1', $user)

@@ -94,20 +94,10 @@ class LanguageControllerTest extends TestCase
     public function testUpdateDuplicate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->languages()->saveMany(factory(Language::class, 2)->make());
+        $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
 
         $language = factory(Language::class)->make([
-            'name' => 'New Language 1',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/languages/1', $language)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $language,
-            ]);
-
-        $language = factory(Language::class)->make([
-            'name' => 'Language 2',
+            'name' => $languages->last()->name,
         ])->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)

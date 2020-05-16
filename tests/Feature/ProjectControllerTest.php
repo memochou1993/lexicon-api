@@ -82,20 +82,10 @@ class ProjectControllerTest extends TestCase
     public function testUpdateDuplicate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->projects()->saveMany(factory(Project::class, 2)->make());
+        $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
 
         $project = factory(Project::class)->make([
-            'name' => 'New Project 1',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/projects/1', $project)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $project,
-            ]);
-
-        $project = factory(Project::class)->make([
-            'name' => 'Project 2',
+            'name' => $projects->last()->name,
         ])->toArray();
 
         $this->json('PATCH', 'api/projects/1', $project)
