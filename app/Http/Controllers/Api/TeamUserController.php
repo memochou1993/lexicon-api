@@ -7,6 +7,7 @@ use App\Http\Requests\TeamUserStoreRequest;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\TeamService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,9 +53,12 @@ class TeamUserController extends Controller
      * @param  Team  $team
      * @param  User  $user
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Team $team, User $user)
     {
+        $this->authorize('view', $team);
+
         $this->teamService->detachUser($team, $user->id);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);

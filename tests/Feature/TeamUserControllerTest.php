@@ -69,6 +69,18 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testAttachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+
+        $this->json('POST', 'api/teams/'.$team->id.'/users')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -80,5 +92,17 @@ class TeamUserControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(1, $team->refresh()->users);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDetachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$guest->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
