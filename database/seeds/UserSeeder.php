@@ -4,7 +4,6 @@ use App\Models\User;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -22,7 +21,7 @@ class UserSeeder extends Seeder
         $admin = app(User::class)->create([
             'name' => env('ADMIN_NAME'),
             'email' => env('ADMIN_EMAIL'),
-            'password' => Hash::make(env('ADMIN_PASSWORD')),
+            'password' => env('ADMIN_PASSWORD'),
         ]);
 
         $users = factory(User::class, self::DATA_AMOUNT)->withoutEvents()->create();
