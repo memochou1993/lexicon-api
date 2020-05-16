@@ -24,31 +24,36 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::apiResource('users', 'UserController');
+
         Route::namespace('User')->prefix('user')->group(function () {
             Route::apiResource('teams', 'TeamController')
                 ->only('index', 'store');
         });
 
-        Route::apiResource('users', 'UserController');
         Route::apiResource('teams', 'TeamController')
             ->only('show', 'update', 'destroy');
-        Route::apiResource('teams.languages', 'TeamLanguageController')
-            ->only('index', 'store');
-        Route::apiResource('teams.forms', 'TeamFormController')
-            ->only('index', 'store');
+        Route::apiResource('teams.users', 'TeamUserController')
+            ->only('store', 'destroy');
         Route::apiResource('teams.projects', 'TeamProjectController')
             ->only('index', 'store');
-        Route::apiResource('teams.users', 'TeamUserController');
+        Route::apiResource('teams.languages', 'TeamLanguageController')
+            ->only('store');
+        Route::apiResource('teams.forms', 'TeamFormController')
+            ->only('store');
+
         Route::apiResource('projects', 'ProjectController')
             ->only('show', 'update', 'destroy');
         Route::apiResource('projects.users', 'ProjectUserController')
             ->only('store', 'destroy');
         Route::apiResource('projects.languages', 'ProjectLanguageController')
             ->only('store', 'destroy');
+
         Route::apiResource('languages', 'LanguageController')
             ->only('show', 'update', 'destroy');
         Route::apiResource('languages.forms', 'LanguageFormController')
             ->only('store', 'destroy');
+
         Route::apiResource('forms', 'FormController')
             ->only('show', 'update', 'destroy');
         Route::apiResource('keys', 'KeyController');

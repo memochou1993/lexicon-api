@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeamLanguageStoreRequest;
-use App\Http\Requests\TeamLanguageIndexRequest;
 use App\Http\Resources\LanguageResource as Resource;
 use App\Models\Team;
 use App\Services\TeamService;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TeamLanguageController extends Controller
 {
@@ -26,24 +24,6 @@ class TeamLanguageController extends Controller
         TeamService $teamService
     ) {
         $this->teamService = $teamService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  TeamLanguageIndexRequest  $request
-     * @param  Team  $team
-     * @return AnonymousResourceCollection
-     */
-    public function index(TeamLanguageIndexRequest $request, Team $team)
-    {
-        $language = $this->teamService->getLanguages(
-            $team,
-            $request->relations,
-            $request->per_page,
-        );
-
-        return Resource::collection($language);
     }
 
     /**

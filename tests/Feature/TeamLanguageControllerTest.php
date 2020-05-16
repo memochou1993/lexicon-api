@@ -33,30 +33,6 @@ class TeamLanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testIndex()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
-
-        $this->json('GET', 'api/teams/1/languages', [
-            'relations' => 'forms',
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data' => [
-                    [
-                        'forms',
-                    ],
-                ],
-            ])
-            ->assertJson([
-                'data' => $team->languages->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

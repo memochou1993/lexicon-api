@@ -33,26 +33,6 @@ class TeamFormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testIndex()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
-
-        $this->json('GET', 'api/teams/1/forms', [
-            'relations' => '',
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data',
-            ])
-            ->assertJson([
-                'data' => $team->forms->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
