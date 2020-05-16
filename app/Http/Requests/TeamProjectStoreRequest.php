@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProjectStoreRequest extends FormRequest
+class TeamProjectStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,13 +28,8 @@ class ProjectStoreRequest extends FormRequest
             'name' => [
                 'required',
                 Rule::unique('projects', 'name')->where(function ($query) {
-                    $query->where('team_id', $this->team_id);
+                    $query->where('team_id', $this->route('team')->id);
                 }),
-            ],
-            'team_id' => [
-                'numeric',
-                'required',
-                Rule::exists('teams', 'id'),
             ],
         ];
     }

@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProjectIndexRequest;
 use App\Http\Requests\ProjectShowRequest;
-use App\Http\Requests\ProjectStoreRequest;
 use App\Http\Requests\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource as Resource;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
 {
@@ -30,39 +27,6 @@ class ProjectController extends Controller
         ProjectService $projectService
     ) {
         $this->projectService = $projectService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  ProjectIndexRequest  $request
-     * @return AnonymousResourceCollection
-     */
-    public function index(ProjectIndexRequest $request)
-    {
-        $projects = $this->projectService->getByTeam(
-            $request->team_id,
-            $request->relations,
-            $request->per_page
-        );
-
-        return Resource::collection($projects);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  ProjectStoreRequest  $request
-     * @return Resource
-     */
-    public function store(ProjectStoreRequest $request)
-    {
-        $project = $this->projectService->storeByTeam(
-            $request->team_id,
-            $request->all()
-        );
-
-        return new Resource($project);
     }
 
     /**

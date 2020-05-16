@@ -3,17 +3,10 @@
 namespace App\Services;
 
 use App\Models\Project;
-use App\Models\Team;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectService
 {
-    /**
-     * @var Team
-     */
-    private Team $team;
-
     /**
      * @var Project
      */
@@ -22,36 +15,12 @@ class ProjectService
     /**
      * Instantiate a new service instance.
      *
-     * @param  Team  $team
      * @param  Project  $project
      */
     public function __construct(
-        Team $team,
         Project $project
     ) {
-        $this->team = $team;
         $this->project = $project;
-    }
-
-    /**
-     * @param  int  $team_id
-     * @param  array  $relations
-     * @param  int  $per_page
-     * @return LengthAwarePaginator
-     */
-    public function getByTeam(int $team_id, array $relations, int $per_page): LengthAwarePaginator
-    {
-        return $this->team->find($team_id)->projects()->with($relations)->paginate($per_page);
-    }
-
-    /**
-     * @param  int  $teamId
-     * @param  array  $data
-     * @return Model
-     */
-    public function storeByTeam(int $teamId, array $data): Model
-    {
-        return $this->team->find($teamId)->projects()->create($data);
     }
 
     /**

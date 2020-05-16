@@ -89,6 +89,27 @@ class TeamService
 
     /**
      * @param  Team  $team
+     * @param  array  $relations
+     * @param  int  $per_page
+     * @return LengthAwarePaginator
+     */
+    public function getProjects(Team $team, array $relations, int $per_page): LengthAwarePaginator
+    {
+        return $team->projects()->with($relations)->paginate($per_page);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  array  $data
+     * @return Model
+     */
+    public function storeProject(Team $team, array $data): Model
+    {
+        return $team->projects()->create($data);
+    }
+
+    /**
+     * @param  Team  $team
      * @param  array  $user_ids
      * @param  bool  $sync
      */
