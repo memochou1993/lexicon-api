@@ -66,4 +66,25 @@ class UserService
     {
         return $this->user->destroy($user->id);
     }
+
+    /**
+     * @param  User  $user
+     * @param  array  $relations
+     * @param  int  $per_page
+     * @return LengthAwarePaginator
+     */
+    public function getTeams(User $user, array $relations, int $per_page): LengthAwarePaginator
+    {
+        return $user->teams()->with($relations)->paginate($per_page);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  array  $data
+     * @return Model
+     */
+    public function storeTeam(User $user, array $data): Model
+    {
+        return $user->teams()->create($data);
+    }
 }

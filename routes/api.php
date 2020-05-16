@@ -24,8 +24,14 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::namespace('User')->prefix('user')->group(function () {
+            Route::apiResource('teams', 'TeamController')
+                ->only('index', 'store');
+        });
+
         Route::apiResource('users', 'UserController');
-        Route::apiResource('teams', 'TeamController');
+        Route::apiResource('teams', 'TeamController')
+            ->only('show', 'update', 'destroy');
         Route::apiResource('teams.languages', 'TeamLanguageController')
             ->only('index', 'store');
         Route::apiResource('teams.forms', 'TeamFormController')

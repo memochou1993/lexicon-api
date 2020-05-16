@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TeamIndexRequest;
 use App\Http\Requests\TeamShowRequest;
-use App\Http\Requests\TeamStoreRequest;
 use App\Http\Requests\TeamUpdateRequest;
 use App\Http\Resources\TeamResource as Resource;
 use App\Models\Team;
 use App\Services\TeamService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TeamController extends Controller
 {
@@ -30,42 +26,9 @@ class TeamController extends Controller
     public function __construct(
         TeamService $teamService
     ) {
-        $this->authorizeResource(Team::class, 'team');
+        $this->authorizeResource(Team::class);
 
         $this->teamService = $teamService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  TeamIndexRequest  $request
-     * @return AnonymousResourceCollection
-     */
-    public function index(TeamIndexRequest $request)
-    {
-        $teams = $this->teamService->getByUser(
-            Auth::guard()->user()->id,
-            $request->relations,
-            $request->per_page
-        );
-
-        return Resource::collection($teams);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  TeamStoreRequest  $request
-     * @return Resource
-     */
-    public function store(TeamStoreRequest $request)
-    {
-        $team = $this->teamService->storeByUser(
-            Auth::guard()->user()->id,
-            $request->all()
-        );
-
-        return new Resource($team);
     }
 
     /**
