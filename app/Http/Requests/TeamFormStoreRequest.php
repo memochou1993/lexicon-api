@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FormStoreRequest extends FormRequest
+class TeamFormStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,14 +30,9 @@ class FormStoreRequest extends FormRequest
                 Rule::unique('forms', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
-                        Team::findOrNew($this->team_id)->forms()->pluck('id')->toArray()
+                        $this->route('team')->forms()->pluck('id')->toArray()
                     );
                 }),
-            ],
-            'team_id' => [
-                'numeric',
-                'required',
-                Rule::exists('teams', 'id'),
             ],
         ];
     }

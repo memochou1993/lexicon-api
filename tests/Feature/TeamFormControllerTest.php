@@ -5,13 +5,13 @@ namespace Tests\Feature;
 use App\Models\Form;
 use App\Models\Team;
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class FormControllerTest extends TestCase
+class TeamFormControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -33,12 +33,12 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testShow()
+    public function testIndex()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('GET', 'api/forms/1', [
+        $this->json('GET', 'api/teams/1/forms', [
             'relations' => '',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -46,79 +46,54 @@ class FormControllerTest extends TestCase
                 'data',
             ])
             ->assertJson([
-                'data' => $form->toArray(),
+                'data' => $team->forms->toArray(),
             ]);
     }
 
     /**
      * @return void
      */
-    public function testUpdate()
+    public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
 
-        $form = factory(Form::class)
-            ->make([
-                'name' => 'New Form',
-            ])
-            ->toArray();
+        $form = factory(Form::class)->make()->toArray();
 
-        $this->json('PATCH', 'api/forms/1', $form)
-            ->assertStatus(Response::HTTP_OK)
+        $this->json('POST', 'api/teams/1/forms', $form)
+            ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'data' => $form,
             ]);
 
         $this->assertDatabaseHas('forms', $form);
+
+        $this->assertCount(1, $team->forms);
     }
 
     /**
      * @return void
      */
-    public function testUpdateDuplicate()
+    public function testStoreDuplicate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->forms()->saveMany(factory(Form::class, 2)->make());
+        $team->forms()->save(factory(Form::class)->make([
+            'name' => 'Unique Form',
+        ]));
 
         $form = factory(Form::class)
             ->make([
-                'name' => 'New Form 1',
+                'name' => 'Unique Form',
             ])
             ->toArray();
 
-        $this->json('PATCH', 'api/forms/1', $form)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $form,
-            ]);
-
-        $form = factory(Form::class)
-            ->make([
-                'name' => 'Form 2',
-            ])
-            ->toArray();
-
-        $this->json('PATCH', 'api/forms/1', $form)
+        $this->json('POST', 'api/teams/1/forms', $form)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
                     'name',
                 ],
             ]);
-    }
 
-    /**
-     * @return void
-     */
-    public function testDestroy()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
-
-        $this->json('DELETE', 'api/forms/1')
-            ->assertStatus(Response::HTTP_NO_CONTENT);
-
-        $this->assertDeleted($form);
+        $this->assertCount(1, $team->forms);
     }
 }

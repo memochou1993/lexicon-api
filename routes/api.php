@@ -28,6 +28,8 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('teams', 'TeamController');
         Route::apiResource('teams.languages', 'TeamLanguageController')
             ->only('index', 'store');
+        Route::apiResource('teams.forms', 'TeamFormController')
+            ->only('index', 'store');
         Route::apiResource('teams.projects', 'TeamProjectController')
             ->only('index', 'store');
         Route::apiResource('teams.users', 'TeamUserController');
@@ -41,7 +43,8 @@ Route::namespace('Api')->group(function () {
             ->only('show', 'update', 'destroy');
         Route::apiResource('languages.forms', 'LanguageFormController')
             ->only('store', 'destroy');
-        Route::apiResource('forms', 'FormController');
+        Route::apiResource('forms', 'FormController')
+            ->only('show', 'update', 'destroy');
         Route::apiResource('keys', 'KeyController');
         Route::apiResource('values', 'ValueController');
     });
