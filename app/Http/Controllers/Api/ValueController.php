@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ValueIndexRequest;
 use App\Http\Requests\ValueShowRequest;
-use App\Http\Requests\ValueStoreRequest;
 use App\Http\Requests\ValueUpdateRequest;
 use App\Http\Resources\ValueResource as Resource;
 use App\Models\Value;
 use App\Services\ValueService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ValueController extends Controller
@@ -30,41 +27,6 @@ class ValueController extends Controller
         ValueService $valueService
     ) {
         $this->valueService = $valueService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  ValueIndexRequest  $request
-     * @return AnonymousResourceCollection
-     */
-    public function index(ValueIndexRequest $request)
-    {
-        $values = $this->valueService->getByKey(
-            $request->key_id,
-            $request->relations,
-            $request->per_page
-        );
-
-        return Resource::collection($values);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  ValueStoreRequest  $request
-     * @return Resource
-     */
-    public function store(ValueStoreRequest $request)
-    {
-        $value = $this->valueService->storeByKey(
-            $request->key_id,
-            $request->language_id,
-            $request->form_id,
-            $request->all()
-        );
-
-        return new Resource($value);
     }
 
     /**

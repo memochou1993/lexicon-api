@@ -37,63 +37,6 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testIndex()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-        $key->values()->save(factory(Value::class)->make());
-
-        $this->json('GET', 'api/values', [
-            'key_id' => $key->id,
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data' => [
-                    [
-                        'language',
-                        'form',
-                    ],
-                ],
-            ])
-            ->assertJson([
-                'data' => $key->values->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testStore()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $language = $team->languages()->save(factory(Language::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-
-        $value = factory(Value::class)
-            ->make([
-                'key_id' => $key->id,
-                'language_id' => $language->id,
-                'form_id' => $form->id,
-            ])
-            ->makeVisible('key_id');
-
-        $this->json('POST', 'api/values', $value->toArray())
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJson([
-                'data' => $value->makeHidden('key_id', 'language_id', 'form_id')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('values', $value->toArray());
-
-        $this->assertCount(1, $key->values);
-    }
-
-    /**
-     * @return void
-     */
     public function testShow()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());

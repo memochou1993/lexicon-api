@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ValueStoreRequest extends FormRequest
+class KeyValueStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,6 @@ class ValueStoreRequest extends FormRequest
         return [
             'text' => [
                 'required',
-            ],
-            'key_id' => [
-                'numeric',
-                'required',
-                Rule::exists('keys', 'id'),
             ],
             'language_id' => [
                 'numeric',
