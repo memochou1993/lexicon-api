@@ -26,6 +26,8 @@ class FormController extends Controller
     public function __construct(
         FormService $formService
     ) {
+        $this->authorizeResource(Form::class);
+
         $this->formService = $formService;
     }
 

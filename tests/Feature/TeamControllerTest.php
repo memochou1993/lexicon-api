@@ -159,7 +159,7 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDestroyForbidden()
+    public function testDeleteForbidden()
     {
         $guest = factory(User::class)->create();
         $guest->teams()->save(factory(Team::class)->make());

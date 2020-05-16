@@ -14,7 +14,7 @@ class TeamLanguageStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->route('team')->hasUser($this->user());
     }
 
     /**

@@ -58,6 +58,19 @@ class TeamProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewAllForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make())->toArray();
+
+        $this->json('GET', 'api/teams/1/projects')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -100,5 +113,18 @@ class TeamProjectControllerTest extends TestCase
             ]);
 
         $this->assertCount(1, $team->projects);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make())->toArray();
+
+        $this->json('POST', 'api/teams/1/projects', $project)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

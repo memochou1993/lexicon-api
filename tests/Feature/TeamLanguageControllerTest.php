@@ -76,4 +76,18 @@ class TeamLanguageControllerTest extends TestCase
 
         $this->assertCount(1, $team->languages);
     }
+
+    /**
+     * @return void
+     */
+    public function testCreateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $guest->teams()->save(factory(Team::class)->make());
+
+        $language = factory(Language::class)->make()->toArray();
+
+        $this->json('POST', 'api/teams/1/languages', $language)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
 }

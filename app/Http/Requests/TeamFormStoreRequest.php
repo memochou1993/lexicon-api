@@ -14,7 +14,7 @@ class TeamFormStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('view', $this->route('team'));
     }
 
     /**
