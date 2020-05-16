@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\KeyIndexRequest;
 use App\Http\Requests\KeyShowRequest;
-use App\Http\Requests\KeyStoreRequest;
 use App\Http\Requests\KeyUpdateRequest;
 use App\Http\Resources\KeyResource as Resource;
 use App\Models\Key;
 use App\Services\KeyService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class KeyController extends Controller
@@ -30,39 +27,6 @@ class KeyController extends Controller
         KeyService $keyService
     ) {
         $this->keyService = $keyService;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  KeyIndexRequest  $request
-     * @return AnonymousResourceCollection
-     */
-    public function index(KeyIndexRequest $request)
-    {
-        $keys = $this->keyService->getByProject(
-            $request->project_id,
-            $request->relations,
-            $request->per_page
-        );
-
-        return Resource::collection($keys);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  KeyStoreRequest  $request
-     * @return Resource
-     */
-    public function store(KeyStoreRequest $request)
-    {
-        $key = $this->keyService->storeByProject(
-            $request->project_id,
-            $request->all()
-        );
-
-        return new Resource($key);
     }
 
     /**

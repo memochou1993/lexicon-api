@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Project;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectService
@@ -54,6 +55,27 @@ class ProjectService
     public function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $relations
+     * @param  int  $per_page
+     * @return LengthAwarePaginator
+     */
+    public function getKeys(Project $project, array $relations, int $per_page): LengthAwarePaginator
+    {
+        return $project->keys()->with($relations)->paginate($per_page);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $data
+     * @return Model
+     */
+    public function storeKey(Project $project, array $data): Model
+    {
+        return $project->keys()->create($data);
     }
 
     /**

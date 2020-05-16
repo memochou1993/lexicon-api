@@ -12,7 +12,7 @@ use Laravel\Sanctum\Sanctum;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class KeyControllerTest extends TestCase
+class ProjectKeyControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -34,84 +34,73 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testShow()
-    {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-
-        $this->json('GET', 'api/keys/1', [
-            'relations' => 'project,values',
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data' => [
-                    'project',
-                    'values',
-                ],
-            ])
-            ->assertJson([
-                'data' => $key->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUpdate()
+    public function testIndex()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'New Key',
-            ])
-            ->toArray();
-
-        $this->json('PATCH', 'api/keys/1', $key)
+        $this->json('GET', 'api/projects/1/keys', [
+            'relations' => 'values',
+        ])
             ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                'data' => [
+                    [
+                        'values',
+                    ],
+                ],
+            ])
             ->assertJson([
-                'data' => $key,
+                'data' => $project->keys->toArray(),
             ]);
-
-        $this->assertDatabaseHas('keys', $key);
     }
 
     /**
      * @return void
      */
-    public function testUpdateDuplicate()
+    public function testStore()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->saveMany(factory(Key::class, 2)->make());
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'New Key 1',
-            ])
-            ->toArray();
+        $key = factory(Key::class)->make()->toArray();
 
-        $this->json('PATCH', 'api/keys/1', $key)
-            ->assertStatus(Response::HTTP_OK)
+        $this->json('POST', 'api/projects/1/keys', $key)
+            ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'data' => $key,
             ]);
 
+        $this->assertDatabaseHas('keys', $key);
+
+        $this->assertCount(1, $project->keys);
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreDuplicate()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->keys()->save(factory(Key::class)->make([
+            'name' => 'Unique Key',
+        ]));
+
         $key = factory(Key::class)
             ->make([
-                'name' => 'Key 2',
-            ])
-            ->toArray();
+                'name' => 'Unique Key',
+            ]);
 
-        $this->json('PATCH', 'api/keys/1', $key)
+        $this->json('POST', 'api/projects/1/keys', $key->toArray())
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
                     'name',
                 ],
             ]);
+
+        $this->assertCount(1, $project->keys);
     }
 }
