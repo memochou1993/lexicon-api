@@ -26,6 +26,8 @@ class LanguageController extends Controller
     public function __construct(
         LanguageService $languageService
     ) {
+        $this->authorizeResource(Language::class);
+
         $this->languageService = $languageService;
     }
 

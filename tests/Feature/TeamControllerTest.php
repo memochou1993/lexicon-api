@@ -58,6 +58,18 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $guest->teams()->save(factory(Team::class)->make());
+
+        $this->json('GET', 'api/teams/1')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $this->user->teams()->save(factory(Team::class)->make());
@@ -108,6 +120,18 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUpdateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $guest->teams()->save(factory(Team::class)->make());
+
+        $this->json('PATCH', 'api/teams/1')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -140,5 +164,17 @@ class TeamControllerTest extends TestCase
             'model_type' => 'team',
             'model_id' => $team->id,
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDestroyForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $guest->teams()->save(factory(Team::class)->make());
+
+        $this->json('DELETE', 'api/teams/1')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

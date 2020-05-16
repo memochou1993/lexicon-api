@@ -7,6 +7,7 @@ use App\Http\Requests\TeamLanguageStoreRequest;
 use App\Http\Resources\LanguageResource as Resource;
 use App\Models\Team;
 use App\Services\TeamService;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class TeamLanguageController extends Controller
 {
@@ -29,12 +30,15 @@ class TeamLanguageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  TeamLanguageStoreRequest  $request
-     * @param  Team  $team
+     * @param TeamLanguageStoreRequest $request
+     * @param Team $team
      * @return Resource
+     * @throws AuthorizationException
      */
     public function store(TeamLanguageStoreRequest $request, Team $team)
     {
+        $this->authorize('view', $team);
+
         $language = $this->teamService->storeLanguage($team, $request->all());
 
         return new Resource($language);
