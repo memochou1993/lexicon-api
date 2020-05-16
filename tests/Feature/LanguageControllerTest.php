@@ -62,11 +62,9 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->languages()->save(factory(Language::class)->make());
 
-        $language = factory(Language::class)
-            ->make([
-                'name' => 'New Language',
-            ])
-            ->toArray();
+        $language = factory(Language::class)->make([
+            'name' => 'New Language',
+        ])->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_OK)
@@ -85,11 +83,9 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->languages()->saveMany(factory(Language::class, 2)->make());
 
-        $language = factory(Language::class)
-            ->make([
-                'name' => 'New Language 1',
-            ])
-            ->toArray();
+        $language = factory(Language::class)->make([
+            'name' => 'New Language 1',
+        ])->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_OK)
@@ -97,11 +93,9 @@ class LanguageControllerTest extends TestCase
                 'data' => $language,
             ]);
 
-        $language = factory(Language::class)
-            ->make([
-                'name' => 'Language 2',
-            ])
-            ->toArray();
+        $language = factory(Language::class)->make([
+            'name' => 'Language 2',
+        ])->toArray();
 
         $this->json('PATCH', 'api/languages/1', $language)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

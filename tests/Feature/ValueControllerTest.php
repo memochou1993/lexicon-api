@@ -67,11 +67,9 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $key->values()->save(factory(Value::class)->make());
 
-        $value = factory(Value::class)
-            ->make([
-                'text' => 'New Value',
-            ])
-            ->toArray();
+        $value = factory(Value::class)->make([
+            'text' => 'New Value',
+        ])->toArray();
 
         $this->json('PATCH', 'api/values/1', $value)
             ->assertStatus(Response::HTTP_OK)

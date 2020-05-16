@@ -62,11 +62,9 @@ class TeamControllerTest extends TestCase
     {
         $this->user->teams()->save(factory(Team::class)->make());
 
-        $team = factory(Team::class)
-            ->make([
-                'name' => 'New Team',
-            ])
-            ->toArray();
+        $team = factory(Team::class)->make([
+            'name' => 'New Team',
+        ])->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_OK)
@@ -84,11 +82,9 @@ class TeamControllerTest extends TestCase
     {
         $this->user->teams()->saveMany(factory(Team::class, 2)->make());
 
-        $team = factory(Team::class)
-            ->make([
-                'name' => 'New Team 1',
-            ])
-            ->toArray();
+        $team = factory(Team::class)->make([
+            'name' => 'New Team 1',
+        ])->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_OK)
@@ -96,11 +92,9 @@ class TeamControllerTest extends TestCase
                 'data' => $team,
             ]);
 
-        $team = factory(Team::class)
-            ->make([
-                'name' => 'Team 2',
-            ])
-            ->toArray();
+        $team = factory(Team::class)->make([
+            'name' => 'Team 2',
+        ])->toArray();
 
         $this->json('PATCH', 'api/teams/1', $team)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

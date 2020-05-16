@@ -64,11 +64,9 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'New Key',
-            ])
-            ->toArray();
+        $key = factory(Key::class)->make([
+            'name' => 'New Key',
+        ])->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_OK)
@@ -88,11 +86,9 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->saveMany(factory(Key::class, 2)->make());
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'New Key 1',
-            ])
-            ->toArray();
+        $key = factory(Key::class)->make([
+            'name' => 'New Key 1',
+        ])->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_OK)
@@ -100,11 +96,9 @@ class KeyControllerTest extends TestCase
                 'data' => $key,
             ]);
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'Key 2',
-            ])
-            ->toArray();
+        $key = factory(Key::class)->make([
+            'name' => 'Key 2',
+        ])->toArray();
 
         $this->json('PATCH', 'api/keys/1', $key)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
