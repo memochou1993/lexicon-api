@@ -29,6 +29,8 @@ class TeamUserController extends Controller
     }
 
     /**
+     * Assign the given user to the team.
+     *
      * @param  TeamUserStoreRequest  $request
      * @param  Team  $team
      * @return JsonResponse
@@ -45,6 +47,8 @@ class TeamUserController extends Controller
     }
 
     /**
+     * Revoke the given user from the team.
+     *
      * @param  Team  $team
      * @param  User  $user
      * @return JsonResponse

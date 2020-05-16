@@ -29,6 +29,8 @@ class ProjectLanguageController extends Controller
     }
 
     /**
+     * Assign the given form to the language.
+     *
      * @param  ProjectLanguageStoreRequest  $request
      * @param  Project  $project
      * @return JsonResponse
@@ -45,6 +47,8 @@ class ProjectLanguageController extends Controller
     }
 
     /**
+     * Revoke the given language from the project.
+     *
      * @param  Project  $project
      * @param  Language  $language
      * @return JsonResponse

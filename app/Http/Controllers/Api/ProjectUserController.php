@@ -29,6 +29,8 @@ class ProjectUserController extends Controller
     }
 
     /**
+     * Assign the given user to the project.
+     *
      * @param  ProjectUserStoreRequest  $request
      * @param  Project  $project
      * @return JsonResponse
@@ -45,6 +47,8 @@ class ProjectUserController extends Controller
     }
 
     /**
+     * Revoke the given user from the project.
+     *
      * @param  Project  $project
      * @param  User  $user
      * @return JsonResponse

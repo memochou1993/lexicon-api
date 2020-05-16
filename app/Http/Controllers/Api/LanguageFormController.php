@@ -29,6 +29,8 @@ class LanguageFormController extends Controller
     }
 
     /**
+     * Assign the given form to the language.
+     *
      * @param  LanguageFormStoreRequest  $request
      * @param  Language  $language
      * @return JsonResponse
@@ -45,6 +47,8 @@ class LanguageFormController extends Controller
     }
 
     /**
+     * Revoke the given form from the language.
+     *
      * @param  Language  $language
      * @param  Form  $form
      * @return JsonResponse
