@@ -30,6 +30,8 @@ class TeamController extends Controller
     public function __construct(
         TeamService $teamService
     ) {
+        $this->authorizeResource(Team::class, 'team');
+
         $this->teamService = $teamService;
     }
 

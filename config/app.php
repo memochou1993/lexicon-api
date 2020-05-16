@@ -177,6 +177,7 @@ return [
         App\Providers\RelationServiceProvider::class,
         App\Providers\MixinServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
+        App\Providers\GateServiceProvider::class,
 
     ],
 

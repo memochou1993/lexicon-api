@@ -16,4 +16,15 @@ trait HasUsers
     {
         return $this->morphToMany(User::class, 'model', 'model_has_users');
     }
+
+    /**
+     * Determine if the model has the given user.
+     *
+     * @param  User  $user
+     * @return bool
+     */
+    public function hasUser(User $user): bool
+    {
+        return $this->users->contains($user);
+    }
 }
