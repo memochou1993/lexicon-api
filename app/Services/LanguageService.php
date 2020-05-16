@@ -3,17 +3,10 @@
 namespace App\Services;
 
 use App\Models\Language;
-use App\Models\Team;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class LanguageService
 {
-    /**
-     * @var Team
-     */
-    private Team $team;
-
     /**
      * @var Language
      */
@@ -22,36 +15,12 @@ class LanguageService
     /**
      * Instantiate a new service instance.
      *
-     * @param  Team  $team
      * @param  Language  $language
      */
     public function __construct(
-        Team $team,
         Language $language
     ) {
-        $this->team = $team;
         $this->language = $language;
-    }
-
-    /**
-     * @param  int  $team_id
-     * @param  array  $relations
-     * @param  int  $per_page
-     * @return LengthAwarePaginator
-     */
-    public function getByTeam(int $team_id, array $relations, int $per_page): LengthAwarePaginator
-    {
-        return $this->team->find($team_id)->languages()->with($relations)->paginate($per_page);
-    }
-
-    /**
-     * @param  int  $team_id
-     * @param  array  $data
-     * @return Model
-     */
-    public function storeByTeam(int $team_id, array $data): Model
-    {
-        return $this->team->find($team_id)->languages()->create($data);
     }
 
     /**

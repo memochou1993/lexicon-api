@@ -26,6 +26,8 @@ Route::namespace('Api')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('users', 'UserController');
         Route::apiResource('teams', 'TeamController');
+        Route::apiResource('teams.languages', 'TeamLanguageController')
+            ->only('index', 'store');
         Route::apiResource('teams.projects', 'TeamProjectController')
             ->only('index', 'store');
         Route::apiResource('teams.users', 'TeamUserController');
@@ -35,7 +37,8 @@ Route::namespace('Api')->group(function () {
             ->only('store', 'destroy');
         Route::apiResource('projects.languages', 'ProjectLanguageController')
             ->only('store', 'destroy');
-        Route::apiResource('languages', 'LanguageController');
+        Route::apiResource('languages', 'LanguageController')
+            ->only('show', 'update', 'destroy');
         Route::apiResource('languages.forms', 'LanguageFormController')
             ->only('store', 'destroy');
         Route::apiResource('forms', 'FormController');

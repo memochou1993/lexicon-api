@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class LanguageIndexRequest extends FormRequest
+class TeamLanguageIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +25,6 @@ class LanguageIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'team_id' => [
-                'numeric',
-                'required',
-                Rule::exists('teams', 'id'),
-            ],
             'per_page' => [
                 'between:1,100',
                 'numeric',
