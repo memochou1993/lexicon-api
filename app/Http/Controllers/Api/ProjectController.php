@@ -26,6 +26,8 @@ class ProjectController extends Controller
     public function __construct(
         ProjectService $projectService
     ) {
+        $this->authorizeResource(Project::class);
+
         $this->projectService = $projectService;
     }
 
