@@ -29,9 +29,9 @@ class LanguageUpdateRequest extends FormRequest
                 Rule::unique('languages', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
-                        $this->language->teams()->first()->languages()->pluck('id')->toArray()
+                        $this->route('language')->teams()->first()->languages()->pluck('id')->toArray()
                     );
-                })->ignore($this->language->id),
+                })->ignore($this->route('language')->id),
             ],
         ];
     }

@@ -29,9 +29,9 @@ class FormUpdateRequest extends FormRequest
                 Rule::unique('forms', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
-                        $this->form->teams()->first()->forms()->pluck('id')->toArray()
+                        $this->route('form')->teams()->first()->forms()->pluck('id')->toArray()
                     );
-                })->ignore($this->form->id),
+                })->ignore($this->route('form')->id),
             ],
         ];
     }
