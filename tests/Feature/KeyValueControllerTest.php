@@ -45,13 +45,12 @@ class KeyValueControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
-        $value = factory(Value::class)
-            ->make([
-                'language_id' => $language->id,
-                'form_id' => $form->id,
-            ]);
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
 
-        $this->json('POST', 'api/keys/1/values', $value->toArray())
+        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'data' => $value->makeHidden('language_id', 'form_id')->toArray(),

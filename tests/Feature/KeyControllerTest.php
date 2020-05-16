@@ -40,7 +40,7 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
-        $this->json('GET', 'api/keys/1', [
+        $this->json('GET', 'api/keys/'.$key->id, [
             'relations' => 'project,values',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -62,19 +62,19 @@ class KeyControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $key = factory(Key::class)->make([
+        $data = factory(Key::class)->make([
             'name' => 'New Key',
         ])->toArray();
 
-        $this->json('PATCH', 'api/keys/1', $key)
+        $this->json('PATCH', 'api/keys/'.$key->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $key,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('keys', $key);
+        $this->assertDatabaseHas('keys', $data);
     }
 
     /**
@@ -86,11 +86,11 @@ class KeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $keys = $project->keys()->saveMany(factory(Key::class, 2)->make());
 
-        $key = factory(Key::class)->make([
+        $data = factory(Key::class)->make([
             'name' => $keys->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/keys/1', $key)
+        $this->json('PATCH', 'api/keys/'.$keys->first()->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [

@@ -37,15 +37,15 @@ class TeamLanguageControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $language = factory(Language::class)->make()->toArray();
+        $data = factory(Language::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/1/languages', $language)
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $language,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('languages', $language);
+        $this->assertDatabaseHas('languages', $data);
 
         $this->assertCount(1, $team->languages);
     }
@@ -60,13 +60,11 @@ class TeamLanguageControllerTest extends TestCase
             'name' => 'Unique Language',
         ]));
 
-        $language = factory(Language::class)
-            ->make([
-                'name' => 'Unique Language',
-            ])
-            ->toArray();
+        $data = factory(Language::class)->make([
+            'name' => 'Unique Language',
+        ])->toArray();
 
-        $this->json('POST', 'api/teams/1/languages', $language)
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -83,11 +81,11 @@ class TeamLanguageControllerTest extends TestCase
     public function testCreateForbidden()
     {
         $guest = factory(User::class)->create();
-        $guest->teams()->save(factory(Team::class)->make());
+        $team = $guest->teams()->save(factory(Team::class)->make());
 
         $language = factory(Language::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/1/languages', $language)
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $language)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

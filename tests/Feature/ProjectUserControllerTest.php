@@ -33,7 +33,7 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStore()
+    public function testAttach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -41,7 +41,7 @@ class ProjectUserControllerTest extends TestCase
 
         $this->assertCount(1, $project->users);
 
-        $this->json('POST', 'api/projects/1/users', [
+        $this->json('POST', 'api/projects/'.$project->id.'/users', [
             'user_ids' => $user->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -52,7 +52,7 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStoreSync()
+    public function testSync()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -60,7 +60,7 @@ class ProjectUserControllerTest extends TestCase
 
         $this->assertCount(2, $project->users);
 
-        $this->json('POST', 'api/projects/1/users', [
+        $this->json('POST', 'api/projects/'.$project->id.'/users', [
             'user_ids' => $this->user->id,
             'sync' => true,
         ])
@@ -72,15 +72,15 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDestroy()
+    public function testDetach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->users()->save(factory(User::class)->make());
+        $user = $project->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $project->users);
 
-        $this->json('DELETE', 'api/projects/1/users/2')
+        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(1, $project->refresh()->users);

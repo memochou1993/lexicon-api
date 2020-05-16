@@ -38,7 +38,7 @@ class TeamControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $this->json('GET', 'api/teams/1', [
+        $this->json('GET', 'api/teams/'.$team->id, [
             'relations' => 'users,projects,languages,forms',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -61,9 +61,9 @@ class TeamControllerTest extends TestCase
     public function testViewForbidden()
     {
         $guest = factory(User::class)->create();
-        $guest->teams()->save(factory(Team::class)->make());
+        $team = $guest->teams()->save(factory(Team::class)->make());
 
-        $this->json('GET', 'api/teams/1')
+        $this->json('GET', 'api/teams/'.$team->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -72,19 +72,19 @@ class TeamControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $this->user->teams()->save(factory(Team::class)->make());
+        $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $team = factory(Team::class)->make([
+        $data = factory(Team::class)->make([
             'name' => 'New Team',
         ])->toArray();
 
-        $this->json('PATCH', 'api/teams/1', $team)
+        $this->json('PATCH', 'api/teams/'.$team->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $team,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('teams', $team);
+        $this->assertDatabaseHas('teams', $data);
     }
 
     /**
@@ -94,11 +94,11 @@ class TeamControllerTest extends TestCase
     {
         $teams = $this->user->teams()->saveMany(factory(Team::class, 2)->make());
 
-        $team = factory(Team::class)->make([
+        $data = factory(Team::class)->make([
             'name' => $teams->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/teams/1', $team)
+        $this->json('PATCH', 'api/teams/'.$teams->first()->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -113,9 +113,9 @@ class TeamControllerTest extends TestCase
     public function testUpdateForbidden()
     {
         $guest = factory(User::class)->create();
-        $guest->teams()->save(factory(Team::class)->make());
+        $team = $guest->teams()->save(factory(Team::class)->make());
 
-        $this->json('PATCH', 'api/teams/1')
+        $this->json('PATCH', 'api/teams/'.$team->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -132,7 +132,7 @@ class TeamControllerTest extends TestCase
         $this->assertCount(1, $team->languages);
         $this->assertCount(1, $team->forms);
 
-        $this->json('DELETE', 'api/teams/1')
+        $this->json('DELETE', 'api/teams/'.$team->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($team);
@@ -162,9 +162,9 @@ class TeamControllerTest extends TestCase
     public function testDeleteForbidden()
     {
         $guest = factory(User::class)->create();
-        $guest->teams()->save(factory(Team::class)->make());
+        $team = $guest->teams()->save(factory(Team::class)->make());
 
-        $this->json('DELETE', 'api/teams/1')
+        $this->json('DELETE', 'api/teams/'.$team->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

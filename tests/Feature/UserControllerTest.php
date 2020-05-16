@@ -55,7 +55,7 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        $this->json('GET', 'api/users/1', [
+        $this->json('GET', 'api/users/'.$this->user->id, [
             'relations' => 'teams,projects',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -75,14 +75,14 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = factory(User::class)->make([
+        $data = factory(User::class)->make([
             'name' => 'New User',
         ])->toArray();
 
-        $this->json('PATCH', 'api/users/1', $user)
+        $this->json('PATCH', 'api/users/'.$this->user->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $user,
+                'data' => $data,
             ]);
     }
 
@@ -93,11 +93,11 @@ class UserControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $user = factory(User::class)->make([
+        $data = factory(User::class)->make([
             'email' => $user->email,
         ])->toArray();
 
-        $this->json('PATCH', 'api/users/1', $user)
+        $this->json('PATCH', 'api/users/'.$this->user->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -111,7 +111,7 @@ class UserControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $this->json('DELETE', 'api/users/1')
+        $this->json('DELETE', 'api/users/'.$this->user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($this->user);

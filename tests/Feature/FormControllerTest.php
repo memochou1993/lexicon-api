@@ -38,7 +38,7 @@ class FormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('GET', 'api/forms/1', [
+        $this->json('GET', 'api/forms/'.$form->id, [
             'relations' => '',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -57,9 +57,9 @@ class FormControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('GET', 'api/forms/1')
+        $this->json('GET', 'api/forms/'.$form->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -69,19 +69,19 @@ class FormControllerTest extends TestCase
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
 
-        $form = factory(Form::class)->make([
+        $data = factory(Form::class)->make([
             'name' => 'New Form',
         ])->toArray();
 
-        $this->json('PATCH', 'api/forms/1', $form)
+        $this->json('PATCH', 'api/forms/'.$form->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $form,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('forms', $form);
+        $this->assertDatabaseHas('forms', $data);
     }
 
     /**
@@ -92,11 +92,11 @@ class FormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
 
-        $form = factory(Form::class)->make([
+        $data = factory(Form::class)->make([
             'name' => $forms->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/forms/1', $form)
+        $this->json('PATCH', 'api/forms/'.$forms->first()->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -112,9 +112,9 @@ class FormControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('PATCH', 'api/forms/1')
+        $this->json('PATCH', 'api/forms/'.$form->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -126,7 +126,7 @@ class FormControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/forms/1')
+        $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($form);
@@ -139,9 +139,9 @@ class FormControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/forms/1')
+        $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

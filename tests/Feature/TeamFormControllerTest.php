@@ -37,15 +37,15 @@ class TeamFormControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $form = factory(Form::class)->make()->toArray();
+        $data = factory(Form::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/1/forms', $form)
+        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $form,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('forms', $form);
+        $this->assertDatabaseHas('forms', $data);
 
         $this->assertCount(1, $team->forms);
     }
@@ -60,13 +60,11 @@ class TeamFormControllerTest extends TestCase
             'name' => 'Unique Form',
         ]));
 
-        $form = factory(Form::class)
-            ->make([
-                'name' => 'Unique Form',
-            ])
-            ->toArray();
+        $data = factory(Form::class)->make([
+            'name' => 'Unique Form',
+        ])->toArray();
 
-        $this->json('POST', 'api/teams/1/forms', $form)
+        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -83,11 +81,11 @@ class TeamFormControllerTest extends TestCase
     public function testCreateForbidden()
     {
         $guest = factory(User::class)->create();
-        $guest->teams()->save(factory(Team::class)->make());
+        $team = $guest->teams()->save(factory(Team::class)->make());
 
         $form = factory(Form::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/1/forms', $form)
+        $this->json('POST', 'api/teams/'.$team->id.'/forms', $form)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

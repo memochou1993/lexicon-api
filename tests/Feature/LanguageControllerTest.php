@@ -40,7 +40,7 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('GET', 'api/languages/1', [
+        $this->json('GET', 'api/languages/'.$language->id, [
             'relations' => 'forms',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -61,9 +61,9 @@ class LanguageControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('GET', 'api/languages/1')
+        $this->json('GET', 'api/languages/'.$language->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -73,19 +73,19 @@ class LanguageControllerTest extends TestCase
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $language = factory(Language::class)->make([
+        $data = factory(Language::class)->make([
             'name' => 'New Language',
         ])->toArray();
 
-        $this->json('PATCH', 'api/languages/1', $language)
+        $this->json('PATCH', 'api/languages/'.$language->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $language,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('languages', $language);
+        $this->assertDatabaseHas('languages', $data);
     }
 
     /**
@@ -96,11 +96,11 @@ class LanguageControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
 
-        $language = factory(Language::class)->make([
+        $data = factory(Language::class)->make([
             'name' => $languages->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/languages/1', $language)
+        $this->json('PATCH', 'api/languages/'.$languages->first()->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -116,9 +116,9 @@ class LanguageControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('PATCH', 'api/languages/1')
+        $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -131,7 +131,7 @@ class LanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/languages/1')
+        $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($language);
@@ -150,9 +150,9 @@ class LanguageControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('DELETE', 'api/languages/1')
+        $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

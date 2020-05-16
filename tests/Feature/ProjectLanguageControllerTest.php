@@ -34,7 +34,7 @@ class ProjectLanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStore()
+    public function testAttach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -42,7 +42,7 @@ class ProjectLanguageControllerTest extends TestCase
 
         $this->assertCount(0, $project->languages);
 
-        $this->json('POST', 'api/projects/1/languages', [
+        $this->json('POST', 'api/projects/'.$project->id.'/languages', [
             'language_ids' => $language->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -53,7 +53,7 @@ class ProjectLanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStoreSync()
+    public function testSync()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -61,7 +61,7 @@ class ProjectLanguageControllerTest extends TestCase
 
         $this->assertCount(2, $project->languages);
 
-        $this->json('POST', 'api/projects/1/languages', [
+        $this->json('POST', 'api/projects/'.$project->id.'/languages', [
             'language_ids' => $language->pluck('id')->first(),
             'sync' => true,
         ])
@@ -73,15 +73,15 @@ class ProjectLanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDestroy()
+    public function testDetach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->languages()->save(factory(Language::class)->make());
+        $language = $project->languages()->save(factory(Language::class)->make());
 
         $this->assertCount(1, $project->languages);
 
-        $this->json('DELETE', 'api/projects/1/languages/1')
+        $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(0, $project->refresh()->languages);

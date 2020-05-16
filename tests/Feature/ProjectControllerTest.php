@@ -39,7 +39,7 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/projects/1', [
+        $this->json('GET', 'api/projects/'.$project->id, [
             'relations' => 'users,team,languages',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -61,19 +61,19 @@ class ProjectControllerTest extends TestCase
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
 
-        $project = factory(Project::class)->make([
+        $data = factory(Project::class)->make([
             'name' => 'New Project',
         ])->toArray();
 
-        $this->json('PATCH', 'api/projects/1', $project)
+        $this->json('PATCH', 'api/projects/'.$project->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $project,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('projects', $project);
+        $this->assertDatabaseHas('projects', $data);
     }
 
     /**
@@ -84,11 +84,11 @@ class ProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
 
-        $project = factory(Project::class)->make([
+        $data = factory(Project::class)->make([
             'name' => $projects->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/projects/1', $project)
+        $this->json('PATCH', 'api/projects/'.$projects->first()->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -109,7 +109,7 @@ class ProjectControllerTest extends TestCase
         $this->assertCount(1, $project->users);
         $this->assertCount(1, $project->languages);
 
-        $this->json('DELETE', 'api/projects/1')
+        $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($project);

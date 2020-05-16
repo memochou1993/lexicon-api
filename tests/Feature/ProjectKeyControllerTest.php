@@ -40,7 +40,7 @@ class ProjectKeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $this->json('GET', 'api/projects/1/keys', [
+        $this->json('GET', 'api/projects/'.$project->id.'/keys', [
             'relations' => 'values',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -64,15 +64,15 @@ class ProjectKeyControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $key = factory(Key::class)->make()->toArray();
+        $data = factory(Key::class)->make()->toArray();
 
-        $this->json('POST', 'api/projects/1/keys', $key)
+        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $key,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('keys', $key);
+        $this->assertDatabaseHas('keys', $data);
 
         $this->assertCount(1, $project->keys);
     }
@@ -88,12 +88,11 @@ class ProjectKeyControllerTest extends TestCase
             'name' => 'Unique Key',
         ]));
 
-        $key = factory(Key::class)
-            ->make([
-                'name' => 'Unique Key',
-            ]);
+        $data = factory(Key::class)->make([
+            'name' => 'Unique Key',
+        ])->toArray();
 
-        $this->json('POST', 'api/projects/1/keys', $key->toArray())
+        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [

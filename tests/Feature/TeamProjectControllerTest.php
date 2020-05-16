@@ -38,7 +38,7 @@ class TeamProjectControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/teams/1/projects', [
+        $this->json('GET', 'api/teams/'.$team->id.'/projects', [
             'relations' => 'users,languages',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -64,7 +64,7 @@ class TeamProjectControllerTest extends TestCase
         $team = $guest->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make())->toArray();
 
-        $this->json('GET', 'api/teams/1/projects')
+        $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -75,15 +75,15 @@ class TeamProjectControllerTest extends TestCase
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
 
-        $project = factory(Project::class)->make()->toArray();
+        $data = factory(Project::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/1/projects', $project)
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $project,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('projects', $project);
+        $this->assertDatabaseHas('projects', $data);
 
         $this->assertCount(1, $team->projects);
     }
@@ -98,13 +98,11 @@ class TeamProjectControllerTest extends TestCase
             'name' => 'Unique Project',
         ]));
 
-        $project = factory(Project::class)
-            ->make([
-                'name' => 'Unique Project',
-            ])
-            ->toArray();
+        $data = factory(Project::class)->make([
+            'name' => 'Unique Project',
+        ])->toArray();
 
-        $this->json('POST', 'api/teams/1/projects', $project)
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -124,7 +122,7 @@ class TeamProjectControllerTest extends TestCase
         $team = $guest->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make())->toArray();
 
-        $this->json('POST', 'api/teams/1/projects', $project)
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $project)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

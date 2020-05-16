@@ -32,14 +32,14 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStore()
+    public function testAttach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $user = factory(User::class)->create();
 
         $this->assertCount(1, $team->users);
 
-        $this->json('POST', 'api/teams/1/users', [
+        $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $user->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -50,14 +50,14 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStoreSync()
+    public function testSync()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
-        $this->json('POST', 'api/teams/1/users', [
+        $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $this->user->id,
             'sync' => true,
         ])
@@ -81,14 +81,14 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDestroy()
+    public function testDetach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $team->users()->save(factory(User::class)->make());
+        $user = $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
-        $this->json('DELETE', 'api/teams/1/users/2')
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(1, $team->refresh()->users);

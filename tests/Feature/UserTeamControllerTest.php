@@ -62,17 +62,15 @@ class UserTeamControllerTest extends TestCase
      */
     public function testStore()
     {
-        $team = factory(Team::class)
-            ->make()
-            ->toArray();
+        $data = factory(Team::class)->make()->toArray();
 
-        $this->json('POST', 'api/user/teams', $team)
+        $this->json('POST', 'api/user/teams', $data)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'data' => $team,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('teams', $team);
+        $this->assertDatabaseHas('teams', $data);
 
         $this->assertCount(1, $this->user->teams);
     }
@@ -86,13 +84,11 @@ class UserTeamControllerTest extends TestCase
             'name' => 'Unique Team',
         ]));
 
-        $team = factory(Team::class)
-            ->make([
-                'name' => 'Unique Team',
-            ])
-            ->toArray();
+        $data = factory(Team::class)->make([
+            'name' => 'Unique Team',
+        ])->toArray();
 
-        $this->json('POST', 'api/user/teams', $team)
+        $this->json('POST', 'api/user/teams', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [

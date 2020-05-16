@@ -44,7 +44,7 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/values/1')
+        $this->json('GET', 'api/values/'.$value->id)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 'data' => [
@@ -65,19 +65,19 @@ class ValueControllerTest extends TestCase
         $team = $this->user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
-        $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
 
-        $value = factory(Value::class)->make([
+        $data = factory(Value::class)->make([
             'text' => 'New Value',
         ])->toArray();
 
-        $this->json('PATCH', 'api/values/1', $value)
+        $this->json('PATCH', 'api/values/'.$value->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'data' => $value,
+                'data' => $data,
             ]);
 
-        $this->assertDatabaseHas('values', $value);
+        $this->assertDatabaseHas('values', $data);
 
         $this->assertCount(1, $key->values);
     }
@@ -101,7 +101,7 @@ class ValueControllerTest extends TestCase
         $this->assertCount(1, $value->languages);
         $this->assertCount(1, $value->forms);
 
-        $this->json('DELETE', 'api/values/1')
+        $this->json('DELETE', 'api/values/'.$value->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDeleted($value);

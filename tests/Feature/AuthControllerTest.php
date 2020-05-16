@@ -37,7 +37,7 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testLoginFail()
+    public function testLoginUnauthorized()
     {
         $user = factory(User::class)->make();
 
@@ -114,7 +114,7 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUserFail()
+    public function testUserUnauthorized()
     {
         $response = $this->json('GET', 'api/auth/user');
 
@@ -140,7 +140,7 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testLogoutFail()
+    public function testLogoutUnauthorized()
     {
         $response = $this->json('POST', 'api/auth/logout');
 
