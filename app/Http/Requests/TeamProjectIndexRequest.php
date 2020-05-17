@@ -14,7 +14,7 @@ class TeamProjectIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->route('team')->hasUser($this->user());
+        return $this->user()->can('view', $this->route('team'));
     }
 
     /**

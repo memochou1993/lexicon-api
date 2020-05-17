@@ -57,7 +57,7 @@ class TeamUserController extends Controller
      */
     public function destroy(Team $team, User $user)
     {
-        $this->authorize('view', $team);
+        $this->authorize('update', $team);
 
         $this->teamService->detachUser($team, $user->id);
 
