@@ -26,6 +26,8 @@ class KeyController extends Controller
     public function __construct(
         KeyService $keyService
     ) {
+        $this->authorizeResource(Key::class);
+
         $this->keyService = $keyService;
     }
 

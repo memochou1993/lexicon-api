@@ -58,6 +58,20 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('GET', 'api/keys/'.$key->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -97,5 +111,48 @@ class KeyControllerTest extends TestCase
                     'name',
                 ],
             ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('PATCH', 'api/keys/'.$key->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDestroy()
+    {
+        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('DELETE', 'api/keys/'.$key->id)
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDeleted($key);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('DELETE', 'api/keys/'.$key->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
