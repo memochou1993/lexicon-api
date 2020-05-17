@@ -26,6 +26,8 @@ class ValueController extends Controller
     public function __construct(
         ValueService $valueService
     ) {
+        $this->authorizeResource(Value::class);
+        
         $this->valueService = $valueService;
     }
 

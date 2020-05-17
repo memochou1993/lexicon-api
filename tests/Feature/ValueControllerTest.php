@@ -60,6 +60,21 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+
+        $this->json('GET', 'api/values/'.$value->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -80,6 +95,21 @@ class ValueControllerTest extends TestCase
         $this->assertDatabaseHas('values', $data);
 
         $this->assertCount(1, $key->values);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+
+        $this->json('PATCH', 'api/values/'.$value->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -117,5 +147,20 @@ class ValueControllerTest extends TestCase
             'model_type' => 'value',
             'model_id' => $value->id,
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+
+        $this->json('DELETE', 'api/values/'.$value->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
