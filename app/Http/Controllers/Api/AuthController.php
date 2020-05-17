@@ -30,6 +30,17 @@ class AuthController extends Controller
     }
 
     /**
+     * @param  AuthRegisterRequest  $request
+     * @return UserResource
+     */
+    public function register(AuthRegisterRequest $request)
+    {
+        $user = $this->authService->storeUser($request->all());
+
+        return new UserResource($user);
+    }
+
+    /**
      * @param  AuthLoginRequest  $request
      * @return JsonResponse
      * @throws AuthenticationException
@@ -46,32 +57,21 @@ class AuthController extends Controller
             throw new AuthenticationException();
         }
 
-        return response()->json([
+        $payload = [
             'access_token' => $token,
-        ]);
+        ];
+
+        return response()->json($payload);
     }
 
     /**
-     * @param  AuthRegisterRequest  $request
      * @return UserResource
-     */
-    public function register(AuthRegisterRequest $request)
-    {
-        $user = $this->authService->storeUser($request->all());
-
-        return new UserResource($user);
-    }
-
-    /**
-     * @return JsonResponse
      */
     public function user()
     {
         $user = $this->authService->getUser();
 
-        return response()->json([
-            'data' => $user,
-        ]);
+        return new UserResource($user);
     }
 
     /**

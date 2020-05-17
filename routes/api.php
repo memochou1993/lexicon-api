@@ -24,7 +24,8 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResource('users', 'UserController');
+        Route::apiResource('users', 'UserController')
+            ->only('index', 'show', 'update', 'destroy');
 
         Route::prefix('user')->group(function () {
             Route::apiResource('teams', 'UserTeamController')
