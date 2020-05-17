@@ -38,8 +38,8 @@ class LanguageFormControllerTest extends TestCase
     public function testAttach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $language = $project->languages()->save(factory(Language::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
         $form = factory(Form::class)->create();
 
         $this->assertCount(0, $language->forms);
@@ -55,11 +55,28 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testAttachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = factory(Form::class)->create();
+
+        $this->json('POST', 'api/languages/'.$language->id.'/forms', [
+            'form_ids' => $form->id,
+        ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testSync()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $language = $project->languages()->save(factory(Language::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->saveMany(factory(Form::class, 2)->make());
 
         $this->assertCount(2, $language->forms);
@@ -79,8 +96,8 @@ class LanguageFormControllerTest extends TestCase
     public function testDetach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $language = $project->languages()->save(factory(Language::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->save(factory(Form::class)->make());
 
         $this->assertCount(1, $language->forms);
@@ -89,5 +106,20 @@ class LanguageFormControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(0, $language->refresh()->forms);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDetachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $language->forms()->save(factory(Form::class)->make());
+
+        $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

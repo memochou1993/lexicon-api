@@ -7,6 +7,7 @@ use App\Http\Requests\LanguageFormStoreRequest;
 use App\Models\Form;
 use App\Models\Language;
 use App\Services\LanguageService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,9 +53,12 @@ class LanguageFormController extends Controller
      * @param  Language  $language
      * @param  Form  $form
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Language $language, Form $form)
     {
+        $this->authorize('update', $language);
+
         $this->languageService->detachForm($language, $form->id);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
