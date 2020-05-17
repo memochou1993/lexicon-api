@@ -72,6 +72,22 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testAttachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $user = factory(User::class)->create();
+
+        $this->json('POST', 'api/projects/'.$project->id.'/users', [
+            'user_ids' => $user->id,
+        ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDetach()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -84,5 +100,19 @@ class ProjectUserControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(1, $project->refresh()->users);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDetachForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $user = $project->users()->save(factory(User::class)->make());
+
+        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

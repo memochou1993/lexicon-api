@@ -58,6 +58,19 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $this->json('GET', 'api/projects/'.$project->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -100,6 +113,19 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUpdateForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $this->json('PATCH', 'api/projects/'.$project->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDestroy()
     {
         $team = $this->user->teams()->save(factory(Team::class)->make());
@@ -125,5 +151,18 @@ class ProjectControllerTest extends TestCase
             'model_type' => 'project',
             'model_id' => $project->id,
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteForbidden()
+    {
+        $guest = factory(User::class)->create();
+        $team = $guest->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $this->json('DELETE', 'api/projects/'.$project->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

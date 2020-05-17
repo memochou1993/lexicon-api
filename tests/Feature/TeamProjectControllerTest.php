@@ -62,7 +62,7 @@ class TeamProjectControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $team->projects()->save(factory(Project::class)->make())->toArray();
+        $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -120,7 +120,7 @@ class TeamProjectControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make())->toArray();
+        $project = factory(Project::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $project)
             ->assertStatus(Response::HTTP_FORBIDDEN);

@@ -8,6 +8,7 @@ use App\Http\Requests\ProjectKeyIndexRequest;
 use App\Http\Resources\KeyResource as Resource;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectKeyController extends Controller
@@ -52,9 +53,12 @@ class ProjectKeyController extends Controller
      * @param  ProjectKeyStoreRequest  $request
      * @param  Project  $project
      * @return Resource
+     * @throws AuthorizationException
      */
     public function store(ProjectKeyStoreRequest $request, Project $project)
     {
+        $this->authorize('update', $project);
+
         $key = $this->projectService->storekey($project, $request->all());
 
         return new Resource($key);

@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectUserStoreRequest;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\ProjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,9 +53,12 @@ class ProjectUserController extends Controller
      * @param  Project  $project
      * @param  User  $user
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Project $project, User $user)
     {
+        $this->authorize('update', $project);
+
         $this->projectService->detachUser($project, $user->id);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);

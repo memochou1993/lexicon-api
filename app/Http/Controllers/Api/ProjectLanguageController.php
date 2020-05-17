@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectLanguageStoreRequest;
 use App\Models\Language;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,9 +53,12 @@ class ProjectLanguageController extends Controller
      * @param  Project  $project
      * @param  Language  $language
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Project $project, Language $language)
     {
+        $this->authorize('update', $project);
+
         $this->projectService->detachLanguage($project, $language->id);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
