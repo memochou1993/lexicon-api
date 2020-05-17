@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -42,20 +43,34 @@ class AuthService
     }
 
     /**
-     * @param  array  $data
-     * @return User
+     * @param  array  $relations
+     * @return Model
      */
-    public function storeUser(array $data): User
+    public function getUser(array $relations): Model
+    {
+        return $this->user->with($relations)->find(Auth::id());
+    }
+
+    /**
+     * @param  array  $data
+     * @return Model
+     */
+    public function storeUser(array $data): Model
     {
         return $this->user->create($data);
     }
 
     /**
-     * @return User
+     * @param  array  $data
+     * @return Model
      */
-    public function getUser(): User
+    public function updateUser(array $data): Model
     {
-        return Auth::guard()->user();
+        $user = Auth::guard()->user();
+
+        $user->update($data);
+
+        return $user;
     }
 
     /**

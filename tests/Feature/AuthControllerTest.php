@@ -94,7 +94,7 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUser()
+    public function testGetUser()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());
 
@@ -110,9 +110,44 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUserUnauthorized()
+    public function testGetUserUnauthorized()
     {
         $response = $this->json('GET', 'api/auth/user');
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateUser()
+    {
+        Sanctum::actingAs(factory(User::class)->create());
+
+        $data = factory(User::class)->make([
+            'name' => 'New User',
+        ])->toArray();
+
+        $response = $this->json('PATCH', 'api/auth/user', $data);
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'data' => $data,
+            ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateUserUnauthorized()
+    {
+        $data = factory(User::class)->make([
+            'name' => 'New User',
+        ])->toArray();
+
+        $response = $this->json('PATCH', 'api/auth/user', $data);
 
         $response
             ->assertStatus(Response::HTTP_UNAUTHORIZED);

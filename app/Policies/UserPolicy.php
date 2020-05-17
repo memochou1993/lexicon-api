@@ -31,7 +31,7 @@ class UserPolicy
     public function view(User $user, User $model)
     {
         // FIXME: should use role
-        return $user->email === env('ADMIN_EMAIL') || $user->id === $model->id;
+        return $user->email === env('ADMIN_EMAIL');
     }
 
     /**
@@ -55,7 +55,7 @@ class UserPolicy
     public function update(User $user, User $model)
     {
         // FIXME: should use role
-        return $user->email === env('ADMIN_EMAIL') || $user->id === $model->id;
+        return $user->email === env('ADMIN_EMAIL');
     }
 
     /**

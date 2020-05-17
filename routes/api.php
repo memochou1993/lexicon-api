@@ -18,7 +18,8 @@ Route::namespace('Api')->group(function () {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::middleware('auth:sanctum')->group(function () {
-            Route::get('user', 'AuthController@user');
+            Route::get('user', 'AuthController@getUser');
+            Route::patch('user', 'AuthController@updateUser');
             Route::post('logout', 'AuthController@logout');
         });
     });

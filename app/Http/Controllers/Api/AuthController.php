@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
+use App\Http\Requests\AuthUserShowRequest;
+use App\Http\Requests\AuthUserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Auth\AuthenticationException;
@@ -65,11 +67,23 @@ class AuthController extends Controller
     }
 
     /**
+     * @param  AuthUserShowRequest  $request
      * @return UserResource
      */
-    public function user()
+    public function getUser(AuthUserShowRequest $request)
     {
-        $user = $this->authService->getUser();
+        $user = $this->authService->getUser($request->relations);
+
+        return new UserResource($user);
+    }
+
+    /**
+     * @param  AuthUserUpdateRequest  $request
+     * @return UserResource
+     */
+    public function updateUser(AuthUserUpdateRequest $request)
+    {
+        $user = $this->authService->updateUser($request->all());
 
         return new UserResource($user);
     }

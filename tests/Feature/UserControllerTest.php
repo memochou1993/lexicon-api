@@ -18,7 +18,7 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $admin = Sanctum::actingAs(factory(User::class)->create([
+        $user = Sanctum::actingAs(factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
         ]));
 
@@ -36,7 +36,7 @@ class UserControllerTest extends TestCase
             ])
             ->assertJson([
                 'data' => [
-                    $admin->toArray(),
+                    $user->toArray(),
                 ],
             ]);
     }
@@ -57,31 +57,9 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        $admin = Sanctum::actingAs(factory(User::class)->create([
+        $user = Sanctum::actingAs(factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
         ]));
-
-        $this->json('GET', 'api/users/'.$admin->id, [
-            'relations' => 'teams,projects',
-        ])
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'data' => [
-                    'teams',
-                    'projects',
-                ],
-            ])
-            ->assertJson([
-                'data' => $admin->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserView()
-    {
-        $user = Sanctum::actingAs(factory(User::class)->create());
 
         $this->json('GET', 'api/users/'.$user->id, [
             'relations' => 'teams,projects',
@@ -116,27 +94,9 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $admin = Sanctum::actingAs(factory(User::class)->create([
+        $user = Sanctum::actingAs(factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
         ]));
-
-        $data = factory(User::class)->make([
-            'name' => 'New User',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/users/'.$admin->id, $data)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $data,
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserUpdate()
-    {
-        $user = Sanctum::actingAs(factory(User::class)->create());
 
         $data = factory(User::class)->make([
             'name' => 'New User',
@@ -154,13 +114,13 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $admin = Sanctum::actingAs(factory(User::class)->create([
+        $user = Sanctum::actingAs(factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
         ]));
 
         $data = factory(User::class)->create()->toArray();
 
-        $this->json('PATCH', 'api/users/'.$admin->id, $data)
+        $this->json('PATCH', 'api/users/'.$user->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -189,14 +149,14 @@ class UserControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $admin = Sanctum::actingAs(factory(User::class)->create([
+        $user = Sanctum::actingAs(factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
         ]));
 
-        $this->json('DELETE', 'api/users/'.$admin->id)
+        $this->json('DELETE', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertDeleted($admin);
+        $this->assertDeleted($user);
     }
 
     /**
