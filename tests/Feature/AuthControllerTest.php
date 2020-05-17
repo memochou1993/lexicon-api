@@ -55,11 +55,9 @@ class AuthControllerTest extends TestCase
      */
     public function testRegister()
     {
-        $user = factory(User::class)
-            ->make([
-                'email_verified_at' => null,
-            ])
-            ->makeVisible('password');
+        $user = factory(User::class)->make([
+            'email_verified_at' => null,
+        ])->makeVisible('password');
 
         $response = $this->json('POST', 'api/auth/register', $user->toArray());
 
@@ -79,14 +77,12 @@ class AuthControllerTest extends TestCase
             'email' => 'unique@email.com',
         ]);
 
-        $user = factory(User::class)
-            ->make([
-                'email' => 'unique@email.com',
-                'email_verified_at' => null,
-            ])
-            ->makeVisible('password');
+        $data = factory(User::class)->make([
+            'email' => 'unique@email.com',
+            'email_verified_at' => null,
+        ])->makeVisible('password');
 
-        $this->json('POST', 'api/auth/register', $user->toArray())
+        $this->json('POST', 'api/auth/register', $data->toArray())
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
