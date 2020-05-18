@@ -23,15 +23,6 @@ class Team extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'pivot',
-    ];
-
-    /**
      * Get the projects for the team.
      */
     public function projects()

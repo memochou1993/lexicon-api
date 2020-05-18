@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             ModelHasUserSeeder::class,
             ModelHasLanguageSeeder::class,
             ModelHasFormSeeder::class,
+            RoleSeeder::class,
+            RoleUserSeeder::class,
         ]);
     }
 }

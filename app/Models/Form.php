@@ -23,15 +23,6 @@ class Form extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'pivot',
-    ];
-
-    /**
      * Get all of the teams that are assigned this languages.
      */
     public function teams()

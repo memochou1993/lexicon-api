@@ -32,7 +32,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'pivot',
     ];
 
     /**
@@ -68,5 +67,13 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->morphedByMany(Project::class, 'model', 'model_has_users');
+    }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
     }
 }

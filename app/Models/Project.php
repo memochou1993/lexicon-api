@@ -27,7 +27,6 @@ class Project extends Model
      */
     protected $hidden = [
         'team_id',
-        'pivot',
     ];
 
     /**
