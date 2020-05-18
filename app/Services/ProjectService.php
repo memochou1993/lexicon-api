@@ -67,7 +67,7 @@ class ProjectService
      */
     public function getKeys(Project $project, array $request): LengthAwarePaginator
     {
-        $keys = $project
+        return $project
             ->keys()
             ->when(Arr::get($request, 'q'), function ($query, $q) {
                 $query
@@ -75,9 +75,7 @@ class ProjectService
                     ->orWhereHas('values', function ($query) use ($q) {
                         $query->where('text', $q);
                     });
-            });
-
-        return $keys
+            })
             ->with(Arr::get($request, 'relations', []))
             ->paginate(Arr::get($request, 'per_page'));
     }

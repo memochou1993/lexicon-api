@@ -69,6 +69,9 @@ class TeamService
     {
         return $team
             ->projects()
+            ->when(Arr::get($request, 'q'), function ($query, $q) {
+                $query->where('name', 'LIKE', '%'.$q.'%');
+            })
             ->with(Arr::get($request, 'relations', []))
             ->paginate(Arr::get($request, 'per_page'));
     }
