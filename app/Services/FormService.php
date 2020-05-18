@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Form;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class FormService
 {
@@ -25,12 +26,14 @@ class FormService
 
     /**
      * @param  Form  $form
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(Form $form, array $relations): Model
+    public function get(Form $form, array $request): Model
     {
-        return $this->form->with($relations)->find($form->id);
+        return $this->form
+            ->with(Arr::get($request, 'relations', []))
+            ->find($form->id);
     }
 
     /**

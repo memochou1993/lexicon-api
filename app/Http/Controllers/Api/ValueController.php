@@ -27,7 +27,7 @@ class ValueController extends Controller
         ValueService $valueService
     ) {
         $this->authorizeResource(Value::class);
-        
+
         $this->valueService = $valueService;
     }
 
@@ -40,7 +40,7 @@ class ValueController extends Controller
      */
     public function show(ValueShowRequest $request, Value $value)
     {
-        $value = $this->valueService->get($value, $request->relations);
+        $value = $this->valueService->get($value, $request->all());
 
         return new Resource($value);
     }

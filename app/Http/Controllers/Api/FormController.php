@@ -40,7 +40,7 @@ class FormController extends Controller
      */
     public function show(FormShowRequest $request, Form $form)
     {
-        $form = $this->formService->get($form, $request->relations);
+        $form = $this->formService->get($form, $request->all());
 
         return new Resource($form);
     }

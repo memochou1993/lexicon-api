@@ -27,12 +27,14 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(Project $project, array $relations): Model
+    public function get(Project $project, array $request): Model
     {
-        return $this->project->with($relations)->find($project->id);
+        return $this->project
+            ->with(Arr::get($request, 'relations', []))
+            ->find($project->id);
     }
 
     /**
@@ -65,16 +67,18 @@ class ProjectService
      */
     public function getKeys(Project $project, array $request): LengthAwarePaginator
     {
-        $keys = $project->keys();
+        $keys = $project
+            ->keys()
+            ->when(Arr::get($request, 'q'), function ($query, $q) {
+                $query
+                    ->where('name', 'LIKE', '%'.$q.'%')
+                    ->orWhereHas('values', function ($query) use ($q) {
+                        $query->where('text', $q);
+                    });
+            });
 
-        if (Arr::has($request, 'q')) {
-            $keys->where('name', 'LIKE', '%'.$request['q'].'%')
-                ->orWhereHas('values', function ($query) use ($request) {
-                    $query->where('text', Arr::get($request, 'q'));
-                });
-        }
-
-        return $keys->with(Arr::get($request, 'relations'))
+        return $keys
+            ->with(Arr::get($request, 'relations', []))
             ->paginate(Arr::get($request, 'per_page'));
     }
 
