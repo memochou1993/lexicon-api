@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Value;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 
 class ValueService
 {
@@ -26,13 +26,13 @@ class ValueService
 
     /**
      * @param  Value  $value
-     * @param  array  $request
+     * @param  Request  $request
      * @return Model
      */
-    public function get(Value $value, array $request): Model
+    public function get(Value $value, Request $request): Model
     {
         return $this->value
-            ->with(Arr::get($request, 'relations', []))
+            ->with($request->relations ?? [])
             ->find($value->id);
     }
 

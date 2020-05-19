@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Language;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 
 class LanguageService
 {
@@ -26,13 +26,13 @@ class LanguageService
 
     /**
      * @param  Language  $language
-     * @param  array  $request
+     * @param  Request  $request
      * @return Model
      */
-    public function get(Language $language, array $request): Model
+    public function get(Language $language, Request $request): Model
     {
         return $this->language
-            ->with(Arr::get($request, 'relations', []))
+            ->with($request->relations ?? [])
             ->find($language->id);
     }
 

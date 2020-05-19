@@ -37,7 +37,7 @@ class TeamProjectController extends Controller
      */
     public function index(TeamProjectIndexRequest $request, Team $team)
     {
-        $projects = $this->teamService->getProjects($team, $request->all());
+        $projects = $this->teamService->getProjects($team, $request);
 
         return Resource::collection($projects);
     }

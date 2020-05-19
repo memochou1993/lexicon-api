@@ -40,7 +40,7 @@ class LanguageController extends Controller
      */
     public function show(LanguageShowRequest $request, Language $language)
     {
-        $language = $this->languageService->get($language, $request->all());
+        $language = $this->languageService->get($language, $request);
 
         return new Resource($language);
     }

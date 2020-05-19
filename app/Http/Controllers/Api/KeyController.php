@@ -40,7 +40,7 @@ class KeyController extends Controller
      */
     public function show(KeyShowRequest $request, Key $key)
     {
-        $key = $this->keyService->get($key, $request->all());
+        $key = $this->keyService->get($key, $request);
 
         return new Resource($key);
     }

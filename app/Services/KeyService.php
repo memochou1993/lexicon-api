@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Key;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 
 class KeyService
 {
@@ -26,13 +26,13 @@ class KeyService
 
     /**
      * @param  Key  $key
-     * @param  array  $request
+     * @param  Request  $request
      * @return Model
      */
-    public function get(Key $key, array $request): Model
+    public function get(Key $key, Request $request): Model
     {
         return $this->key
-            ->with(Arr::get($request, 'relations', []))
+            ->with($request->relations ?? [])
             ->find($key->id);
     }
 

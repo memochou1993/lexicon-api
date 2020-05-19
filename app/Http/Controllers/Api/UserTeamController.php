@@ -36,7 +36,7 @@ class UserTeamController extends Controller
      */
     public function index(UserTeamIndexRequest $request)
     {
-        $teams = $this->userService->getTeams(Auth::guard()->user(), $request->all());
+        $teams = $this->userService->getTeams(Auth::guard()->user(), $request);
 
         return Resource::collection($teams);
     }
