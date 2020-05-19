@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    use HasUsers;
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -21,12 +24,4 @@ class Role extends Model
     protected $fillable = [
         'name',
     ];
-
-    /**
-     * The users that belong to the role.
-     */
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
 }

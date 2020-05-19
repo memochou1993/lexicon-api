@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            RoleSeeder::class,
             TeamSeeder::class,
             ProjectSeeder::class,
             LanguageSeeder::class,
@@ -22,8 +23,6 @@ class DatabaseSeeder extends Seeder
             ModelHasUserSeeder::class,
             ModelHasLanguageSeeder::class,
             ModelHasFormSeeder::class,
-            RoleSeeder::class,
-            RoleUserSeeder::class,
         ]);
     }
 }
