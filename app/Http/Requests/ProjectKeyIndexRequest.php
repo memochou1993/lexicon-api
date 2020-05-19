@@ -46,18 +46,7 @@ class ProjectKeyIndexRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->preparePerPage();
         $this->prepareRelations();
-    }
-
-    /**
-     * @return void
-     */
-    private function preparePerPage()
-    {
-        $this->merge([
-            'per_page' => $this->per_page ?? 10,
-        ]);
     }
 
     /**

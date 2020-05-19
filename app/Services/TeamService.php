@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Team;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class TeamService
 {
@@ -26,12 +27,14 @@ class TeamService
 
     /**
      * @param  Team  $team
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(Team $team, array $relations): Model
+    public function get(Team $team, array $request): Model
     {
-        return $this->team->with($relations)->find($team->id);
+        return $this->team
+            ->with(Arr::get($request, 'relations', []))
+            ->find($team->id);
     }
 
     /**
@@ -59,13 +62,18 @@ class TeamService
 
     /**
      * @param  Team  $team
-     * @param  array  $relations
-     * @param  int  $per_page
+     * @param  array  $request
      * @return LengthAwarePaginator
      */
-    public function getProjects(Team $team, array $relations, int $per_page): LengthAwarePaginator
+    public function getProjects(Team $team, array $request): LengthAwarePaginator
     {
-        return $team->projects()->with($relations)->paginate($per_page);
+        return $team
+            ->projects()
+            ->when(Arr::get($request, 'q'), function ($query, $q) {
+                $query->where('name', 'LIKE', '%'.$q.'%');
+            })
+            ->with(Arr::get($request, 'relations', []))
+            ->paginate(Arr::get($request, 'per_page'));
     }
 
     /**

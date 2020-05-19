@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class UserService
 {
@@ -25,23 +26,26 @@ class UserService
     }
 
     /**
-     * @param  array  $relations
-     * @param  int  $per_page
+     * @param  array  $request
      * @return LengthAwarePaginator
      */
-    public function getAll(array $relations, int $per_page): LengthAwarePaginator
+    public function getAll(array $request): LengthAwarePaginator
     {
-        return $this->user->with($relations)->paginate($per_page);
+        return $this->user
+            ->with(Arr::get($request, 'relations', []))
+            ->paginate(Arr::get($request, 'per_page'));
     }
 
     /**
      * @param  User  $user
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(User $user, array $relations): Model
+    public function get(User $user, array $request): Model
     {
-        return $this->user->with($relations)->find($user->id);
+        return $this->user
+            ->with(Arr::get($request, 'relations', []))
+            ->find($user->id);
     }
 
     /**
@@ -69,13 +73,15 @@ class UserService
 
     /**
      * @param  User  $user
-     * @param  array  $relations
-     * @param  int  $per_page
+     * @param  array  $request
      * @return LengthAwarePaginator
      */
-    public function getTeams(User $user, array $relations, int $per_page): LengthAwarePaginator
+    public function getTeams(User $user, array $request): LengthAwarePaginator
     {
-        return $user->teams()->with($relations)->paginate($per_page);
+        return $user
+            ->teams()
+            ->with(Arr::get($request, 'relations', []))
+            ->paginate(Arr::get($request, 'per_page'));
     }
 
     /**

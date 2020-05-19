@@ -41,10 +41,7 @@ class UserController extends Controller
      */
     public function index(UserIndexRequest $request)
     {
-        $users = $this->userService->getAll(
-            $request->relations,
-            $request->per_page
-        );
+        $users = $this->userService->getAll($request->all());
 
         return Resource::collection($users);
     }
@@ -58,7 +55,7 @@ class UserController extends Controller
      */
     public function show(UserShowRequest $request, User $user)
     {
-        $user = $this->userService->get($user, $request->relations);
+        $user = $this->userService->get($user, $request->all());
 
         return new Resource($user);
     }

@@ -40,7 +40,7 @@ class TeamController extends Controller
      */
     public function show(TeamShowRequest $request, Team $team)
     {
-        $team = $this->teamService->get($team, $request->relations);
+        $team = $this->teamService->get($team, $request->all());
 
         return new Resource($team);
     }

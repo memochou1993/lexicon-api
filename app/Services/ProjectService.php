@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Project;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class ProjectService
 {
@@ -26,12 +27,14 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(Project $project, array $relations): Model
+    public function get(Project $project, array $request): Model
     {
-        return $this->project->with($relations)->find($project->id);
+        return $this->project
+            ->with(Arr::get($request, 'relations', []))
+            ->find($project->id);
     }
 
     /**
@@ -59,13 +62,22 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  array  $relations
-     * @param  int  $per_page
+     * @param  array  $request
      * @return LengthAwarePaginator
      */
-    public function getKeys(Project $project, array $relations, int $per_page): LengthAwarePaginator
+    public function getKeys(Project $project, array $request): LengthAwarePaginator
     {
-        return $project->keys()->with($relations)->paginate($per_page);
+        return $project
+            ->keys()
+            ->when(Arr::get($request, 'q'), function ($query, $q) {
+                $query
+                    ->where('name', 'LIKE', '%'.$q.'%')
+                    ->orWhereHas('values', function ($query) use ($q) {
+                        $query->where('text', $q);
+                    });
+            })
+            ->with(Arr::get($request, 'relations', []))
+            ->paginate(Arr::get($request, 'per_page'));
     }
 
     /**
