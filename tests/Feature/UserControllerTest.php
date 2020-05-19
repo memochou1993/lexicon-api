@@ -14,14 +14,27 @@ class UserControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * @var User
+     */
+    private $admin;
+
+    /**
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->admin = Sanctum::actingAs(factory(User::class)->create([
+            'email' => env('ADMIN_EMAIL'),
+        ]));
+    }
+
+    /**
      * @return void
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
-
         $this->json('GET', 'api/users', [
             'relations' => 'teams,projects',
         ])
@@ -36,7 +49,7 @@ class UserControllerTest extends TestCase
             ])
             ->assertJson([
                 'data' => [
-                    $user->toArray(),
+                    $this->admin->toArray(),
                 ],
             ]);
     }
@@ -57,11 +70,7 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
-
-        $this->json('GET', 'api/users/'.$user->id, [
+        $this->json('GET', 'api/users/'.$this->admin->id, [
             'relations' => 'teams,projects',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -72,7 +81,7 @@ class UserControllerTest extends TestCase
                 ],
             ])
             ->assertJson([
-                'data' => $user->toArray(),
+                'data' => $this->admin->toArray(),
             ]);
     }
 
@@ -81,9 +90,7 @@ class UserControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        Sanctum::actingAs(factory(User::class)->create());
-
-        $guest = factory(User::class)->create();
+        $guest = Sanctum::actingAs(factory(User::class)->create());
 
         $this->json('GET', 'api/users/'.$guest->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -94,15 +101,11 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
-
         $data = factory(User::class)->make([
             'name' => 'New User',
         ])->toArray();
 
-        $this->json('PATCH', 'api/users/'.$user->id, $data)
+        $this->json('PATCH', 'api/users/'.$this->admin->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'data' => $data,
@@ -114,13 +117,9 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
-
         $data = factory(User::class)->create()->toArray();
 
-        $this->json('PATCH', 'api/users/'.$user->id, $data)
+        $this->json('PATCH', 'api/users/'.$this->admin->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -134,13 +133,9 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        Sanctum::actingAs(factory(User::class)->create());
+        $guest = Sanctum::actingAs(factory(User::class)->create());
 
-        $guest = factory(User::class)->create();
-
-        $data = factory(User::class)->make()->toArray();
-
-        $this->json('PATCH', 'api/users/'.$guest->id, $data)
+        $this->json('PATCH', 'api/users/'.$guest->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -149,9 +144,7 @@ class UserControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
+        $user = factory(User::class)->create();
 
         $this->json('DELETE', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);

@@ -83,9 +83,9 @@ class TeamLanguageControllerTest extends TestCase
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
 
-        $language = factory(Language::class)->make()->toArray();
+        $data = factory(Language::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/languages', $language)
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

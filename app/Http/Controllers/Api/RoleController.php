@@ -29,8 +29,7 @@ class RoleController extends Controller
     public function __construct(
         RoleService $roleService
     ) {
-        // TODO: should use policy
-        // $this->authorizeResource(Role::class);
+        $this->authorizeResource(Role::class);
 
         $this->roleService = $roleService;
     }

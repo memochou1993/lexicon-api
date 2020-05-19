@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class RolePolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +26,10 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  User  $user
-     * @param  User  $model
+     * @param  Role  $role
      * @return bool
      */
-    public function view(User $user, User $model)
+    public function view(User $user, Role $role)
     {
         // TODO: use permission
         return $user->email === env('ADMIN_EMAIL');
@@ -42,17 +43,18 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return true;
+        // TODO: use permission
+        return $user->email === env('ADMIN_EMAIL');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  User  $user
-     * @param  User  $model
+     * @param  Role  $role
      * @return bool
      */
-    public function update(User $user, User $model)
+    public function update(User $user, Role $role)
     {
         // TODO: use permission
         return $user->email === env('ADMIN_EMAIL');
@@ -62,10 +64,10 @@ class UserPolicy
      * Determine whether the user can delete the model.
      *
      * @param  User  $user
-     * @param  User  $model
+     * @param  Role  $role
      * @return bool
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, Role $role)
     {
         // TODO: use permission
         return $user->email === env('ADMIN_EMAIL');

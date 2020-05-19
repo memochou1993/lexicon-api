@@ -125,9 +125,10 @@ class ProjectKeyControllerTest extends TestCase
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = factory(Key::class)->make()->toArray();
 
-        $this->json('POST', 'api/projects/'.$project->id.'/keys', $key)
+        $data = factory(Key::class)->make()->toArray();
+
+        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

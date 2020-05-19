@@ -57,8 +57,7 @@ class RoleUserController extends Controller
      */
     public function destroy(Role $role, User $user)
     {
-        // TODO: should use policy
-        // $this->authorize('update', $role);
+        $this->authorize('update', $role);
 
         $this->roleService->detachUser($role, $user->id);
 

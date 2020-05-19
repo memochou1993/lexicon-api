@@ -120,9 +120,10 @@ class TeamProjectControllerTest extends TestCase
     {
         $guest = factory(User::class)->create();
         $team = $guest->teams()->save(factory(Team::class)->make());
-        $project = factory(Project::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/projects', $project)
+        $data = factory(Project::class)->make()->toArray();
+
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

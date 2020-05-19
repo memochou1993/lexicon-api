@@ -14,9 +14,7 @@ class RoleUserStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: should use policy
-        // return $this->user()->can('update', $this->route('role'));
-        return true;
+        return $this->user()->can('update', $this->route('role'));
     }
 
     /**
