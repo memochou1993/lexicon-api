@@ -60,8 +60,8 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testViewAllForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects')
@@ -118,8 +118,8 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testCreateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Project::class)->make()->toArray();
 

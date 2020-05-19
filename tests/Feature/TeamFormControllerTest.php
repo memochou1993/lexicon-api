@@ -80,8 +80,8 @@ class TeamFormControllerTest extends TestCase
      */
     public function testCreateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Form::class)->make()->toArray();
 

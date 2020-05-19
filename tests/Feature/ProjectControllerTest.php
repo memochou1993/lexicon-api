@@ -60,8 +60,8 @@ class ProjectControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('GET', 'api/projects/'.$project->id)
@@ -115,8 +115,8 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('PATCH', 'api/projects/'.$project->id)
@@ -158,8 +158,8 @@ class ProjectControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('DELETE', 'api/projects/'.$project->id)

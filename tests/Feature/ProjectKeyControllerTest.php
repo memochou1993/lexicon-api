@@ -61,8 +61,8 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testViewAllForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
         $project->keys()->save(factory(Key::class)->make());
 
@@ -122,8 +122,8 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testCreateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $data = factory(Key::class)->make()->toArray();

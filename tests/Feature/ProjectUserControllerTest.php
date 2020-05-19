@@ -74,8 +74,8 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testAttachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
         $user = factory(User::class)->create();
 
@@ -107,8 +107,8 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testDetachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
         $user = $project->users()->save(factory(User::class)->make());
 

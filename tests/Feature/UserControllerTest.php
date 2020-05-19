@@ -90,9 +90,9 @@ class UserControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $this->json('GET', 'api/users/'.$guest->id)
+        $this->json('GET', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -133,9 +133,9 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $this->json('PATCH', 'api/users/'.$guest->id)
+        $this->json('PATCH', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 

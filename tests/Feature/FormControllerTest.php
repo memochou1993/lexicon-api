@@ -55,8 +55,8 @@ class FormControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('GET', 'api/forms/'.$form->id)
@@ -110,8 +110,8 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('PATCH', 'api/forms/'.$form->id)
@@ -137,8 +137,8 @@ class FormControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/forms/'.$form->id)

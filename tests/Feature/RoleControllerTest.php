@@ -137,8 +137,8 @@ class RoleControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
-        $role = $guest->roles()->save(factory(Role::class)->make());
+        $user = Sanctum::actingAs(factory(User::class)->create());
+        $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('GET', 'api/roles/'.$role->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -185,8 +185,8 @@ class RoleControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
-        $role = $guest->roles()->save(factory(Role::class)->make());
+        $user = Sanctum::actingAs(factory(User::class)->create());
+        $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('PATCH', 'api/roles/'.$role->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -214,9 +214,9 @@ class RoleControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $role = $guest->roles()->save(factory(Role::class)->make());
+        $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);

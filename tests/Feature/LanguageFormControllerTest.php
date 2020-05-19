@@ -57,8 +57,8 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testAttachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = factory(Form::class)->create();
@@ -113,8 +113,8 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testDetachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->save(factory(Form::class)->make());

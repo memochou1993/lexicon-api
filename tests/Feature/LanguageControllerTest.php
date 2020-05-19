@@ -59,8 +59,8 @@ class LanguageControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('GET', 'api/languages/'.$language->id)
@@ -114,8 +114,8 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('PATCH', 'api/languages/'.$language->id)
@@ -148,8 +148,8 @@ class LanguageControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('DELETE', 'api/languages/'.$language->id)

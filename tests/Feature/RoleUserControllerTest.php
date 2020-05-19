@@ -73,11 +73,11 @@ class RoleUserControllerTest extends TestCase
      */
     public function testAttachForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
         $role = $this->admin->roles()->save(factory(Role::class)->make());
 
         $this->json('POST', 'api/roles/'.$role->id.'/users', [
-            'user_ids' => $guest->id,
+            'user_ids' => $user->id,
         ])
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -103,10 +103,10 @@ class RoleUserControllerTest extends TestCase
      */
     public function testDetachForbidden()
     {
-        $guest = Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
         $role = $this->admin->roles()->save(factory(Role::class)->make());
 
-        $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$guest->id)
+        $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

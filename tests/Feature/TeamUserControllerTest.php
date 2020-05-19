@@ -71,8 +71,8 @@ class TeamUserControllerTest extends TestCase
      */
     public function testAttachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $this->user->id,
@@ -101,10 +101,10 @@ class TeamUserControllerTest extends TestCase
      */
     public function testDetachForbidden()
     {
-        $guest = factory(User::class)->create();
-        $team = $guest->teams()->save(factory(Team::class)->make());
+        $user = factory(User::class)->create();
+        $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$guest->id)
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
