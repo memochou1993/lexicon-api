@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasPermissions;
-use App\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class Permission extends Model
 {
-    use HasUsers;
-    use HasPermissions;
-
     /**
      * Indicates if the model should be timestamped.
      *

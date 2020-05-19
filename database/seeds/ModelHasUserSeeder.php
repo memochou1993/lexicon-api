@@ -16,10 +16,6 @@ class ModelHasUserSeeder extends Seeder
     {
         $users = app(UserSeeder::class)->users;
 
-        app(RoleSeeder::class)->roles->each(function ($role) use ($users) {
-            $role->users()->saveMany($users);
-        });
-
         app(TeamSeeder::class)->teams->each(function ($team) use ($users) {
             $team->users()->saveMany($users);
         });
