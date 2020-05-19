@@ -109,11 +109,11 @@ class TeamService
     /**
      * @param  Team  $team
      * @param  array  $user_ids
-     * @param  bool  $sync
+     * @param  bool  $detaching
      */
-    public function attachUser(Team $team, array $user_ids, bool $sync): void
+    public function attachUser(Team $team, array $user_ids, bool $detaching): void
     {
-        $team->users()->sync($user_ids, $sync);
+        $team->users()->sync($user_ids, $detaching);
     }
 
     /**

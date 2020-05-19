@@ -62,11 +62,11 @@ class LanguageService
     /**
      * @param  Language  $language
      * @param  array  $form_ids
-     * @param  bool  $sync
+     * @param  bool  $detaching
      */
-    public function attachForm(Language $language, array $form_ids, bool $sync): void
+    public function attachForm(Language $language, array $form_ids, bool $detaching): void
     {
-        $language->forms()->sync($form_ids, $sync);
+        $language->forms()->sync($form_ids, $detaching);
     }
 
     /**

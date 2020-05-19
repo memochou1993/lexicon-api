@@ -34,7 +34,7 @@ class RoleControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
 
         $this->json('GET', 'api/roles', [
             'relations' => 'users',
@@ -95,7 +95,7 @@ class RoleControllerTest extends TestCase
      */
     public function testShow()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
 
         $this->json('GET', 'api/roles/'.$role->id, [
             'relations' => 'users',
@@ -111,7 +111,7 @@ class RoleControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
 
         $data = factory(Role::class)->make([
             'name' => 'New Role',
@@ -129,7 +129,7 @@ class RoleControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
 
         $data = factory(Role::class)->create()->toArray();
 
@@ -147,9 +147,15 @@ class RoleControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDatabaseMissing('model_has_users', [
+            'user_id' => $this->user->id,
+            'model_type' => 'role',
+            'model_id' => $role->id,
+        ]);
     }
 }

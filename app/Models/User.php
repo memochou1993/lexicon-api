@@ -54,6 +54,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all of the roles that are assigned this user.
+     */
+    public function roles()
+    {
+        return $this->morphedByMany(Role::class, 'model', 'model_has_users');
+    }
+
+    /**
      * Get all of the teams that are assigned this user.
      */
     public function teams()
@@ -67,13 +75,5 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->morphedByMany(Project::class, 'model', 'model_has_users');
-    }
-
-    /**
-     * The roles that belong to the user.
-     */
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
     }
 }

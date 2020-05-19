@@ -30,7 +30,7 @@ class ProjectLanguageController extends Controller
     }
 
     /**
-     * Assign the given form to the language.
+     * Assign the given language to the project.
      *
      * @param  ProjectLanguageStoreRequest  $request
      * @param  Project  $project
