@@ -26,13 +26,13 @@ class KeyService
 
     /**
      * @param  Key  $key
-     * @param  array  $relations
+     * @param  array  $request
      * @return Model
      */
-    public function get(Key $key, array $relations): Model
+    public function get(Key $key, array $request): Model
     {
         return $this->key
-            ->with(Arr::get($relations, 'relations', []))
+            ->with(Arr::get($request, 'relations', []))
             ->find($key->id);
     }
 

@@ -32,7 +32,7 @@ class LanguageService
     public function get(Language $language, array $request): Model
     {
         return $this->language
-            ->with(Arr::get($request, 'relations'))
+            ->with(Arr::get($request, 'relations', []))
             ->find($language->id);
     }
 
