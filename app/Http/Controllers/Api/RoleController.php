@@ -3,63 +3,102 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleIndexRequest;
+use App\Http\Requests\RoleShowRequest;
+use App\Http\Requests\RoleStoreRequest;
+use App\Http\Requests\RoleUpdateRequest;
+use App\Http\Resources\RoleResource as Resource;
 use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Services\RoleService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
     /**
+     * @var RoleService
+     */
+    private RoleService $roleService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @param  RoleService  $roleService
+     */
+    public function __construct(
+        RoleService $roleService
+    ) {
+        // TODO: should use policy
+        // $this->authorizeResource(Role::class);
+
+        $this->roleService = $roleService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  RoleIndexRequest  $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(RoleIndexRequest $request)
     {
-        // TODO
+        $roles = $this->roleService->getAll($request);
+
+        return Resource::collection($roles);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param RoleStoreRequest $request
+     * @return Resource
      */
-    public function store(Request $request)
+    public function store(RoleStoreRequest $request)
     {
-        // TODO
+        $role = $this->roleService->store($request->all());
+
+        return new Resource($role);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @param  RoleShowRequest  $request
+     * @param  Role  $role
+     * @return Resource
      */
-    public function show(Role $role)
+    public function show(RoleShowRequest $request, Role $role)
     {
-        // TODO
+        $role = $this->roleService->get($role, $request);
+
+        return new Resource($role);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @param  RoleUpdateRequest  $request
+     * @param  Role  $role
+     * @return Resource
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleUpdateRequest $request, Role $role)
     {
-        // TODO
+        $role = $this->roleService->update($role, $request->all());
+
+        return new Resource($role);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @param Role $role
+     * @return JsonResponse
      */
     public function destroy(Role $role)
     {
-        // TODO
+        $this->roleService->destroy($role);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

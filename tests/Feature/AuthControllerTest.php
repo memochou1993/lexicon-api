@@ -141,6 +141,24 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testUpdateUserDuplicate()
+    {
+        Sanctum::actingAs(factory(User::class)->create());
+
+        $data = factory(User::class)->create()->toArray();
+
+        $this->json('PATCH', 'api/auth/user', $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'errors' => [
+                    'email',
+                ],
+            ]);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdateUserUnauthorized()
     {
         $data = factory(User::class)->make([

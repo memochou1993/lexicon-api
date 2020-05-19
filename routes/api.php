@@ -28,6 +28,8 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('users', 'UserController')
             ->only('index', 'show', 'update', 'destroy');
 
+        Route::apiResource('roles', 'RoleController');
+
         Route::prefix('user')->group(function () {
             Route::apiResource('teams', 'UserTeamController')
                 ->only('index', 'store');
