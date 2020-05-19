@@ -38,7 +38,7 @@ class ProjectKeyController extends Controller
      */
     public function index(ProjectKeyIndexRequest $request, Project $project)
     {
-        $keys = $this->projectService->getKeys($project, $request->all());
+        $keys = $this->projectService->getKeys($project, $request);
 
         return Resource::collection($keys);
     }

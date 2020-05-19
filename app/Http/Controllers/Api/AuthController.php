@@ -72,7 +72,7 @@ class AuthController extends Controller
      */
     public function getUser(AuthUserShowRequest $request)
     {
-        $user = $this->authService->getUser($request->all());
+        $user = $this->authService->getUser($request);
 
         return new UserResource($user);
     }

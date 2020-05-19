@@ -40,7 +40,7 @@ class ValueController extends Controller
      */
     public function show(ValueShowRequest $request, Value $value)
     {
-        $value = $this->valueService->get($value, $request->all());
+        $value = $this->valueService->get($value, $request);
 
         return new Resource($value);
     }

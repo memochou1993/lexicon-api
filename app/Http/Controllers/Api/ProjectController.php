@@ -40,7 +40,7 @@ class ProjectController extends Controller
      */
     public function show(ProjectShowRequest $request, Project $project)
     {
-        $project = $this->projectService->get($project, $request->all());
+        $project = $this->projectService->get($project, $request);
 
         return new Resource($project);
     }

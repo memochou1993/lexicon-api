@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -44,13 +44,13 @@ class AuthService
     }
 
     /**
-     * @param  array  $request
+     * @param  Request  $request
      * @return Model
      */
-    public function getUser(array $request): Model
+    public function getUser(Request $request): Model
     {
         return $this->user
-            ->with(Arr::get($request, 'relations', []))
+            ->with($request->relations ?? [])
             ->find(Auth::id());
     }
 
