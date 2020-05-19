@@ -34,16 +34,17 @@ class RoleUserControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $role = factory(Role::class)->create();
+        $role = $this->user->roles()->save(factory(Role::class)->make());
+        $user = factory(User::class)->create();
 
-        $this->assertCount(0, $role->users);
+        $this->assertCount(1, $role->users);
 
         $this->json('POST', 'api/roles/'.$role->id.'/users', [
-            'user_ids' => $this->user->id,
+            'user_ids' => $user->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertCount(1, $role->refresh()->users);
+        $this->assertCount(2, $role->refresh()->users);
     }
 
     /**
@@ -51,8 +52,8 @@ class RoleUserControllerTest extends TestCase
      */
     public function testSync()
     {
-        $role = factory(Role::class)->create();
-        $role->users()->saveMany(factory(User::class, 2)->make());
+        $role = $this->user->roles()->save(factory(Role::class)->make());
+        $role->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $role->users);
 
@@ -71,12 +72,13 @@ class RoleUserControllerTest extends TestCase
     public function testDetach()
     {
         $role = $this->user->roles()->save(factory(Role::class)->make());
+        $user = $role->users()->save(factory(User::class)->make());
 
-        $this->assertCount(1, $role->users);
+        $this->assertCount(2, $role->users);
 
-        $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$this->user->id)
+        $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertCount(0, $role->refresh()->users);
+        $this->assertCount(1, $role->refresh()->users);
     }
 }
