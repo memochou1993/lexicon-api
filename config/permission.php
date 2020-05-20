@@ -9,13 +9,13 @@ return [
             'name' => 'Administrator',
 
             'permissions' => [
+                'view-users',
+                'update-users',
+                'delete-users',
                 'view-roles',
                 'create-roles',
                 'update-roles',
                 'delete-roles',
-                'view-users',
-                'update-users',
-                'delete-users',
                 'view-teams',
                 'create-teams',
                 'update-teams',

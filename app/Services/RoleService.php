@@ -79,23 +79,4 @@ class RoleService
     {
         return $this->role->destroy($role->id);
     }
-
-    /**
-     * @param  Role  $role
-     * @param  array  $user_ids
-     * @param  bool  $detaching
-     */
-    public function attachUser(Role $role, array $user_ids, bool $detaching): void
-    {
-        $role->users()->sync($user_ids, $detaching);
-    }
-
-    /**
-     * @param  Role  $role
-     * @param  int  $user_id
-     */
-    public function detachUser(Role $role, int $user_id): void
-    {
-        $role->users()->detach($user_id);
-    }
 }

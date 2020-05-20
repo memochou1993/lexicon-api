@@ -30,7 +30,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Assign the given user to the role.
+     * Assign the given role to the user.
      *
      * @param  UserRoleStoreRequest  $request
      * @param  User  $user
@@ -48,7 +48,7 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Revoke the given user from the role.
+     * Revoke the given role from the user.
      *
      * @param  User  $user
      * @param  Role  $role
