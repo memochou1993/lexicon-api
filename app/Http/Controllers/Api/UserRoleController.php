@@ -3,44 +3,44 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleUserStoreRequest;
+use App\Http\Requests\UserRoleStoreRequest;
 use App\Models\Role;
 use App\Models\User;
-use App\Services\RoleService;
+use App\Services\UserService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleUserController extends Controller
+class UserRoleController extends Controller
 {
     /**
-     * @var RoleService
+     * @var UserService
      */
-    private RoleService $roleService;
+    private UserService $userService;
 
     /**
      * Instantiate a new controller instance.
      *
-     * @param  RoleService  $roleService
+     * @param  UserService  $userService
      */
     public function __construct(
-        RoleService $roleService
+        UserService $userService
     ) {
-        $this->roleService = $roleService;
+        $this->userService = $userService;
     }
 
     /**
      * Assign the given user to the role.
      *
-     * @param  RoleUserStoreRequest  $request
-     * @param  Role  $role
+     * @param  UserRoleStoreRequest  $request
+     * @param  User  $user
      * @return JsonResponse
      */
-    public function store(RoleUserStoreRequest $request, Role $role)
+    public function store(UserRoleStoreRequest $request, User $user)
     {
-        $this->roleService->attachUser(
-            $role,
-            $request->user_ids,
+        $this->userService->attachRole(
+            $user,
+            $request->role_ids,
             $request->sync
         );
 
@@ -50,16 +50,16 @@ class RoleUserController extends Controller
     /**
      * Revoke the given user from the role.
      *
-     * @param  Role  $role
      * @param  User  $user
+     * @param  Role  $role
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function destroy(Role $role, User $user)
+    public function destroy(User $user, Role $role)
     {
-        $this->authorize('update', $role);
+        $this->authorize('update', $user);
 
-        $this->roleService->detachUser($role, $user->id);
+        $this->userService->detachRole($user, $role->id);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

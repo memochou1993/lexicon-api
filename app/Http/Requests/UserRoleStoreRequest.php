@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RoleUserStoreRequest extends FormRequest
+class UserRoleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class RoleUserStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('role'));
+        return $this->user()->can('update', $this->route('user'));
     }
 
     /**
@@ -25,10 +25,10 @@ class RoleUserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_ids' => [
+            'role_ids' => [
                 'array',
                 'required',
-                Rule::exists('users', 'id'),
+                Rule::exists('roles', 'id'),
             ],
             'sync' => [
                 'bool',
@@ -43,17 +43,17 @@ class RoleUserStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareUserIds();
+        $this->prepareRoleIds();
         $this->prepareSync();
     }
 
     /**
      * @return void
      */
-    private function prepareUserIds()
+    private function prepareRoleIds()
     {
         $this->merge([
-            'user_ids' => collect($this->user_ids)->explode(',')->toArray(),
+            'role_ids' => collect($this->role_ids)->explode(',')->toArray(),
         ]);
     }
 

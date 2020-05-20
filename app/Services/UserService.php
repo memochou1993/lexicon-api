@@ -93,4 +93,23 @@ class UserService
     {
         return $user->teams()->create($data);
     }
+
+    /**
+     * @param  User  $user
+     * @param  array  $role_ids
+     * @param  bool  $detaching
+     */
+    public function attachRole(User $user, array $role_ids, bool $detaching): void
+    {
+        $user->roles()->sync($role_ids, $detaching);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  int  $role_id
+     */
+    public function detachRole(User $user, int $role_id): void
+    {
+        $user->roles()->detach($role_id);
+    }
 }
