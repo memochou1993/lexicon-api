@@ -19,7 +19,7 @@ class RoleSeeder extends Seeder
             ]);
 
             $role->permissions()->sync(
-                Permission::whereIn('name', $item['permissions'])->pluck('id')
+                Permission::whereIn('name', $item['permissions'])->get()
             );
         });
     }

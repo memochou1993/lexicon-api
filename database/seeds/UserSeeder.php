@@ -26,7 +26,9 @@ class UserSeeder extends Seeder
                     'password' => 'password',
                 ]);
 
-                Role::where('name', $item['name'])->first()->users()->attach($user);
+                $user->roles()->attach(
+                    Role::where('name', $item['name'])->first()
+                );
 
                 return $user;
             })

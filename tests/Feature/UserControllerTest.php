@@ -32,13 +32,12 @@ class UserControllerTest extends TestCase
         ]);
 
         $user = factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
+            'email' => env('ADMIN_EMAIL'), // TODO: should be removed
         ]);
 
-        Role::where('name', config('permission.roles.admin.name'))
-            ->first()
-            ->users()
-            ->attach($user);
+        $user->roles()->attach(
+            Role::where('name', config('permission.roles.admin.name'))->first()
+        );
 
         $this->admin = Sanctum::actingAs($user);
     }

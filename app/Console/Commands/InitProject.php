@@ -107,7 +107,7 @@ class InitProject extends Command
             'password' => $password,
         ]);
 
-        $admin->users()->attach($user);
+        $user->roles()->attach($admin);
 
         $this->info('Admin account created successfully.');
     }

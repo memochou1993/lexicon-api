@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -55,13 +56,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the roles that are assigned this user.
+     * The roles that belong to the user.
      *
-     * @return MorphToMany
+     * @return BelongsToMany
      */
     public function roles()
     {
-        return $this->morphedByMany(Role::class, 'model', 'model_has_users');
+        return $this->belongsToMany(Role::class);
     }
 
     /**
