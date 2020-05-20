@@ -26,15 +26,12 @@ class RoleControllerTest extends TestCase
             'RoleSeeder',
         ]);
 
-        $user = factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'), // TODO: should be removed
-        ]);
+        $admin = Role::where('name', config('permission.roles.admin.name'))
+            ->first()
+            ->users()
+            ->save(factory(User::class)->make());
 
-        $user->roles()->attach(
-            Role::where('name', config('permission.roles.admin.name'))->first()
-        );
-
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($admin);
     }
 
     /**

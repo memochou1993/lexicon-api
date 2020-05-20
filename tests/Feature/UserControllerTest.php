@@ -15,11 +15,6 @@ class UserControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $admin;
-
-    /**
      * @return void
      */
     public function setUp(): void
@@ -31,15 +26,12 @@ class UserControllerTest extends TestCase
             'RoleSeeder',
         ]);
 
-        $user = factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'), // TODO: should be removed
-        ]);
+        $admin = Role::where('name', config('permission.roles.admin.name'))
+            ->first()
+            ->users()
+            ->save(factory(User::class)->make());
 
-        $user->roles()->attach(
-            Role::where('name', config('permission.roles.admin.name'))->first()
-        );
-
-        $this->admin = Sanctum::actingAs($user);
+        Sanctum::actingAs($admin);
     }
 
     /**
@@ -57,11 +49,6 @@ class UserControllerTest extends TestCase
                         'teams',
                         'projects',
                     ],
-                ],
-            ])
-            ->assertJson([
-                'data' => [
-                    $this->admin->toArray(),
                 ],
             ]);
     }
@@ -82,7 +69,9 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        $this->json('GET', 'api/users/'.$this->admin->id, [
+        $user = factory(User::class)->create();
+
+        $this->json('GET', 'api/users/'.$user->id, [
             'relations' => 'teams,projects',
         ])
             ->assertStatus(Response::HTTP_OK)
@@ -93,7 +82,7 @@ class UserControllerTest extends TestCase
                 ],
             ])
             ->assertJson([
-                'data' => $this->admin->toArray(),
+                'data' => $user->toArray(),
             ]);
     }
 
@@ -102,9 +91,9 @@ class UserControllerTest extends TestCase
      */
     public function testViewForbidden()
     {
-        Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $this->json('GET', 'api/users/'.$this->admin->id)
+        $this->json('GET', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -113,11 +102,13 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        $user = factory(User::class)->create();
+
         $data = factory(User::class)->make([
             'name' => 'New User',
         ])->toArray();
 
-        $this->json('PATCH', 'api/users/'.$this->admin->id, $data)
+        $this->json('PATCH', 'api/users/'.$user->id, $data)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'data' => $data,
@@ -129,9 +120,11 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
+        $user = factory(User::class)->create();
+
         $data = factory(User::class)->create()->toArray();
 
-        $this->json('PATCH', 'api/users/'.$this->admin->id, $data)
+        $this->json('PATCH', 'api/users/'.$user->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'errors' => [
@@ -145,9 +138,9 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateForbidden()
     {
-        Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $this->json('PATCH', 'api/users/'.$this->admin->id)
+        $this->json('PATCH', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -169,9 +162,9 @@ class UserControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        Sanctum::actingAs(factory(User::class)->create());
+        $user = Sanctum::actingAs(factory(User::class)->create());
 
-        $this->json('DELETE', 'api/users/'.$this->admin->id)
+        $this->json('DELETE', 'api/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

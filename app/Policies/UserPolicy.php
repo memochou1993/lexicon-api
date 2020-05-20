@@ -17,8 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('view-users');
     }
 
     /**
@@ -30,8 +29,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('view-users');
     }
 
     /**
@@ -54,8 +52,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('update-users');
     }
 
     /**
@@ -67,7 +64,6 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('delete-users');
     }
 }

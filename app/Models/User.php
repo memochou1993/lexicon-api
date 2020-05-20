@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -83,5 +85,43 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->morphedByMany(Project::class, 'model', 'model_has_users');
+    }
+
+    /**
+     * Determine if the user has the given role.
+     *
+     * @param  Role|array|string  $roles
+     * @return bool
+     */
+    public function hasRole(...$roles)
+    {
+        return collect($roles)
+            ->flatten()
+            ->some(function ($role) {
+                if (is_string($role)) {
+                    $role = Role::where('name', $role)->first();
+                }
+
+                return $this->roles->contains($role);
+            });
+    }
+
+    /**
+     * Determine if the user has the given permission.
+     *
+     * @param  Permission|array|string  $permissions
+     * @return bool
+     */
+    public function hasPermission(...$permissions)
+    {
+        return collect($permissions)
+            ->flatten()
+            ->some(function ($permission) {
+                if (is_string($permission)) {
+                    $permission = Permission::where('name', $permission)->firstOrNew();
+                }
+
+                return $this->hasRole($permission->roles);
+            });
     }
 }

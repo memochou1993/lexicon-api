@@ -18,8 +18,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('view-roles');
     }
 
     /**
@@ -31,8 +30,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('view-roles');
     }
 
     /**
@@ -43,8 +41,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('create-roles');
     }
 
     /**
@@ -56,8 +53,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('update-roles');
     }
 
     /**
@@ -69,7 +65,6 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        // TODO: use permission
-        return $user->email === env('ADMIN_EMAIL');
+        return $user->hasPermission('delete-roles');
     }
 }

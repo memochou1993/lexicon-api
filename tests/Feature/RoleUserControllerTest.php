@@ -15,20 +15,23 @@ class RoleUserControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $admin;
-
-    /**
      * @return void
      */
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->admin = Sanctum::actingAs(factory(User::class)->create([
-            'email' => env('ADMIN_EMAIL'),
-        ]));
+        $this->seed([
+            'PermissionSeeder',
+            'RoleSeeder',
+        ]);
+
+        $admin = Role::where('name', config('permission.roles.admin.name'))
+            ->first()
+            ->users()
+            ->save(factory(User::class)->make());
+
+        Sanctum::actingAs($admin);
     }
 
     /**
@@ -36,17 +39,17 @@ class RoleUserControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $role = $this->admin->roles()->save(factory(Role::class)->make());
         $user = factory(User::class)->create();
+        $role = factory(Role::class)->create();
 
-        $this->assertCount(1, $role->users);
+        $this->assertCount(0, $role->users);
 
         $this->json('POST', 'api/roles/'.$role->id.'/users', [
             'user_ids' => $user->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertCount(2, $role->refresh()->users);
+        $this->assertCount(1, $role->refresh()->users);
     }
 
     /**
@@ -54,13 +57,14 @@ class RoleUserControllerTest extends TestCase
      */
     public function testSync()
     {
-        $role = $this->admin->roles()->save(factory(Role::class)->make());
+        $user = factory(User::class)->create();
+        $role = $user->roles()->save(factory(Role::class)->make());
         $role->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $role->users);
 
         $this->json('POST', 'api/roles/'.$role->id.'/users', [
-            'user_ids' => $this->admin->id,
+            'user_ids' => $user->id,
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -74,7 +78,7 @@ class RoleUserControllerTest extends TestCase
     public function testAttachForbidden()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());
-        $role = $this->admin->roles()->save(factory(Role::class)->make());
+        $role = factory(Role::class)->create();
 
         $this->json('POST', 'api/roles/'.$role->id.'/users', [
             'user_ids' => $user->id,
@@ -87,15 +91,15 @@ class RoleUserControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $role = $this->admin->roles()->save(factory(Role::class)->make());
-        $user = $role->users()->save(factory(User::class)->make());
+        $user = factory(User::class)->create();
+        $role = $user->roles()->save(factory(Role::class)->make());
 
-        $this->assertCount(2, $role->users);
+        $this->assertCount(1, $role->users);
 
         $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertCount(1, $role->refresh()->users);
+        $this->assertCount(0, $role->refresh()->users);
     }
 
     /**
@@ -104,7 +108,7 @@ class RoleUserControllerTest extends TestCase
     public function testDetachForbidden()
     {
         $user = Sanctum::actingAs(factory(User::class)->create());
-        $role = $this->admin->roles()->save(factory(Role::class)->make());
+        $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id.'/users/'.$user->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
