@@ -21,17 +21,7 @@ class UserControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed([
-            'PermissionSeeder',
-            'RoleSeeder',
-        ]);
-
-        $admin = Role::where('name', config('permission.roles.admin.name'))
-            ->first()
-            ->users()
-            ->save(factory(User::class)->make());
-
-        Sanctum::actingAs($admin);
+        $this->setUpAdmin();
     }
 
     /**
