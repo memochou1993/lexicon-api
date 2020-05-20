@@ -2,24 +2,33 @@
 
 return [
 
-    'permissions' => [
+    'roles' => [
 
-        'administrator' => [
-            // TODO
-            'update-teams',
-            'update-projects',
-            'update-keys',
+        'admin' => [
+            'name' => 'administrator',
+            'permissions' => [
+                // TODO
+                'update-teams',
+                'update-projects',
+                'update-keys',
+            ],
         ],
 
         'owner' => [
-            // TODO
-            'update-projects',
-            'update-keys',
+            'name' => 'owner',
+            'permissions' => [
+                // TODO
+                'update-projects',
+                'update-keys',
+            ],
         ],
 
         'maintainer' => [
-            // TODO
-            'update-keys',
+            'name' => 'maintainer',
+            'permissions' => [
+                // TODO
+                'update-keys',
+            ],
         ],
 
     ],

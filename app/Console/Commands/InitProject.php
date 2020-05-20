@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class InitProject extends Command
 {
@@ -35,44 +36,85 @@ class InitProject extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
         $this->migrate();
-        $this->seed();
-
-        return;
+        $this->setupPermission();
+        $this->setupAdmin();
     }
 
+    /**
+     * @return void
+     */
     private function migrate()
     {
-        $this->comment('Migrating...');
-
-        Artisan::call('migrate', [
+        $this->call('migrate', [
             '--force' => true,
         ]);
-
-        $this->comment('Migrated successfully.');
     }
 
-    private function seed()
+    /**
+     * @return void
+     */
+    private function setupPermission()
     {
-        $this->comment('Seeding...');
-
-        if (! User::count()) {
-            User::create([
-                'name' => env('ADMIN_NAME'),
-                'email' => env('ADMIN_EMAIL'),
-                'password' => env('ADMIN_PASSWORD'),
-            ]);
-
-            Artisan::call('db:seed', [
-                '--force' => true,
-                '--class' => 'PermissionSeeder',
-            ]);
+        if (Permission::count()) {
+            return;
         }
 
-        $this->comment('Seeded successfully.');
+        $this->call('db:seed', [
+            '--force' => true,
+            '--class' => 'PermissionSeeder',
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    private function setupAdmin()
+    {
+        $admin = Role::where('name', config('permission.roles.admin'))->first();
+
+        if ($admin->users->count()) {
+            return;
+        }
+
+        $name = $this->ask('Enter the admin name', 'Admin');
+        $email = $this->ask('Enter the admin email address', 'admin@email.com');
+        $password = $this->askForPassword();
+
+        $user = User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+        ]);
+
+        $admin->users()->attach($user);
+
+        $this->info('Admin account created successfully.');
+    }
+
+    /**
+     * @return string
+     */
+    private function askForPassword()
+    {
+        $password = $this->secret('Enter the admin password');
+
+        if (! $password) {
+            $this->error('Password cannot be empty.');
+
+            return $this->askForPassword();
+        }
+
+        if ($password !== $this->secret('Confirm the admin password')) {
+            $this->error('Passwords do not match.');
+
+            return $this->askForPassword();
+        }
+
+        return $password;
     }
 }

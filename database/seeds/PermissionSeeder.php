@@ -16,25 +16,20 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = collect(config('permission.permissions'));
+        $roles = collect(config('permission.roles'));
 
-        $permissions
-            ->flatten()
-            ->unique()
-            ->each(function ($permission) {
-                Permission::create([
-                    'name' => $permission,
-                ]);
-            });
+        $roles->pluck('permissions')->flatten()->unique()->each(function ($name) {
+            Permission::create([
+                'name' => $name,
+            ]);
+        });
 
-        $permissions
-            ->each(function ($permissions, $role) {
-                $permission_ids = Permission::whereIn('name', $permissions)->pluck('id');
+        $roles->each(function ($role) {
+            $permission_ids = Permission::whereIn('name', $role['permissions'])->pluck('id');
 
-                Role::create([
-                    'name' => $role
-                ])->permissions()->sync($permission_ids);
-            });
-
+            Role::create([
+                'name' => $role['name']
+            ])->permissions()->sync($permission_ids);
+        });
     }
 }
