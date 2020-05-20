@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Form extends Model
 {
@@ -24,6 +25,8 @@ class Form extends Model
 
     /**
      * Get all of the teams that are assigned this languages.
+     *
+     * @return MorphToMany
      */
     public function teams()
     {

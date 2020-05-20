@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Key extends Model
 {
@@ -26,6 +28,8 @@ class Key extends Model
 
     /**
      * Get the project that owns the key.
+     *
+     * @return BelongsTo
      */
     public function project()
     {
@@ -34,6 +38,8 @@ class Key extends Model
 
     /**
      * Get the values for the key.
+     *
+     * @return HasMany
      */
     public function values()
     {

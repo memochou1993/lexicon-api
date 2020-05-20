@@ -5,30 +5,73 @@ return [
     'roles' => [
 
         'admin' => [
-            'name' => 'administrator',
+
+            'name' => 'Administrator',
+
             'permissions' => [
-                // TODO
+                'view-roles',
+                'create-roles',
+                'update-roles',
+                'delete-roles',
+                'view-teams',
+                'create-teams',
                 'update-teams',
+                'delete-teams',
+                'view-projects',
+                'create-projects',
                 'update-projects',
+                'delete-projects',
+                'view-keys',
+                'create-keys',
+                'delete-keys',
                 'update-keys',
+                'view-values',
+                'create-values',
+                'update-values',
+                'delete-values',
             ],
+
         ],
 
-        'owner' => [
-            'name' => 'owner',
+        'developer' => [
+
+            'name' => 'Developer',
+
             'permissions' => [
-                // TODO
+                'view-teams',
+                'view-projects',
+                'create-projects',
                 'update-projects',
+                'delete-projects',
+                'view-keys',
+                'create-keys',
+                'delete-keys',
                 'update-keys',
+                'view-values',
+                'create-values',
+                'update-values',
+                'delete-values',
             ],
+
         ],
 
         'maintainer' => [
-            'name' => 'maintainer',
+
+            'name' => 'Maintainer',
+
             'permissions' => [
-                // TODO
+                'view-teams',
+                'view-projects',
+                'view-keys',
+                'create-keys',
+                'delete-keys',
                 'update-keys',
+                'view-values',
+                'create-values',
+                'update-values',
+                'delete-values',
             ],
+
         ],
 
     ],

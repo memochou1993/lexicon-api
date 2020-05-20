@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
             'projects' => ProjectResource::collection($this->whenLoaded('projects')),
             'created_at' => $this->created_at,

@@ -41,7 +41,8 @@ class InitProject extends Command
     public function handle()
     {
         $this->migrate();
-        $this->setupPermission();
+        $this->seedPermission();
+        $this->seedRole();
         $this->setupAdmin();
     }
 
@@ -58,7 +59,7 @@ class InitProject extends Command
     /**
      * @return void
      */
-    private function setupPermission()
+    private function seedPermission()
     {
         if (Permission::count()) {
             return;
@@ -73,9 +74,24 @@ class InitProject extends Command
     /**
      * @return void
      */
+    private function seedRole()
+    {
+        if (Role::count()) {
+            return;
+        }
+
+        $this->call('db:seed', [
+            '--force' => true,
+            '--class' => 'RoleSeeder',
+        ]);
+    }
+
+    /**
+     * @return void
+     */
     private function setupAdmin()
     {
-        $admin = Role::where('name', config('permission.roles.admin'))->first();
+        $admin = Role::where('name', config('permission.roles.admin.name'))->first();
 
         if ($admin->users->count()) {
             return;

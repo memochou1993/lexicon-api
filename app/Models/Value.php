@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasForms;
 use App\Traits\HasLanguages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Value extends Model
 {
@@ -32,6 +33,8 @@ class Value extends Model
 
     /**
      * Get the key that owns the value.
+     *
+     * @return BelongsTo
      */
     public function key()
     {

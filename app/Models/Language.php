@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasForms;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Language extends Model
 {
@@ -27,6 +28,8 @@ class Language extends Model
 
     /**
      * Get all of the teams that are assigned this languages.
+     *
+     * @return MorphToMany
      */
     public function teams()
     {

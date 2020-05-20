@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -25,9 +26,21 @@ class UserControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = Sanctum::actingAs(factory(User::class)->create([
+        $this->seed([
+            'PermissionSeeder',
+            'RoleSeeder',
+        ]);
+
+        $user = factory(User::class)->create([
             'email' => env('ADMIN_EMAIL'),
-        ]));
+        ]);
+
+        Role::where('name', config('permission.roles.admin.name'))
+            ->first()
+            ->users()
+            ->attach($user);
+
+        $this->admin = Sanctum::actingAs($user);
     }
 
     /**

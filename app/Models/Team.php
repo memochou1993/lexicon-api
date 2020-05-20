@@ -6,6 +6,7 @@ use App\Traits\HasForms;
 use App\Traits\HasLanguages;
 use App\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Team extends Model
 {
@@ -24,6 +25,8 @@ class Team extends Model
 
     /**
      * Get the projects for the team.
+     *
+     * @return HasMany
      */
     public function projects()
     {

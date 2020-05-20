@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\HasLanguages;
 use App\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends Model
 {
@@ -31,6 +34,8 @@ class Project extends Model
 
     /**
      * Get the team that owns the project.
+     *
+     * @return BelongsTo
      */
     public function team()
     {
@@ -39,6 +44,8 @@ class Project extends Model
 
     /**
      * Get the keys for the project.
+     *
+     * @return HasMany
      */
     public function keys()
     {
@@ -47,6 +54,8 @@ class Project extends Model
 
     /**
      * Get all of the values for the project.
+     *
+     * @return HasManyThrough
      */
     public function values()
     {
