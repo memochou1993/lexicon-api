@@ -21,7 +21,7 @@ class RoleControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setUpAdmin();
+        $this->setUpUser('admin');
     }
 
     /**
