@@ -14,7 +14,7 @@ class ProjectKeyIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('project'));
+        return $this->user()->can('view', $this->route('project'));
     }
 
     /**
