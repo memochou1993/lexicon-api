@@ -107,6 +107,48 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testGuestView()
+    {
+        Sanctum::actingAs($this->user, ['view-language']);
+
+        $team = factory(Team::class)->create();
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('GET', 'api/languages/'.$language->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestUpdate()
+    {
+        Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = factory(Team::class)->create();
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('PATCH', 'api/languages/'.$language->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDelete()
+    {
+        Sanctum::actingAs($this->user, ['delete-language']);
+
+        $team = factory(Team::class)->create();
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('DELETE', 'api/languages/'.$language->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
     public function testViewWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
