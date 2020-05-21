@@ -102,11 +102,10 @@ class KeyControllerTest extends TestCase
         $this->assertDeleted($key);
     }
 
-
     /**
      * @return void
      */
-    public function testViewForbidden()
+    public function testGuestView()
     {
         $user = Sanctum::actingAs($this->user, ['view-key']);
 
@@ -121,7 +120,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
+    public function testGuestUpdate()
     {
         $user = Sanctum::actingAs($this->user, ['update-key']);
 
@@ -132,15 +131,62 @@ class KeyControllerTest extends TestCase
         $this->json('PATCH', 'api/keys/'.$key->id)
             ->assertForbidden();
     }
+
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testGuestDelete()
     {
         $user = Sanctum::actingAs($this->user, ['delete-key']);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('DELETE', 'api/keys/'.$key->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testViewWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('GET', 'api/keys/'.$key->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('PATCH', 'api/keys/'.$key->id)
+            ->assertForbidden();
+    }
+
+
+    /**
+     * @return void
+     */
+    public function testDeleteWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('DELETE', 'api/keys/'.$key->id)
