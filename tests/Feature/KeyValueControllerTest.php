@@ -49,7 +49,7 @@ class KeyValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestStore()
+    public function testGuestCreate()
     {
         $user = Sanctum::actingAs($this->user, ['update-key']);
 
@@ -71,7 +71,7 @@ class KeyValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testStoreWithoutPermission()
+    public function testCreateWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
 
