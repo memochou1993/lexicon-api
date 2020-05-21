@@ -75,11 +75,7 @@ class UserRoleControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user);
 
-        $role = factory(Role::class)->create();
-
-        $this->json('POST', 'api/users/'.$user->id.'/roles', [
-            'role_ids' => $role->id,
-        ])
+        $this->json('POST', 'api/users/'.$user->id.'/roles')
             ->assertForbidden();
     }
 

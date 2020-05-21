@@ -109,9 +109,7 @@ class TeamUserControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $user->id,
-        ])
+        $this->json('POST', 'api/teams/'.$team->id.'/users')
             ->assertForbidden();
     }
 
