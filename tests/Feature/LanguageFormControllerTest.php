@@ -83,7 +83,38 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testAttachForbidden()
+    public function testGuestAttach()
+    {
+        Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = factory(Team::class)->create();
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('POST', 'api/languages/'.$language->id.'/forms')
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDetach()
+    {
+        Sanctum::actingAs($this->user);
+
+        $team = factory(Team::class)->create();
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $language->forms()->save(factory(Form::class)->make());
+
+        $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testAttachWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
 
@@ -98,7 +129,7 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDetachForbidden()
+    public function testDetachWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
 
