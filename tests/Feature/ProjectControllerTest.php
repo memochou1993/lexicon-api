@@ -118,7 +118,7 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
+    public function testGuestView()
     {
         $user = Sanctum::actingAs($this->user, ['view-project']);
 
@@ -132,7 +132,7 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
+    public function testGuestUpdate()
     {
         $user = Sanctum::actingAs($this->user, ['update-project']);
 
@@ -146,7 +146,7 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testGuestDelete()
     {
         $user = Sanctum::actingAs($this->user, ['delete-project']);
 
@@ -157,5 +157,45 @@ class ProjectControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    // TODO: make WithoutPermission() tests
+    /**
+     * @return void
+     */
+    public function testViewWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('GET', 'api/projects/'.$project->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('PATCH', 'api/projects/'.$project->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('DELETE', 'api/projects/'.$project->id)
+            ->assertForbidden();
+    }
 }
