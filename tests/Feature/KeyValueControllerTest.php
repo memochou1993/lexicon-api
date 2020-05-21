@@ -11,7 +11,6 @@ use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class KeyValueControllerTest extends TestCase
@@ -37,7 +36,7 @@ class KeyValueControllerTest extends TestCase
         ]);
 
         $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $value->makeHidden('language_id', 'form_id')->toArray(),
             ]);

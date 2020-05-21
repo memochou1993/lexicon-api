@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Form;
 use App\Models\Language;
 use App\Models\Team;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -28,7 +27,7 @@ class LanguageControllerTest extends TestCase
         $this->json('GET', 'api/languages/'.$language->id, [
             'relations' => 'forms',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'forms',
@@ -54,7 +53,7 @@ class LanguageControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/languages/'.$language->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -77,11 +76,8 @@ class LanguageControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/languages/'.$languages->first()->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -97,7 +93,7 @@ class LanguageControllerTest extends TestCase
         $form = $language->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($language);
 
@@ -119,7 +115,7 @@ class LanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('GET', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -133,7 +129,7 @@ class LanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('PATCH', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -147,6 +143,6 @@ class LanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('DELETE', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

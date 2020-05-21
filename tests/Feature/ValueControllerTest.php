@@ -11,7 +11,6 @@ use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ValueControllerTest extends TestCase
@@ -31,7 +30,7 @@ class ValueControllerTest extends TestCase
         $value = $key->values()->save(factory(Value::class)->make());
 
         $this->json('GET', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'language',
@@ -60,7 +59,7 @@ class ValueControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/values/'.$value->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -92,7 +91,7 @@ class ValueControllerTest extends TestCase
         $this->assertCount(1, $value->forms);
 
         $this->json('DELETE', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($value);
 
@@ -122,7 +121,7 @@ class ValueControllerTest extends TestCase
         $value = $key->values()->save(factory(Value::class)->make());
 
         $this->json('GET', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -138,7 +137,7 @@ class ValueControllerTest extends TestCase
         $value = $key->values()->save(factory(Value::class)->make());
 
         $this->json('PATCH', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -154,7 +153,7 @@ class ValueControllerTest extends TestCase
         $value = $key->values()->save(factory(Value::class)->make());
 
         $this->json('DELETE', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     // TODO: make testViewWithoutPermission()

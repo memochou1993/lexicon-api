@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ProjectUserControllerTest extends TestCase
@@ -31,7 +30,7 @@ class ProjectUserControllerTest extends TestCase
         $this->json('POST', 'api/projects/'.$project->id.'/users', [
             'user_ids' => $user->id,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(2, $project->refresh()->users);
     }
@@ -53,7 +52,7 @@ class ProjectUserControllerTest extends TestCase
             'user_ids' => $user->id,
             'sync' => true,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $project->refresh()->users);
     }
@@ -72,7 +71,7 @@ class ProjectUserControllerTest extends TestCase
         $this->assertCount(2, $project->users);
 
         $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$guest->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $project->refresh()->users);
     }
@@ -88,7 +87,7 @@ class ProjectUserControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('POST', 'api/projects/'.$project->id.'/users')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -102,7 +101,7 @@ class ProjectUserControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     // TODO: make WithoutPermission() tests

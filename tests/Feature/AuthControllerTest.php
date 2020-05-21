@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -24,7 +23,7 @@ class AuthControllerTest extends TestCase
             'email' => $user->email,
             'password' => 'password',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'access_token',
             ]);
@@ -42,7 +41,7 @@ class AuthControllerTest extends TestCase
         ])->makeVisible('password');
 
         $this->json('POST', 'api/auth/register', $data->toArray())
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data->makeHidden('password')->toArray(),
             ]);
@@ -62,11 +61,8 @@ class AuthControllerTest extends TestCase
         ])->makeVisible('password');
 
         $this->json('POST', 'api/auth/register', $data->toArray())
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'email',
-                ],
+            ->assertJsonValidationErrors([
+                'email',
             ]);
     }
 
@@ -78,7 +74,7 @@ class AuthControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $this->json('GET', 'api/auth/user')
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $user->toArray(),
             ]);
@@ -96,7 +92,7 @@ class AuthControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/auth/user', $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -112,11 +108,8 @@ class AuthControllerTest extends TestCase
         $data = factory(User::class)->create()->toArray();
 
         $this->json('PATCH', 'api/auth/user', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'email',
-                ],
+            ->assertJsonValidationErrors([
+                'email',
             ]);
     }
 
@@ -128,7 +121,7 @@ class AuthControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $this->json('POST', 'api/auth/logout')
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
     }
 
     /**
@@ -142,7 +135,7 @@ class AuthControllerTest extends TestCase
             'email' => $user->email,
             'password' => 'secret',
         ])
-            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+            ->assertUnauthorized();
     }
 
     /**
@@ -151,7 +144,7 @@ class AuthControllerTest extends TestCase
     public function testGetUserUnauthorized()
     {
         $this->json('GET', 'api/auth/user')
-            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+            ->assertUnauthorized();
     }
 
     /**
@@ -160,7 +153,7 @@ class AuthControllerTest extends TestCase
     public function testUpdateUserUnauthorized()
     {
         $this->json('PATCH', 'api/auth/user')
-            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+            ->assertUnauthorized();
     }
 
     /**
@@ -169,6 +162,6 @@ class AuthControllerTest extends TestCase
     public function testLogoutUnauthorized()
     {
         $this->json('POST', 'api/auth/logout')
-            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+            ->assertUnauthorized();
     }
 }

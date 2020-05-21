@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TeamUserControllerTest extends TestCase
@@ -29,7 +28,7 @@ class TeamUserControllerTest extends TestCase
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $guest->id,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(2, $team->refresh()->users);
     }
@@ -50,7 +49,7 @@ class TeamUserControllerTest extends TestCase
             'user_ids' => $user->id,
             'sync' => true,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $team->refresh()->users);
     }
@@ -68,7 +67,7 @@ class TeamUserControllerTest extends TestCase
         $this->assertCount(2, $team->users);
 
         $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$guest->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $team->refresh()->users);
     }
@@ -85,7 +84,7 @@ class TeamUserControllerTest extends TestCase
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $user->id,
         ])
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -98,6 +97,6 @@ class TeamUserControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

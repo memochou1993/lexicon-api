@@ -8,7 +8,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TeamControllerTest extends TestCase
@@ -27,7 +26,7 @@ class TeamControllerTest extends TestCase
         $this->json('GET', 'api/teams/'.$team->id, [
             'relations' => 'users,projects,languages,forms',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'users',
@@ -55,7 +54,7 @@ class TeamControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/teams/'.$team->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -77,11 +76,8 @@ class TeamControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/teams/'.$teams->first()->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -101,7 +97,7 @@ class TeamControllerTest extends TestCase
         $this->assertCount(1, $team->forms);
 
         $this->json('DELETE', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($team);
 
@@ -134,7 +130,7 @@ class TeamControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -147,7 +143,7 @@ class TeamControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('PATCH', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -160,6 +156,6 @@ class TeamControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('DELETE', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

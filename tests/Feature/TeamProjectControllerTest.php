@@ -7,7 +7,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TeamProjectControllerTest extends TestCase
@@ -27,7 +26,7 @@ class TeamProjectControllerTest extends TestCase
         $this->json('GET', 'api/teams/'.$team->id.'/projects', [
             'relations' => 'users,languages',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -52,7 +51,7 @@ class TeamProjectControllerTest extends TestCase
         $data = factory(Project::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -79,11 +78,8 @@ class TeamProjectControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
 
         $this->assertCount(1, $team->projects);
@@ -100,7 +96,7 @@ class TeamProjectControllerTest extends TestCase
         $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -115,6 +111,6 @@ class TeamProjectControllerTest extends TestCase
         $data = factory(Project::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -23,7 +22,7 @@ class UserControllerTest extends TestCase
         $this->json('GET', 'api/users', [
             'relations' => 'teams,projects',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -44,7 +43,7 @@ class UserControllerTest extends TestCase
         $this->json('GET', 'api/users/'.$user->id, [
             'relations' => 'teams,projects',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'teams',
@@ -68,7 +67,7 @@ class UserControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/users/'.$user->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -84,11 +83,8 @@ class UserControllerTest extends TestCase
         $data = factory(User::class)->create()->toArray();
 
         $this->json('PATCH', 'api/users/'.$user->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'email',
-                ],
+            ->assertJsonValidationErrors([
+                'email',
             ]);
     }
 
@@ -100,7 +96,7 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, ['delete-user']);
 
         $this->json('DELETE', 'api/users/'.$user->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($user);
     }
@@ -113,7 +109,7 @@ class UserControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $this->json('GET', 'api/users')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -124,7 +120,7 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $this->json('GET', 'api/users/'.$user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -135,7 +131,7 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $this->json('PATCH', 'api/users/'.$user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -146,6 +142,6 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $this->json('DELETE', 'api/users/'.$user->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

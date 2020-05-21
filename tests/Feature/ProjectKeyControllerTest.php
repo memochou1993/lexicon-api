@@ -8,7 +8,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ProjectKeyControllerTest extends TestCase
@@ -29,7 +28,7 @@ class ProjectKeyControllerTest extends TestCase
         $this->json('GET', 'api/projects/'.$project->id.'/keys', [
             'relations' => 'values',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -55,7 +54,7 @@ class ProjectKeyControllerTest extends TestCase
         $data = factory(Key::class)->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -83,11 +82,8 @@ class ProjectKeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
 
         $this->assertCount(1, $project->keys);
@@ -105,7 +101,7 @@ class ProjectKeyControllerTest extends TestCase
         $project->keys()->save(factory(Key::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id.'/keys')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -121,7 +117,7 @@ class ProjectKeyControllerTest extends TestCase
         $data = factory(Key::class)->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     // TODO: make WithoutPermission() tests

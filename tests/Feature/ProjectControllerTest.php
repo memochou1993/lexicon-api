@@ -8,7 +8,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ProjectControllerTest extends TestCase
@@ -28,7 +27,7 @@ class ProjectControllerTest extends TestCase
         $this->json('GET', 'api/projects/'.$project->id, [
             'relations' => 'users,team,languages',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'users',
@@ -56,7 +55,7 @@ class ProjectControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/projects/'.$project->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -79,11 +78,8 @@ class ProjectControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/projects/'.$projects->first()->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -102,7 +98,7 @@ class ProjectControllerTest extends TestCase
         $this->assertCount(1, $project->languages);
 
         $this->json('DELETE', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($project);
 
@@ -130,7 +126,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('GET', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -144,7 +140,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('PATCH', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -158,7 +154,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('DELETE', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     // TODO: make WithoutPermission() tests

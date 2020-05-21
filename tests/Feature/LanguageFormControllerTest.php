@@ -9,7 +9,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LanguageFormControllerTest extends TestCase
@@ -33,7 +32,7 @@ class LanguageFormControllerTest extends TestCase
         $this->json('POST', 'api/languages/'.$language->id.'/forms', [
             'form_ids' => $form->id,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $language->refresh()->forms);
     }
@@ -56,7 +55,7 @@ class LanguageFormControllerTest extends TestCase
             'form_ids' => $form->pluck('id')->first(),
             'sync' => true,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $language->refresh()->forms);
     }
@@ -76,7 +75,7 @@ class LanguageFormControllerTest extends TestCase
         $this->assertCount(1, $language->forms);
 
         $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(0, $language->refresh()->forms);
     }
@@ -93,7 +92,7 @@ class LanguageFormControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('POST', 'api/languages/'.$language->id.'/forms')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -109,6 +108,6 @@ class LanguageFormControllerTest extends TestCase
         $form = $language->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

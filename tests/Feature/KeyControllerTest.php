@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use App\Models\Key;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class KeyControllerTest extends TestCase
@@ -30,7 +28,7 @@ class KeyControllerTest extends TestCase
         $this->json('GET', 'api/keys/'.$key->id, [
             'relations' => 'project,values',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'project',
@@ -58,7 +56,7 @@ class KeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/keys/'.$key->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -82,11 +80,8 @@ class KeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/keys/'.$keys->first()->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -102,7 +97,7 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('DELETE', 'api/keys/'.$key->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($key);
     }
@@ -120,7 +115,7 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('GET', 'api/keys/'.$key->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -135,7 +130,7 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('PATCH', 'api/keys/'.$key->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
     /**
      * @return void
@@ -149,6 +144,6 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('DELETE', 'api/keys/'.$key->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

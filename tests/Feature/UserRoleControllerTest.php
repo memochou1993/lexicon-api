@@ -6,7 +6,6 @@ use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UserRoleControllerTest extends TestCase
@@ -27,7 +26,7 @@ class UserRoleControllerTest extends TestCase
         $this->json('POST', 'api/users/'.$user->id.'/roles', [
             'role_ids' => $role->id,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $user->refresh()->roles);
     }
@@ -47,7 +46,7 @@ class UserRoleControllerTest extends TestCase
             'role_ids' => $roles->first()->id,
             'sync' => true,
         ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(1, $user->refresh()->roles);
     }
@@ -64,7 +63,7 @@ class UserRoleControllerTest extends TestCase
         $this->assertCount(1, $user->roles);
 
         $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertCount(0, $user->refresh()->roles);
     }
@@ -81,7 +80,7 @@ class UserRoleControllerTest extends TestCase
         $this->json('POST', 'api/users/'.$user->id.'/roles', [
             'role_ids' => $role->id,
         ])
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -94,6 +93,6 @@ class UserRoleControllerTest extends TestCase
         $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

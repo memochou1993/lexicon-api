@@ -6,7 +6,6 @@ use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
@@ -25,7 +24,7 @@ class RoleControllerTest extends TestCase
         $this->json('GET', 'api/roles', [
             'relations' => 'users',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -45,7 +44,7 @@ class RoleControllerTest extends TestCase
         $data = factory(Role::class)->make()->toArray();
 
         $this->json('POST', 'api/roles', $data)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -67,11 +66,8 @@ class RoleControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/roles', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -87,7 +83,7 @@ class RoleControllerTest extends TestCase
         $this->json('GET', 'api/roles/'.$role->id, [
             'relations' => 'users',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $role->toArray(),
             ]);
@@ -107,7 +103,7 @@ class RoleControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/roles/'.$role->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -125,11 +121,8 @@ class RoleControllerTest extends TestCase
         $data = factory(Role::class)->create()->toArray();
 
         $this->json('PATCH', 'api/roles/'.$role->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -143,7 +136,7 @@ class RoleControllerTest extends TestCase
         $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDatabaseMissing('model_has_users', [
             'user_id' => $user->id,
@@ -160,7 +153,7 @@ class RoleControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $this->json('GET', 'api/roles')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -173,7 +166,7 @@ class RoleControllerTest extends TestCase
         $data = factory(Role::class)->make()->toArray();
 
         $this->json('POST', 'api/roles', $data)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -186,7 +179,7 @@ class RoleControllerTest extends TestCase
         $role = factory(Role::class)->make();
 
         $this->json('GET', 'api/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -199,7 +192,7 @@ class RoleControllerTest extends TestCase
         $role = factory(Role::class)->create();
 
         $this->json('PATCH', 'api/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -212,6 +205,6 @@ class RoleControllerTest extends TestCase
         $role = factory(Role::class)->create();
 
         $this->json('DELETE', 'api/roles/'.$role->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

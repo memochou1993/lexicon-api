@@ -7,7 +7,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TeamLanguageControllerTest extends TestCase
@@ -26,7 +25,7 @@ class TeamLanguageControllerTest extends TestCase
         $data = factory(Language::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -53,11 +52,8 @@ class TeamLanguageControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
 
         $this->assertCount(1, $team->languages);
@@ -75,6 +71,6 @@ class TeamLanguageControllerTest extends TestCase
         $data = factory(Language::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }

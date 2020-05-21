@@ -6,7 +6,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UserTeamControllerTest extends TestCase
@@ -25,7 +24,7 @@ class UserTeamControllerTest extends TestCase
         $this->json('GET', 'api/user/teams', [
             'relations' => 'users,projects,languages,forms',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
@@ -53,7 +52,7 @@ class UserTeamControllerTest extends TestCase
         $data = factory(Team::class)->make()->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertCreated()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -79,11 +78,8 @@ class UserTeamControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
 
         $this->assertCount(1, $user->teams);
