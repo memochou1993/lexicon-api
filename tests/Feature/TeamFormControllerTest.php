@@ -62,6 +62,21 @@ class TeamFormControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testGuestCreate()
+    {
+        Sanctum::actingAs($this->user);
+
+        $team = factory(Team::class)->create();
+
+        $data = factory(Form::class)->make()->toArray();
+
+        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
     public function testCreateWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
