@@ -2,32 +2,25 @@
 
 namespace Tests;
 
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Laravel\Sanctum\Sanctum;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
     /**
-     * @param  string  $role
-     * @return UserContract
+     * @var User
      */
-    protected function actingAsRole(string $role): UserContract
+    protected $user;
+
+    /**
+     * @return void
+     */
+    public function setUp(): void
     {
-        $this->seed([
-            'PermissionSeeder',
-            'RoleSeeder',
-        ]);
+        parent::setUp();
 
-        $user = Role::where('name', config('permission.roles.'.$role.'.name'))
-            ->first()
-            ->users()
-            ->save(factory(User::class)->make());
-
-        return Sanctum::actingAs($user);
+        $this->user = factory(User::class)->create();
     }
 }

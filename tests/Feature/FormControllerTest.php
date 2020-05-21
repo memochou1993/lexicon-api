@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Form;
 use App\Models\Team;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,26 +15,13 @@ class FormControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testShow()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-form']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('GET', 'api/forms/'.$form->id, [
@@ -53,22 +39,11 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
-
-        $this->json('GET', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-form']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $data = factory(Form::class)->make([
@@ -89,7 +64,9 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-form']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
 
         $data = factory(Form::class)->make([
@@ -108,22 +85,11 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
-
-        $this->json('PATCH', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDestroy()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['delete-form']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/forms/'.$form->id)
@@ -135,9 +101,38 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testViewWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+
+        $this->json('GET', 'api/forms/'.$form->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+
+        $this->json('PATCH', 'api/forms/'.$form->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 

@@ -4,9 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Form;
 use App\Models\Language;
-use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,26 +16,13 @@ class LanguageControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testShow()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('GET', 'api/languages/'.$language->id, [
@@ -57,22 +42,11 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $language = $team->languages()->save(factory(Language::class)->make());
-
-        $this->json('GET', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $data = factory(Language::class)->make([
@@ -93,7 +67,9 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
 
         $data = factory(Language::class)->make([
@@ -112,22 +88,11 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $language = $team->languages()->save(factory(Language::class)->make());
-
-        $this->json('PATCH', 'api/languages/'.$language->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDestroy()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['delete-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->save(factory(Form::class)->make());
 
@@ -146,9 +111,38 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testViewWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('GET', 'api/languages/'.$language->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('PATCH', 'api/languages/'.$language->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 

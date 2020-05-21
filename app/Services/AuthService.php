@@ -40,7 +40,9 @@ class AuthService
             return null;
         }
 
-        return $user->createToken($device)->plainTextToken;
+        $abilities = $user->permissions()->unique()->pluck('name')->toArray();
+
+        return $user->createToken($device, $abilities)->plainTextToken;
     }
 
     /**

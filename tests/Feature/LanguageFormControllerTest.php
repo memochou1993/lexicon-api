@@ -6,7 +6,6 @@ use App\Models\Form;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -18,26 +17,13 @@ class LanguageFormControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testAttach()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = factory(Form::class)->create();
@@ -55,26 +41,11 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testAttachForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $team->projects()->save(factory(Project::class)->make());
-        $language = $team->languages()->save(factory(Language::class)->make());
-        $form = factory(Form::class)->create();
-
-        $this->json('POST', 'api/languages/'.$language->id.'/forms', [
-            'form_ids' => $form->id,
-        ])
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testSync()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->saveMany(factory(Form::class, 2)->make());
@@ -95,7 +66,9 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-language']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $language->forms()->save(factory(Form::class)->make());
@@ -111,9 +84,25 @@ class LanguageFormControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testAttachForbidden()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        $this->json('POST', 'api/languages/'.$language->id.'/forms')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDetachForbidden()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());

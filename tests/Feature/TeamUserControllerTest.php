@@ -15,32 +15,19 @@ class TeamUserControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testAttach()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $guest = factory(User::class)->create();
 
         $this->assertCount(1, $team->users);
 
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $user->id,
+            'user_ids' => $guest->id,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -52,13 +39,15 @@ class TeamUserControllerTest extends TestCase
      */
     public function testSync()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $this->user->id,
+            'user_ids' => $user->id,
             'sync' => true,
         ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -69,28 +58,16 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testAttachForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-
-        $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $this->user->id,
-        ])
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDetach()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
-        $user = $team->users()->save(factory(User::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $guest = $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$guest->id)
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertCount(1, $team->refresh()->users);
@@ -99,9 +76,25 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDetachForbidden()
+    public function testAttachWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
+        $team = factory(Team::class)->create();
+
+        $this->json('POST', 'api/teams/'.$team->id.'/users', [
+            'user_ids' => $user->id,
+        ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDetachWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)

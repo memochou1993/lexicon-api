@@ -18,7 +18,7 @@ class LanguagePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-language');
+        return $user->tokenCan('view-language');
     }
 
     /**
@@ -30,7 +30,7 @@ class LanguagePolicy
      */
     public function view(User $user, Language $language)
     {
-        return $user->hasPermission('view-language')
+        return $user->tokenCan('view-language')
             && $user->hasTeam($language->teams->first());
     }
 
@@ -42,7 +42,7 @@ class LanguagePolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-language');
+        return $user->tokenCan('create-language');
     }
 
     /**
@@ -54,7 +54,7 @@ class LanguagePolicy
      */
     public function update(User $user, Language $language)
     {
-        return $user->hasPermission('update-language')
+        return $user->tokenCan('update-language')
             && $user->hasTeam($language->teams->first());
     }
 
@@ -67,7 +67,7 @@ class LanguagePolicy
      */
     public function delete(User $user, Language $language)
     {
-        return $user->hasPermission('delete-language')
+        return $user->tokenCan('delete-language')
             && $user->hasTeam($language->teams->first());
     }
 }

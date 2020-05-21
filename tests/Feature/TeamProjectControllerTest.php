@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -16,26 +15,13 @@ class TeamProjectControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testIndex()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects', [
@@ -58,22 +44,10 @@ class TeamProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewAllForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $team->projects()->save(factory(Project::class)->make());
-
-        $this->json('GET', 'api/teams/'.$team->id.'/projects')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testStore()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Project::class)->make()->toArray();
 
@@ -93,7 +67,9 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make([
             'name' => 'Unique Project',
         ]));
@@ -116,9 +92,24 @@ class TeamProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testCreateForbidden()
+    public function testViewAllWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('GET', 'api/teams/'.$team->id.'/projects')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Project::class)->make()->toArray();

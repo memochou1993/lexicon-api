@@ -18,7 +18,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-project');
+        return $user->tokenCan('view-project');
     }
 
     /**
@@ -30,7 +30,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        return $user->hasPermission('view-project')
+        return $user->tokenCan('view-project')
             && $user->hasProject($project);
     }
 
@@ -42,7 +42,7 @@ class ProjectPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-project');
+        return $user->tokenCan('create-project');
     }
 
     /**
@@ -54,7 +54,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project)
     {
-        return $user->hasPermission('update-project')
+        return $user->tokenCan('update-project')
             && $user->hasProject($project);
     }
 
@@ -67,7 +67,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project)
     {
-        return $user->hasPermission('delete-project')
+        return $user->tokenCan('delete-project')
             && $user->hasProject($project);
     }
 }

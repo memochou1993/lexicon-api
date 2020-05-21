@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Form;
 use App\Models\Language;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -17,26 +16,13 @@ class TeamControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testShow()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id, [
             'relations' => 'users,projects,languages,forms',
@@ -58,21 +44,11 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-
-        $this->json('GET', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Team::class)->make([
             'name' => 'New Team',
@@ -92,7 +68,9 @@ class TeamControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $teams = $this->user->teams()->saveMany(factory(Team::class, 2)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $teams = $user->teams()->saveMany(factory(Team::class, 2)->make());
 
         $data = factory(Team::class)->make([
             'name' => $teams->last()->name,
@@ -110,21 +88,11 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-
-        $this->json('PATCH', 'api/teams/'.$team->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDestroy()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['delete-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
@@ -159,9 +127,36 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testViewWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+
+        $this->json('GET', 'api/teams/'.$team->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+
+        $this->json('PATCH', 'api/teams/'.$team->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('DELETE', 'api/teams/'.$team->id)

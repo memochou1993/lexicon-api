@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Key;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -17,26 +16,13 @@ class ProjectKeyControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testIndex()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
@@ -59,23 +45,11 @@ class ProjectKeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewAllForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $project->keys()->save(factory(Key::class)->make());
-
-        $this->json('GET', 'api/projects/'.$project->id.'/keys')
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testStore()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $data = factory(Key::class)->make()->toArray();
@@ -96,7 +70,9 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make([
             'name' => 'Unique Key',
@@ -120,9 +96,25 @@ class ProjectKeyControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewAllForbidden()
+    {
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project->keys()->save(factory(Key::class)->make());
+
+        $this->json('GET', 'api/projects/'.$project->id.'/keys')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testCreateForbidden()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
@@ -131,4 +123,6 @@ class ProjectKeyControllerTest extends TestCase
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
+
+    // TODO: make WithoutPermission() tests
 }

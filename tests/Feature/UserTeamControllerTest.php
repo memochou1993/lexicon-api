@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -15,26 +14,13 @@ class UserTeamControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = Sanctum::actingAs(factory(User::class)->create());
-    }
-
-    /**
      * @return void
      */
     public function testIndex()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->create());
 
         $this->json('GET', 'api/user/teams', [
             'relations' => 'users,projects,languages,forms',
@@ -62,6 +48,8 @@ class UserTeamControllerTest extends TestCase
      */
     public function testStore()
     {
+        $user = Sanctum::actingAs($this->user);
+
         $data = factory(Team::class)->make()->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
@@ -72,7 +60,7 @@ class UserTeamControllerTest extends TestCase
 
         $this->assertDatabaseHas('teams', $data);
 
-        $this->assertCount(1, $this->user->teams);
+        $this->assertCount(1, $user->teams);
     }
 
     /**
@@ -80,7 +68,9 @@ class UserTeamControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $this->user->teams()->save(factory(Team::class)->make([
+        $user = Sanctum::actingAs($this->user);
+
+        $user->teams()->save(factory(Team::class)->make([
             'name' => 'Unique Team',
         ]));
 
@@ -96,6 +86,6 @@ class UserTeamControllerTest extends TestCase
                 ],
             ]);
 
-        $this->assertCount(1, $this->user->teams);
+        $this->assertCount(1, $user->teams);
     }
 }

@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -17,26 +16,13 @@ class ProjectControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testShow()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
@@ -58,22 +44,11 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-
-        $this->json('GET', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $data = factory(Project::class)->make([
@@ -94,7 +69,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
 
         $data = factory(Project::class)->make([
@@ -113,22 +90,11 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-
-        $this->json('PATCH', 'api/projects/'.$project->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDestroy()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['delete-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $language = $project->languages()->save(factory(Language::class)->make());
 
@@ -156,13 +122,44 @@ class ProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testViewForbidden()
+    {
+        $user = Sanctum::actingAs($this->user, ['view-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $this->json('GET', 'api/projects/'.$project->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateForbidden()
+    {
+        $user = Sanctum::actingAs($this->user, ['update-project']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $this->json('PATCH', 'api/projects/'.$project->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
     public function testDeleteForbidden()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user, ['delete-project']);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
+
+    // TODO: make WithoutPermission() tests
 }

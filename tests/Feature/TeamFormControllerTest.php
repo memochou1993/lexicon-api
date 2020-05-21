@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Form;
 use App\Models\Team;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -16,26 +15,13 @@ class TeamFormControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testStore()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Form::class)->make()->toArray();
 
@@ -55,7 +41,9 @@ class TeamFormControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
         $team->forms()->save(factory(Form::class)->make([
             'name' => 'Unique Form',
         ]));
@@ -78,9 +66,10 @@ class TeamFormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testCreateForbidden()
+    public function testCreateWithoutPermission()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user);
+
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Form::class)->make()->toArray();

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -66,6 +67,18 @@ class User extends Authenticatable
     }
 
     /**
+     * The permissions that belong to the user.
+     *
+     * @return Collection
+     */
+    public function permissions()
+    {
+        return $this->roles->flatMap(function ($role) {
+            return $role->permissions;
+        });
+    }
+
+    /**
      * Get all of the teams that are assigned this user.
      *
      * @return MorphToMany
@@ -97,6 +110,7 @@ class User extends Authenticatable
             ->flatten()
             ->some(function ($role) {
                 if (is_string($role)) {
+                    // TODO: make function
                     $role = Role::where('name', $role)->first();
                 }
 
@@ -116,6 +130,7 @@ class User extends Authenticatable
             ->flatten()
             ->some(function ($permission) {
                 if (is_string($permission)) {
+                    // TODO: make function
                     $permission = Permission::where('name', $permission)->firstOrNew();
                 }
 
@@ -124,6 +139,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Determine if the user has the given team.
+     *
      * @param  Team  $team
      * @return bool
      */
@@ -133,11 +150,32 @@ class User extends Authenticatable
     }
 
     /**
+     * Determine if the user has the given project.
+     *
      * @param  Project  $project
      * @return bool
      */
     public function hasProject(Project $project)
     {
         return $this->projects->contains($project);
+    }
+
+    /**
+     * Assign the given role to the user.
+     *
+     * @param  Role|array|string  $roles
+     */
+    public function assignRoles(...$roles)
+    {
+        collect($roles)
+            ->flatten()
+            ->each(function ($role) {
+                if (is_string($role)) {
+                    // TODO: make function
+                    $role = Permission::where('name', $role)->first();
+                }
+
+                $this->roles()->attach($role);
+            });
     }
 }

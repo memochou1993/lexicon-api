@@ -7,7 +7,6 @@ use App\Models\Key;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\User;
 use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,26 +19,13 @@ class ValueControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->actingAsRole('admin');
-    }
-
-    /**
      * @return void
      */
     public function testShow()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['view-value']);
+
+        $team = $user->teams()->save(factory(Team::class)->create());
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
@@ -60,24 +46,11 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-        $value = $key->values()->save(factory(Value::class)->make());
-
-        $this->json('GET', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdate()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['update-value']);
+
+        $team = $user->teams()->save(factory(Team::class)->create());
         $project = $team->projects()->save(factory(Project::class)->make());
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
@@ -100,33 +73,20 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
-    {
-        $user = factory(User::class)->create();
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
-        $value = $key->values()->save(factory(Value::class)->make());
-
-        $this->json('PATCH', 'api/values/'.$value->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @return void
-     */
     public function testDestroy()
     {
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $user = Sanctum::actingAs($this->user, ['delete-value']);
+
+        $team = $user->teams()->save(factory(Team::class)->create());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
-        $language->forms()->attach($form->id);
+        $language->forms()->attach($form);
         $project = $team->projects()->save(factory(Project::class)->make());
-        $project->languages()->attach($language->id);
+        $project->languages()->attach($language);
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
-        $value->languages()->attach($language->id);
-        $value->forms()->attach($form->id);
+        $value->languages()->attach($language);
+        $value->forms()->attach($form);
 
         $this->assertCount(1, $value->languages);
         $this->assertCount(1, $value->forms);
@@ -152,9 +112,42 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testGuestViewForbidden()
     {
-        $user = factory(User::class)->create();
+        $user = Sanctum::actingAs($this->user, ['view-value']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+
+        $this->json('GET', 'api/values/'.$value->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestUpdateForbidden()
+    {
+        $user = Sanctum::actingAs($this->user, ['update-value']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+
+        $this->json('PATCH', 'api/values/'.$value->id)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDeleteForbidden()
+    {
+        $user = Sanctum::actingAs($this->user, ['delete-value']);
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
@@ -163,4 +156,8 @@ class ValueControllerTest extends TestCase
         $this->json('DELETE', 'api/values/'.$value->id)
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
+
+    // TODO: make testViewWithoutPermission()
+    // TODO: make testUpdateWithoutPermission()
+    // TODO: make testDeleteWithoutPermission()
 }

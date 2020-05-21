@@ -18,7 +18,7 @@ class FormPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-form');
+        return $user->tokenCan('view-form');
     }
 
     /**
@@ -30,7 +30,7 @@ class FormPolicy
      */
     public function view(User $user, Form $form)
     {
-        return $user->hasPermission('view-form')
+        return $user->tokenCan('view-form')
             && $user->hasTeam($form->teams->first());
     }
 
@@ -42,7 +42,7 @@ class FormPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-form');
+        return $user->tokenCan('create-form');
     }
 
     /**
@@ -54,7 +54,7 @@ class FormPolicy
      */
     public function update(User $user, Form $form)
     {
-        return $user->hasPermission('update-form')
+        return $user->tokenCan('update-form')
             && $user->hasTeam($form->teams->first());
     }
 
@@ -67,7 +67,7 @@ class FormPolicy
      */
     public function delete(User $user, Form $form)
     {
-        return $user->hasPermission('delete-form')
+        return $user->tokenCan('delete-form')
             && $user->hasTeam($form->teams->first());
     }
 }

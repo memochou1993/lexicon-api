@@ -18,7 +18,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-role');
+        return $user->tokenCan('view-role');
     }
 
     /**
@@ -30,7 +30,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return $user->hasPermission('view-role');
+        return $user->tokenCan('view-role');
     }
 
     /**
@@ -41,7 +41,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-role');
+        return $user->tokenCan('create-role');
     }
 
     /**
@@ -53,7 +53,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        return $user->hasPermission('update-role');
+        return $user->tokenCan('update-role');
     }
 
     /**
@@ -65,6 +65,6 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        return $user->hasPermission('delete-role');
+        return $user->tokenCan('delete-role');
     }
 }
