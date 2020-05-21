@@ -62,11 +62,11 @@ class TeamUserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, ['update-team']);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $guest = $team->users()->save(factory(User::class)->make());
+        $member = $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$guest->id)
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$member->id)
             ->assertNoContent();
 
         $this->assertCount(1, $team->refresh()->users);

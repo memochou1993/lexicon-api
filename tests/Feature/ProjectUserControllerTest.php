@@ -42,7 +42,7 @@ class ProjectUserControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user, ['update-project']);
 
-        $team = $this->user->teams()->save(factory(Team::class)->make());
+        $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->users()->save(factory(User::class)->make());
 
@@ -66,11 +66,11 @@ class ProjectUserControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $guest = $project->users()->save(factory(User::class)->make());
+        $member = $project->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $project->users);
 
-        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$guest->id)
+        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$member->id)
             ->assertNoContent();
 
         $this->assertCount(1, $project->refresh()->users);
@@ -79,7 +79,7 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testAttachForbidden()
+    public function testGuestAttach()
     {
         $user = Sanctum::actingAs($this->user, ['update-project']);
 
@@ -93,7 +93,7 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDetachForbidden()
+    public function testGuestDetach()
     {
         $user = Sanctum::actingAs($this->user, ['update-project']);
 
@@ -104,5 +104,31 @@ class ProjectUserControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    // TODO: make WithoutPermission() tests
+    /**
+     * @return void
+     */
+    public function testAttachWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('POST', 'api/projects/'.$project->id.'/users')
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testDetachWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
+            ->assertForbidden();
+    }
 }
