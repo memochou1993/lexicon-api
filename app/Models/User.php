@@ -122,4 +122,22 @@ class User extends Authenticatable
                 return $this->hasRole($permission->roles);
             });
     }
+
+    /**
+     * @param  Team  $team
+     * @return bool
+     */
+    public function hasTeam(Team $team)
+    {
+        return $this->teams->contains($team);
+    }
+
+    /**
+     * @param  Project  $project
+     * @return bool
+     */
+    public function hasProject(Project $project)
+    {
+        return $this->projects->contains($project);
+    }
 }

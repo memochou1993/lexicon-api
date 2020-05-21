@@ -31,7 +31,7 @@ class ValuePolicy
     public function view(User $user, Value $value)
     {
         return $user->hasPermission('view-value')
-            && $value->key->project->hasUser($user);
+            && $user->hasProject($value->key->project);
     }
 
     /**
@@ -55,7 +55,7 @@ class ValuePolicy
     public function update(User $user, Value $value)
     {
         return $user->hasPermission('update-value')
-            && $value->key->project->hasUser($user);
+            && $user->hasProject($value->key->project);
     }
 
     /**
@@ -68,6 +68,6 @@ class ValuePolicy
     public function delete(User $user, Value $value)
     {
         return $user->hasPermission('delete-value')
-            && $value->key->project->hasUser($user);
+            && $user->hasProject($value->key->project);
     }
 }

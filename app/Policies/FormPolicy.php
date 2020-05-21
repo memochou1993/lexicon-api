@@ -31,7 +31,7 @@ class FormPolicy
     public function view(User $user, Form $form)
     {
         return $user->hasPermission('view-form')
-            && $form->teams->first()->hasUser($user);
+            && $user->hasTeam($form->teams->first());
     }
 
     /**
@@ -55,7 +55,7 @@ class FormPolicy
     public function update(User $user, Form $form)
     {
         return $user->hasPermission('update-form')
-            && $form->teams->first()->hasUser($user);
+            && $user->hasTeam($form->teams->first());
     }
 
     /**
@@ -68,6 +68,6 @@ class FormPolicy
     public function delete(User $user, Form $form)
     {
         return $user->hasPermission('delete-form')
-            && $form->teams->first()->hasUser($user);
+            && $user->hasTeam($form->teams->first());
     }
 }

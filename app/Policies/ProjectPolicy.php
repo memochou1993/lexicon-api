@@ -31,7 +31,7 @@ class ProjectPolicy
     public function view(User $user, Project $project)
     {
         return $user->hasPermission('view-project')
-            && $project->hasUser($user);
+            && $user->hasProject($project);
     }
 
     /**
@@ -55,7 +55,7 @@ class ProjectPolicy
     public function update(User $user, Project $project)
     {
         return $user->hasPermission('update-project')
-            && $project->hasUser($user);
+            && $user->hasProject($project);
     }
 
     /**
@@ -68,6 +68,6 @@ class ProjectPolicy
     public function delete(User $user, Project $project)
     {
         return $user->hasPermission('delete-project')
-            && $project->hasUser($user);
+            && $user->hasProject($project);
     }
 }

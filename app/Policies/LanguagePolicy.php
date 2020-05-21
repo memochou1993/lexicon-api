@@ -31,7 +31,7 @@ class LanguagePolicy
     public function view(User $user, Language $language)
     {
         return $user->hasPermission('view-language')
-            && $language->teams->first()->hasUser($user);
+            && $user->hasTeam($language->teams->first());
     }
 
     /**
@@ -55,7 +55,7 @@ class LanguagePolicy
     public function update(User $user, Language $language)
     {
         return $user->hasPermission('update-language')
-            && $language->teams->first()->hasUser($user);
+            && $user->hasTeam($language->teams->first());
     }
 
     /**
@@ -68,6 +68,6 @@ class LanguagePolicy
     public function delete(User $user, Language $language)
     {
         return $user->hasPermission('delete-language')
-            && $language->teams->first()->hasUser($user);
+            && $user->hasTeam($language->teams->first());
     }
 }
