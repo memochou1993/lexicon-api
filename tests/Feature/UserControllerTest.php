@@ -93,7 +93,9 @@ class UserControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-user']);
+        Sanctum::actingAs($this->user, ['delete-user']);
+
+        $user = factory(User::class)->create();
 
         $this->json('DELETE', 'api/users/'.$user->id)
             ->assertNoContent();
@@ -139,7 +141,9 @@ class UserControllerTest extends TestCase
      */
     public function testDeleteForbidden()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
+
+        $user = factory(User::class)->create();
 
         $this->json('DELETE', 'api/users/'.$user->id)
             ->assertForbidden();
