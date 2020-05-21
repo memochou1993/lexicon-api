@@ -64,7 +64,7 @@ class TeamFormControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user, ['update-team']);
 
         $team = factory(Team::class)->create();
 

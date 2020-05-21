@@ -62,6 +62,21 @@ class TeamLanguageControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testGuestCreate()
+    {
+        Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = factory(Team::class)->create();
+
+        $data = factory(Language::class)->make()->toArray();
+
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
     public function testCreateWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
