@@ -25,7 +25,7 @@ class LanguageFormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
-        $form = factory(Form::class)->create();
+        $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->assertCount(0, $language->forms);
 
@@ -47,12 +47,13 @@ class LanguageFormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
-        $form = $language->forms()->saveMany(factory(Form::class, 2)->make());
+        $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
+        $language->forms()->attach($forms);
 
         $this->assertCount(2, $language->forms);
 
         $this->json('POST', 'api/languages/'.$language->id.'/forms', [
-            'form_ids' => $form->pluck('id')->first(),
+            'form_ids' => $forms->pluck('id')->first(),
             'sync' => true,
         ])
             ->assertNoContent();
@@ -70,7 +71,8 @@ class LanguageFormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
-        $form = $language->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $language->forms()->attach($form);
 
         $this->assertCount(1, $language->forms);
 
@@ -105,7 +107,8 @@ class LanguageFormControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
-        $form = $language->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $language->forms()->attach($form);
 
         $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
             ->assertForbidden();
@@ -136,7 +139,8 @@ class LanguageFormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
-        $form = $language->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $language->forms()->attach($form);
 
         $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
             ->assertForbidden();
