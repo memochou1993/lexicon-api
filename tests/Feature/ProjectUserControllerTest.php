@@ -23,12 +23,12 @@ class ProjectUserControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $user = factory(User::class)->create();
+        $member = factory(User::class)->create();
 
         $this->assertCount(1, $project->users);
 
         $this->json('POST', 'api/projects/'.$project->id.'/users', [
-            'user_ids' => $user->id,
+            'user_ids' => $member->id,
         ])
             ->assertNoContent();
 
