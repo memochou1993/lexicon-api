@@ -102,7 +102,7 @@ class TeamControllerTest extends TestCase
         $this->assertDeleted($team);
 
         $this->assertDatabaseMissing('model_has_users', [
-            'user_id' => $this->user->id,
+            'user_id' => $user->id,
             'model_type' => 'team',
             'model_id' => $team->id,
         ]);

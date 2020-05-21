@@ -103,7 +103,7 @@ class ProjectControllerTest extends TestCase
         $this->assertDeleted($project);
 
         $this->assertDatabaseMissing('model_has_users', [
-            'user_id' => $this->user->id,
+            'user_id' => $user->id,
             'model_type' => 'project',
             'model_id' => $project->id,
         ]);
