@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Form;
 use App\Models\Team;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -27,7 +26,7 @@ class FormControllerTest extends TestCase
         $this->json('GET', 'api/forms/'.$form->id, [
             'relations' => '',
         ])
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJsonStructure([
                 'data',
             ])
@@ -51,7 +50,7 @@ class FormControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/forms/'.$form->id, $data)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertOk()
             ->assertJson([
                 'data' => $data,
             ]);
@@ -74,11 +73,8 @@ class FormControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/forms/'.$forms->first()->id, $data)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ],
+            ->assertJsonValidationErrors([
+                'name',
             ]);
     }
 
@@ -93,9 +89,51 @@ class FormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertNoContent();
 
         $this->assertDeleted($form);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestView()
+    {
+        Sanctum::actingAs($this->user, ['view-form']);
+
+        $team = factory(Team::class)->create();
+        $form = $team->forms()->save(factory(Form::class)->make());
+
+        $this->json('GET', 'api/forms/'.$form->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestUpdate()
+    {
+        Sanctum::actingAs($this->user, ['update-form']);
+
+        $team = factory(Team::class)->create();
+        $form = $team->forms()->save(factory(Form::class)->make());
+
+        $this->json('PATCH', 'api/forms/'.$form->id)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDelete()
+    {
+        Sanctum::actingAs($this->user, ['delete-form']);
+
+        $team = factory(Team::class)->create();
+        $form = $team->forms()->save(factory(Form::class)->make());
+
+        $this->json('DELETE', 'api/forms/'.$form->id)
+            ->assertForbidden();
     }
 
     /**
@@ -109,7 +147,7 @@ class FormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('GET', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -123,7 +161,7 @@ class FormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('PATCH', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 
     /**
@@ -137,6 +175,6 @@ class FormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('DELETE', 'api/forms/'.$form->id)
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertForbidden();
     }
 }
