@@ -31,7 +31,7 @@ class ValueControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->setUpUser('maintainer');
+        $this->user = $this->actingAsRole('admin');
     }
 
     /**

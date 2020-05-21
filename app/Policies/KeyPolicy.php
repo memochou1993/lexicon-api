@@ -18,7 +18,7 @@ class KeyPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasPermission('view-key');
     }
 
     /**
@@ -30,7 +30,8 @@ class KeyPolicy
      */
     public function view(User $user, Key $key)
     {
-        return $key->project->hasUser($user);
+        return $user->hasPermission('view-key')
+            && $key->project->hasUser($user);
     }
 
     /**
@@ -41,7 +42,7 @@ class KeyPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->hasPermission('create-key');
     }
 
     /**
@@ -53,7 +54,8 @@ class KeyPolicy
      */
     public function update(User $user, Key $key)
     {
-        return $key->project->hasUser($user);
+        return $user->hasPermission('update-key')
+            && $key->project->hasUser($user);
     }
 
     /**
@@ -65,6 +67,7 @@ class KeyPolicy
      */
     public function delete(User $user, Key $key)
     {
-        return $key->project->hasUser($user);
+        return $user->hasPermission('delete-key')
+            && $key->project->hasUser($user);
     }
 }

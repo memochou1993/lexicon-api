@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
      * @param  string  $role
      * @return UserContract
      */
-    protected function setUpUser(string $role): UserContract
+    protected function actingAsRole(string $role): UserContract
     {
         $this->seed([
             'PermissionSeeder',

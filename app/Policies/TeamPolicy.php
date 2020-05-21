@@ -18,7 +18,7 @@ class TeamPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasPermission('view-team');
     }
 
     /**
@@ -30,7 +30,8 @@ class TeamPolicy
      */
     public function view(User $user, Team $team)
     {
-        return $team->hasUser($user);
+        return $user->hasPermission('view-team')
+            && $team->hasUser($user);
     }
 
     /**
@@ -41,7 +42,7 @@ class TeamPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->hasPermission('create-team');
     }
 
     /**
@@ -53,7 +54,8 @@ class TeamPolicy
      */
     public function update(User $user, Team $team)
     {
-        return $team->hasUser($user);
+        return $user->hasPermission('update-team')
+            && $team->hasUser($user);
     }
 
     /**
@@ -65,6 +67,7 @@ class TeamPolicy
      */
     public function delete(User $user, Team $team)
     {
-        return $team->hasUser($user);
+        return $user->hasPermission('delete-team')
+            && $team->hasUser($user);
     }
 }

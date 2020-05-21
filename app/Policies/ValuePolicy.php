@@ -18,7 +18,7 @@ class ValuePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-values');
+        return $user->hasPermission('view-value');
     }
 
     /**
@@ -30,8 +30,8 @@ class ValuePolicy
      */
     public function view(User $user, Value $value)
     {
-        return $value->key->project->hasUser($user)
-            && $user->hasPermission('view-values');
+        return $user->hasPermission('view-value')
+            && $value->key->project->hasUser($user);
     }
 
     /**
@@ -42,7 +42,7 @@ class ValuePolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create-values');
+        return $user->hasPermission('create-value');
     }
 
     /**
@@ -54,8 +54,8 @@ class ValuePolicy
      */
     public function update(User $user, Value $value)
     {
-        return $value->key->project->hasUser($user)
-            && $user->hasPermission('update-values');
+        return $user->hasPermission('update-value')
+            && $value->key->project->hasUser($user);
     }
 
     /**
@@ -67,7 +67,7 @@ class ValuePolicy
      */
     public function delete(User $user, Value $value)
     {
-        return $value->key->project->hasUser($user)
-            && $user->hasPermission('delete-values');
+        return $user->hasPermission('delete-value')
+            && $value->key->project->hasUser($user);
     }
 }

@@ -21,7 +21,7 @@ class UserControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setUpUser('admin');
+        $this->actingAsRole('admin');
     }
 
     /**

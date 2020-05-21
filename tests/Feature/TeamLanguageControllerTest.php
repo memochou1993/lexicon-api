@@ -27,7 +27,7 @@ class TeamLanguageControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = Sanctum::actingAs(factory(User::class)->create());
+        $this->user = $this->actingAsRole('admin');
     }
 
     /**

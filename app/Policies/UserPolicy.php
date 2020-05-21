@@ -17,7 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermission('view-users');
+        return $user->hasPermission('view-user');
     }
 
     /**
@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return $user->hasPermission('view-users');
+        return $user->hasPermission('view-user');
     }
 
     /**
@@ -52,7 +52,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->hasPermission('update-users');
+        return $user->hasPermission('update-user');
     }
 
     /**
@@ -64,6 +64,6 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->hasPermission('delete-users');
+        return $user->hasPermission('delete-user');
     }
 }
