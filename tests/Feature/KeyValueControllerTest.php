@@ -45,4 +45,48 @@ class KeyValueControllerTest extends TestCase
 
         $this->assertCount(1, $key->values);
     }
+
+    /**
+     * @return void
+     */
+    public function testGuestStore()
+    {
+        $user = Sanctum::actingAs($this->user, ['update-key']);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
+
+        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
+
+        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+            ->assertForbidden();
+    }
 }
