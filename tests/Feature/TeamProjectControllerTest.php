@@ -88,6 +88,35 @@ class TeamProjectControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testGuestViewAll()
+    {
+        Sanctum::actingAs($this->user, ['view-team']);
+
+        $team = factory(Team::class)->create();
+        $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('GET', 'api/teams/'.$team->id.'/projects')
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestCreate()
+    {
+        Sanctum::actingAs($this->user, ['update-team']);
+
+        $team = factory(Team::class)->create();
+
+        $data = factory(Project::class)->make()->toArray();
+
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
+            ->assertForbidden();
+    }
+
+    /**
+     * @return void
+     */
     public function testViewAllWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
