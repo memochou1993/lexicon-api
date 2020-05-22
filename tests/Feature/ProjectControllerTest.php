@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Project;
@@ -126,8 +127,13 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
-        $this->json('GET', 'api/projects/'.$project->id)
+        $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -140,8 +146,13 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
-        $this->json('PATCH', 'api/projects/'.$project->id)
+        $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -154,8 +165,13 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
-        $this->json('DELETE', 'api/projects/'.$project->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -182,8 +198,13 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('PATCH', 'api/projects/'.$project->id)
+        $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -196,7 +217,12 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('DELETE', 'api/projects/'.$project->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

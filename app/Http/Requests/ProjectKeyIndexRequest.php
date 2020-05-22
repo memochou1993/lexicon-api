@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectKeyIndexRequest extends FormRequest
 {
@@ -14,7 +15,9 @@ class ProjectKeyIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('view', $this->route('project'));
+        Gate::authorize('view', $this->route('project'));
+
+        return true;
     }
 
     /**

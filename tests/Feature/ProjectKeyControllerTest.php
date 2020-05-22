@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Key;
 use App\Models\Project;
@@ -47,7 +48,10 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::KEY_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -70,7 +74,10 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::KEY_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -101,8 +108,13 @@ class ProjectKeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $this->json('GET', 'api/projects/'.$project->id.'/keys')
+        $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -110,15 +122,23 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::KEY_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
         $data = factory(Key::class)->make()->toArray();
 
-        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -132,8 +152,13 @@ class ProjectKeyControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->keys()->save(factory(Key::class)->make());
 
-        $this->json('GET', 'api/projects/'.$project->id.'/keys')
+        $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -148,7 +173,12 @@ class ProjectKeyControllerTest extends TestCase
 
         $data = factory(Key::class)->make()->toArray();
 
-        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

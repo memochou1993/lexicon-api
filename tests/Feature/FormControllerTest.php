@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Team;
@@ -105,8 +106,13 @@ class FormControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('GET', 'api/forms/'.$form->id)
+        $response = $this->json('GET', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -119,8 +125,13 @@ class FormControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('PATCH', 'api/forms/'.$form->id)
+        $response = $this->json('PATCH', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -133,8 +144,13 @@ class FormControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -147,8 +163,13 @@ class FormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('GET', 'api/forms/'.$form->id)
+        $response = $this->json('GET', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -161,8 +182,13 @@ class FormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('PATCH', 'api/forms/'.$form->id)
+        $response = $this->json('PATCH', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -175,7 +201,12 @@ class FormControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

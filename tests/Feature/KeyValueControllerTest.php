@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Key;
@@ -23,7 +24,10 @@ class KeyValueControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+            PermissionType::VALUE_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
@@ -52,7 +56,10 @@ class KeyValueControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+            PermissionType::VALUE_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
@@ -65,8 +72,13 @@ class KeyValueControllerTest extends TestCase
             'form_id' => $form->id,
         ]);
 
-        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+        $response = $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -87,7 +99,12 @@ class KeyValueControllerTest extends TestCase
             'form_id' => $form->id,
         ]);
 
-        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+        $response = $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

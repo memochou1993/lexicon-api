@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
@@ -94,8 +95,13 @@ class LanguageFormControllerTest extends TestCase
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('POST', 'api/languages/'.$language->id.'/forms')
+        $response = $this->json('POST', 'api/languages/'.$language->id.'/forms')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -103,7 +109,7 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testGuestDetach()
     {
-        Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());
@@ -111,8 +117,13 @@ class LanguageFormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
 
-        $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -126,8 +137,13 @@ class LanguageFormControllerTest extends TestCase
         $team->projects()->save(factory(Project::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('POST', 'api/languages/'.$language->id.'/forms')
+        $response = $this->json('POST', 'api/languages/'.$language->id.'/forms')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -143,7 +159,12 @@ class LanguageFormControllerTest extends TestCase
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
 
-        $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id.'/forms/'.$form->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Value;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class KeyValueStoreRequest extends FormRequest
@@ -14,7 +16,10 @@ class KeyValueStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('key'));
+        Gate::authorize('view', $this->route('key'));
+        Gate::authorize('create', Value::class);
+
+        return true;
     }
 
     /**

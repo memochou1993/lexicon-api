@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class LanguageFormStoreRequest extends FormRequest
@@ -14,7 +15,9 @@ class LanguageFormStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('language'));
+        Gate::authorize('update', $this->route('language'));
+
+        return true;
     }
 
     /**

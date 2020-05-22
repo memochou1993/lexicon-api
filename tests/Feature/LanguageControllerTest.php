@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
@@ -115,8 +116,13 @@ class LanguageControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('GET', 'api/languages/'.$language->id)
+        $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -129,8 +135,13 @@ class LanguageControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('PATCH', 'api/languages/'.$language->id)
+        $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -143,8 +154,13 @@ class LanguageControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('DELETE', 'api/languages/'.$language->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -157,8 +173,13 @@ class LanguageControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('GET', 'api/languages/'.$language->id)
+        $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -171,8 +192,13 @@ class LanguageControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('PATCH', 'api/languages/'.$language->id)
+        $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -185,7 +211,12 @@ class LanguageControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('DELETE', 'api/languages/'.$language->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

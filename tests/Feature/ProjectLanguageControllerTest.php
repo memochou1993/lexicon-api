@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Project;
@@ -89,8 +90,13 @@ class ProjectLanguageControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
 
-        $this->json('POST', 'api/projects/'.$project->id.'/languages')
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -105,8 +111,13 @@ class ProjectLanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
         $project->languages()->attach($language);
 
-        $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -119,8 +130,13 @@ class ProjectLanguageControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('POST', 'api/projects/'.$project->id.'/languages')
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -135,7 +151,12 @@ class ProjectLanguageControllerTest extends TestCase
         $language = $team->languages()->save(factory(Language::class)->make());
         $project->languages()->attach($language);
 
-        $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }
