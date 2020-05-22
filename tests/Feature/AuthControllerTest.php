@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -72,9 +73,23 @@ class AuthControllerTest extends TestCase
     public function testGetUser()
     {
         $user = Sanctum::actingAs($this->user);
+        $user->roles()->save(factory(Role::class)->make());
 
-        $this->json('GET', 'api/auth/user')
+        $this->json('GET', 'api/auth/user', [
+            'relations' => 'roles,roles.permissions,teams,projects',
+        ])
             ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    'roles' => [
+                        [
+                            'permissions',
+                        ],
+                    ],
+                    'teams',
+                    'projects',
+                ],
+            ])
             ->assertJson([
                 'data' => $user->toArray(),
             ]);

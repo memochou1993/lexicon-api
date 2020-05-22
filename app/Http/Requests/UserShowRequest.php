@@ -27,6 +27,8 @@ class UserShowRequest extends FormRequest
         return [
             'relations' => [
                 new In([
+                    'roles',
+                    'roles.permissions',
                     'teams',
                     'projects',
                 ]),

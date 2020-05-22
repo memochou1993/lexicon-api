@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,15 +20,21 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, [PermissionType::USER_VIEW_ANY]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_VIEW_ANY]);
+        $user->roles()->save(factory(Role::class)->make());
 
         $this->json('GET', 'api/users', [
-            'relations' => 'teams,projects',
+            'relations' => 'roles,roles.permissions,teams,projects',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
+                        'roles' => [
+                            [
+                                'permissions',
+                            ],
+                        ],
                         'teams',
                         'projects',
                     ],
@@ -41,13 +48,19 @@ class UserControllerTest extends TestCase
     public function testShow()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_VIEW]);
+        $user->roles()->save(factory(Role::class)->make());
 
         $this->json('GET', 'api/users/'.$user->id, [
-            'relations' => 'teams,projects',
+            'relations' => 'roles,roles.permissions,teams,projects',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
+                    'roles' => [
+                        [
+                            'permissions',
+                        ],
+                    ],
                     'teams',
                     'projects',
                 ],
