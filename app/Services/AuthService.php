@@ -34,13 +34,19 @@ class AuthService
      */
     public function getToken(string $email, string $password, string $device): ?string
     {
-        $user = $this->user->where('email', $email)->first();
+        $user = $this->user->firstWhere('email', $email);
 
         if (! $user || ! Hash::check($password, $user->password)) {
             return null;
         }
 
-        $abilities = $user->permissions()->unique()->pluck('name')->toArray();
+        $abilities = $user->roles
+            ->flatMap(function ($role) {
+                return $role->permissions;
+            })
+            ->unique()
+            ->pluck('name')
+            ->toArray();
 
         return $user->createToken($device, $abilities)->plainTextToken;
     }

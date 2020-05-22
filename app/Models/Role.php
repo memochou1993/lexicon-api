@@ -42,23 +42,4 @@ class Role extends Model
     {
         return $this->belongsToMany(Permission::class);
     }
-
-    /**
-     * Assign the given permission to the role.
-     *
-     * @param  Permission|array|string  $permissions
-     */
-    public function assignPermissions(...$permissions)
-    {
-        collect($permissions)
-            ->flatten()
-            ->each(function ($permission) {
-                if (is_string($permission)) {
-                    // TODO: make function
-                    $permission = Permission::where('name', $permission)->first();
-                }
-
-                $this->permissions()->attach($permission);
-            });
-    }
 }
