@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Project;
 use App\Models\Team;
@@ -46,7 +47,11 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
+        ]);
+
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Project::class)->make()->toArray();
@@ -67,7 +72,10 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make([
@@ -96,8 +104,13 @@ class TeamProjectControllerTest extends TestCase
         $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/teams/'.$team->id.'/projects')
+        $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -105,14 +118,22 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
+        ]);
 
         $team = factory(Team::class)->create();
 
         $data = factory(Project::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -125,8 +146,13 @@ class TeamProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/teams/'.$team->id.'/projects')
+        $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -140,7 +166,12 @@ class TeamProjectControllerTest extends TestCase
 
         $data = factory(Project::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

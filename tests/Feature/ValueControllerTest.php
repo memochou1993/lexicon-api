@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Key;
@@ -121,8 +122,13 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/values/'.$value->id)
+        $response = $this->json('GET', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -137,8 +143,13 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('PATCH', 'api/values/'.$value->id)
+        $response = $this->json('PATCH', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -153,8 +164,13 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('DELETE', 'api/values/'.$value->id)
+        $response = $this->json('DELETE', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -169,8 +185,13 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/values/'.$value->id)
+        $response = $this->json('GET', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -185,8 +206,13 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('PATCH', 'api/values/'.$value->id)
+        $response = $this->json('PATCH', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -201,7 +227,12 @@ class ValueControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('DELETE', 'api/values/'.$value->id)
+        $response = $this->json('DELETE', 'api/values/'.$value->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

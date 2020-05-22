@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -153,8 +154,13 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $this->json('GET', 'api/roles')
+        $response = $this->json('GET', 'api/roles')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -166,8 +172,13 @@ class RoleControllerTest extends TestCase
 
         $data = factory(Role::class)->make()->toArray();
 
-        $this->json('POST', 'api/roles', $data)
+        $response = $this->json('POST', 'api/roles', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -179,8 +190,13 @@ class RoleControllerTest extends TestCase
 
         $role = factory(Role::class)->create();
 
-        $this->json('GET', 'api/roles/'.$role->id)
+        $response = $this->json('GET', 'api/roles/'.$role->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -192,8 +208,13 @@ class RoleControllerTest extends TestCase
 
         $role = factory(Role::class)->create();
 
-        $this->json('PATCH', 'api/roles/'.$role->id)
+        $response = $this->json('PATCH', 'api/roles/'.$role->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -205,7 +226,12 @@ class RoleControllerTest extends TestCase
 
         $role = factory(Role::class)->create();
 
-        $this->json('DELETE', 'api/roles/'.$role->id)
+        $response = $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

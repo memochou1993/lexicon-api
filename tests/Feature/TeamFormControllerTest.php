@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Team;
@@ -19,7 +20,10 @@ class TeamFormControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::FORM_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
@@ -41,7 +45,10 @@ class TeamFormControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::FORM_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->forms()->save(factory(Form::class)->make([
@@ -65,14 +72,22 @@ class TeamFormControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::FORM_CREATE,
+        ]);
 
         $team = factory(Team::class)->create();
 
         $data = factory(Form::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -86,7 +101,12 @@ class TeamFormControllerTest extends TestCase
 
         $data = factory(Form::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

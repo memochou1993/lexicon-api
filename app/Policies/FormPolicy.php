@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class FormPolicy
 {
@@ -15,11 +17,15 @@ class FormPolicy
      * Determine whether the user can view any models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::FORM_VIEW_ANY);
+        if (! $user->tokenCan(PermissionType::FORM_VIEW_ANY)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        return true;
     }
 
     /**
@@ -27,23 +33,34 @@ class FormPolicy
      *
      * @param  User  $user
      * @param  Form  $form
-     * @return bool
+     * @return mixed
      */
     public function view(User $user, Form $form)
     {
-        return $user->tokenCan(PermissionType::FORM_VIEW)
-            && $user->hasTeam($form->teams->first());
+        if (! $user->tokenCan(PermissionType::FORM_VIEW)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($form->teams->first())) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function create(User $user)
     {
-        return $user->tokenCan(PermissionType::FORM_CREATE);
+        if (! $user->tokenCan(PermissionType::FORM_CREATE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        return true;
     }
 
     /**
@@ -51,12 +68,19 @@ class FormPolicy
      *
      * @param  User  $user
      * @param  Form  $form
-     * @return bool
+     * @return mixed
      */
     public function update(User $user, Form $form)
     {
-        return $user->tokenCan(PermissionType::FORM_UPDATE)
-            && $user->hasTeam($form->teams->first());
+        if (! $user->tokenCan(PermissionType::FORM_UPDATE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($form->teams->first())) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 
     /**
@@ -64,11 +88,18 @@ class FormPolicy
      *
      * @param  User  $user
      * @param  Form  $form
-     * @return bool
+     * @return mixed
      */
     public function delete(User $user, Form $form)
     {
-        return $user->tokenCan(PermissionType::FORM_DELETE)
-            && $user->hasTeam($form->teams->first());
+        if (! $user->tokenCan(PermissionType::FORM_DELETE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($form->teams->first())) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 }

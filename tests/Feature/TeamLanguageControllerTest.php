@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Team;
@@ -19,7 +20,10 @@ class TeamLanguageControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::LANGUAGE_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
@@ -41,7 +45,10 @@ class TeamLanguageControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::LANGUAGE_CREATE,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->languages()->save(factory(Language::class)->make([
@@ -65,14 +72,22 @@ class TeamLanguageControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::LANGUAGE_CREATE,
+        ]);
 
         $team = factory(Team::class)->create();
 
         $data = factory(Language::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -86,7 +101,12 @@ class TeamLanguageControllerTest extends TestCase
 
         $data = factory(Language::class)->make()->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

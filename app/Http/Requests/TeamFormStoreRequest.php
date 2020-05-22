@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Form;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +16,10 @@ class TeamFormStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('team'));
+        Gate::authorize('view', $this->route('team'));
+        Gate::authorize('create', Form::class);
+
+        return true;
     }
 
     /**

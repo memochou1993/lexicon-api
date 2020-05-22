@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class TeamPolicy
 {
@@ -15,11 +17,15 @@ class TeamPolicy
      * Determine whether the user can view any models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::TEAM_VIEW_ANY);
+        if (! $user->tokenCan(PermissionType::TEAM_VIEW_ANY)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        return true;
     }
 
     /**
@@ -27,19 +33,26 @@ class TeamPolicy
      *
      * @param  User  $user
      * @param  Team  $team
-     * @return bool
+     * @return mixed
      */
     public function view(User $user, Team $team)
     {
-        return $user->tokenCan(PermissionType::TEAM_VIEW)
-            && $user->hasTeam($team);
+        if (! $user->tokenCan(PermissionType::TEAM_VIEW)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($team)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function create(User $user)
     {
@@ -51,12 +64,19 @@ class TeamPolicy
      *
      * @param  User  $user
      * @param  Team  $team
-     * @return bool
+     * @return mixed
      */
     public function update(User $user, Team $team)
     {
-        return $user->tokenCan(PermissionType::TEAM_UPDATE)
-            && $user->hasTeam($team);
+        if (! $user->tokenCan(PermissionType::TEAM_UPDATE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($team)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 
     /**
@@ -64,11 +84,18 @@ class TeamPolicy
      *
      * @param  User  $user
      * @param  Team  $team
-     * @return bool
+     * @return mixed
      */
     public function delete(User $user, Team $team)
     {
-        return $user->tokenCan(PermissionType::TEAM_DELETE)
-            && $user->hasTeam($team);
+        if (! $user->tokenCan(PermissionType::TEAM_DELETE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasTeam($team)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+        }
+
+        return true;
     }
 }

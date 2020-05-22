@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class TeamLanguageStoreRequest extends FormRequest
@@ -14,7 +16,10 @@ class TeamLanguageStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('team'));
+        Gate::authorize('view', $this->route('team'));
+        Gate::authorize('create', Language::class);
+
+        return true;
     }
 
     /**

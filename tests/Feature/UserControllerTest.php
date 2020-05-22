@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -111,8 +112,13 @@ class UserControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $this->json('GET', 'api/users')
+        $response = $this->json('GET', 'api/users')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -122,8 +128,13 @@ class UserControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user);
 
-        $this->json('GET', 'api/users/'.$user->id)
+        $response = $this->json('GET', 'api/users/'.$user->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -133,8 +144,13 @@ class UserControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user);
 
-        $this->json('PATCH', 'api/users/'.$user->id)
+        $response = $this->json('PATCH', 'api/users/'.$user->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -146,7 +162,12 @@ class UserControllerTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $this->json('DELETE', 'api/users/'.$user->id)
+        $response = $this->json('DELETE', 'api/users/'.$user->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

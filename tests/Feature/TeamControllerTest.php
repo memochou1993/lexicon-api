@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
@@ -130,8 +131,13 @@ class TeamControllerTest extends TestCase
 
         $team = factory(Team::class)->create();
 
-        $this->json('GET', 'api/teams/'.$team->id)
+        $response = $this->json('GET', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -143,8 +149,13 @@ class TeamControllerTest extends TestCase
 
         $team = factory(Team::class)->create();
 
-        $this->json('GET', 'api/teams/'.$team->id)
+        $response = $this->json('PATCH', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -156,8 +167,13 @@ class TeamControllerTest extends TestCase
 
         $team = factory(Team::class)->create();
 
-        $this->json('GET', 'api/teams/'.$team->id)
+        $response = $this->json('DELETE', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -169,8 +185,13 @@ class TeamControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('GET', 'api/teams/'.$team->id)
+        $response = $this->json('GET', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -182,8 +203,13 @@ class TeamControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('PATCH', 'api/teams/'.$team->id)
+        $response = $this->json('PATCH', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -195,7 +221,12 @@ class TeamControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('DELETE', 'api/teams/'.$team->id)
+        $response = $this->json('DELETE', 'api/teams/'.$team->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

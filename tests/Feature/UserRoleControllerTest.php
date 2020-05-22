@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -76,8 +77,13 @@ class UserRoleControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user);
 
-        $this->json('POST', 'api/users/'.$user->id.'/roles')
+        $response = $this->json('POST', 'api/users/'.$user->id.'/roles')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -89,7 +95,12 @@ class UserRoleControllerTest extends TestCase
 
         $role = $user->roles()->save(factory(Role::class)->make());
 
-        $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
+        $response = $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

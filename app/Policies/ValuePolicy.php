@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\User;
 use App\Models\Value;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class ValuePolicy
 {
@@ -15,11 +17,15 @@ class ValuePolicy
      * Determine whether the user can view any models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::VALUE_VIEW_ANY);
+        if (! $user->tokenCan(PermissionType::VALUE_VIEW_ANY)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        return true;
     }
 
     /**
@@ -27,23 +33,34 @@ class ValuePolicy
      *
      * @param  User  $user
      * @param  Value  $value
-     * @return bool
+     * @return mixed
      */
     public function view(User $user, Value $value)
     {
-        return $user->tokenCan(PermissionType::VALUE_VIEW)
-            && $user->hasProject($value->key->project);
+        if (! $user->tokenCan(PermissionType::VALUE_VIEW)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasProject($value->key->project)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+        }
+
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      *
      * @param  User  $user
-     * @return bool
+     * @return mixed
      */
     public function create(User $user)
     {
-        return $user->tokenCan(PermissionType::VALUE_CREATE);
+        if (! $user->tokenCan(PermissionType::VALUE_CREATE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        return true;
     }
 
     /**
@@ -51,12 +68,19 @@ class ValuePolicy
      *
      * @param  User  $user
      * @param  Value  $value
-     * @return bool
+     * @return mixed
      */
     public function update(User $user, Value $value)
     {
-        return $user->tokenCan(PermissionType::VALUE_UPDATE)
-            && $user->hasProject($value->key->project);
+        if (! $user->tokenCan(PermissionType::VALUE_UPDATE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasProject($value->key->project)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+        }
+
+        return true;
     }
 
     /**
@@ -64,11 +88,18 @@ class ValuePolicy
      *
      * @param  User  $user
      * @param  Value  $value
-     * @return bool
+     * @return mixed
      */
     public function delete(User $user, Value $value)
     {
-        return $user->tokenCan(PermissionType::VALUE_DELETE)
-            && $user->hasProject($value->key->project);
+        if (! $user->tokenCan(PermissionType::VALUE_DELETE)) {
+            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+        }
+
+        if (! $user->hasProject($value->key->project)) {
+            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+        }
+
+        return true;
     }
 }

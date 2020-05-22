@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Project;
 use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class TeamProjectIndexRequest extends FormRequest
 {
@@ -14,7 +16,9 @@ class TeamProjectIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('view', $this->route('team'));
+        Gate::authorize('view', $this->route('team'));
+
+        return true;
     }
 
     /**

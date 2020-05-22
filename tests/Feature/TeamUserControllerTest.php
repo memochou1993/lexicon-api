@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Team;
 use App\Models\User;
@@ -82,10 +83,15 @@ class TeamUserControllerTest extends TestCase
 
         $team = factory(Team::class)->create();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/users', [
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $user->id,
         ])
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -97,8 +103,13 @@ class TeamUserControllerTest extends TestCase
 
         $team = factory(Team::class)->create();
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
+        $response = $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -110,8 +121,13 @@ class TeamUserControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('POST', 'api/teams/'.$team->id.'/users')
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/users')
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
@@ -123,7 +139,12 @@ class TeamUserControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
+        $response = $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 }

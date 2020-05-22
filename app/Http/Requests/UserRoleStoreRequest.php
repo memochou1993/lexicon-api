@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class UserRoleStoreRequest extends FormRequest
@@ -14,7 +15,9 @@ class UserRoleStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('user'));
+        Gate::authorize('update', $this->route('user'));
+
+        return true;
     }
 
     /**
