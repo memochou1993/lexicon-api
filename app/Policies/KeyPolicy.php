@@ -2,12 +2,12 @@
 
 namespace App\Policies;
 
-use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Exceptions\PermissionDeniedException;
+use App\Exceptions\UserNotInProjectException;
 use App\Models\Key;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class KeyPolicy
 {
@@ -18,11 +18,12 @@ class KeyPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function viewAny(User $user)
     {
         if (! $user->tokenCan(PermissionType::KEY_VIEW_ANY)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -34,15 +35,17 @@ class KeyPolicy
      * @param  User  $user
      * @param  Key  $key
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInProjectException
      */
     public function view(User $user, Key $key)
     {
         if (! $user->tokenCan(PermissionType::KEY_VIEW)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasProject($key->project)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+            throw new UserNotInProjectException();
         }
 
         return true;
@@ -53,11 +56,12 @@ class KeyPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
         if (! $user->tokenCan(PermissionType::KEY_CREATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -69,15 +73,17 @@ class KeyPolicy
      * @param  User  $user
      * @param  Key  $key
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInProjectException
      */
     public function update(User $user, Key $key)
     {
         if (! $user->tokenCan(PermissionType::KEY_UPDATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasProject($key->project)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+            throw new UserNotInProjectException();
         }
 
         return true;
@@ -89,15 +95,17 @@ class KeyPolicy
      * @param  User  $user
      * @param  Key  $key
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInProjectException
      */
     public function delete(User $user, Key $key)
     {
         if (! $user->tokenCan(PermissionType::KEY_DELETE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasProject($key->project)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_PROJECT);
+            throw new UserNotInProjectException();
         }
 
         return true;

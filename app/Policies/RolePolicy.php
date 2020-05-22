@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Exceptions\PermissionDeniedException;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class RolePolicy
 {
@@ -18,11 +17,12 @@ class RolePolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function viewAny(User $user)
     {
         if (! $user->tokenCan(PermissionType::ROLE_VIEW_ANY)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -34,11 +34,12 @@ class RolePolicy
      * @param  User  $user
      * @param  Role  $role
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function view(User $user, Role $role)
     {
         if (! $user->tokenCan(PermissionType::ROLE_VIEW)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -49,11 +50,12 @@ class RolePolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
         if (! $user->tokenCan(PermissionType::ROLE_CREATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -65,11 +67,12 @@ class RolePolicy
      * @param  User  $user
      * @param  Role  $role
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function update(User $user, Role $role)
     {
         if (! $user->tokenCan(PermissionType::ROLE_UPDATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -81,11 +84,12 @@ class RolePolicy
      * @param  User  $user
      * @param  Role  $role
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function delete(User $user, Role $role)
     {
         if (! $user->tokenCan(PermissionType::ROLE_DELETE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;

@@ -2,12 +2,12 @@
 
 namespace App\Policies;
 
-use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Exceptions\PermissionDeniedException;
+use App\Exceptions\UserNotInTeamException;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class LanguagePolicy
 {
@@ -18,11 +18,12 @@ class LanguagePolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function viewAny(User $user)
     {
         if (! $user->tokenCan(PermissionType::LANGUAGE_VIEW_ANY)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -34,15 +35,17 @@ class LanguagePolicy
      * @param  User  $user
      * @param  Language  $language
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function view(User $user, Language $language)
     {
         if (! $user->tokenCan(PermissionType::LANGUAGE_VIEW)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($language->teams->first())) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;
@@ -53,11 +56,12 @@ class LanguagePolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
         if (! $user->tokenCan(PermissionType::LANGUAGE_CREATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -69,15 +73,17 @@ class LanguagePolicy
      * @param  User  $user
      * @param  Language  $language
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function update(User $user, Language $language)
     {
         if (! $user->tokenCan(PermissionType::LANGUAGE_UPDATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($language->teams->first())) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;
@@ -89,15 +95,17 @@ class LanguagePolicy
      * @param  User  $user
      * @param  Language  $language
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function delete(User $user, Language $language)
     {
         if (! $user->tokenCan(PermissionType::LANGUAGE_DELETE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($language->teams->first())) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;

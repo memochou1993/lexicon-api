@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Exceptions\PermissionDeniedException;
+use App\Exceptions\UserNotInTeamException;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,11 +20,12 @@ class TeamPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function viewAny(User $user)
     {
         if (! $user->tokenCan(PermissionType::TEAM_VIEW_ANY)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -34,15 +37,17 @@ class TeamPolicy
      * @param  User  $user
      * @param  Team  $team
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function view(User $user, Team $team)
     {
         if (! $user->tokenCan(PermissionType::TEAM_VIEW)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($team)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;
@@ -53,10 +58,15 @@ class TeamPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
-        return $user->tokenCan(PermissionType::TEAM_CREATE);
+        if (! $user->tokenCan(PermissionType::TEAM_CREATE)) {
+            throw new PermissionDeniedException();
+        }
+
+        return true;
     }
 
     /**
@@ -65,15 +75,17 @@ class TeamPolicy
      * @param  User  $user
      * @param  Team  $team
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function update(User $user, Team $team)
     {
         if (! $user->tokenCan(PermissionType::TEAM_UPDATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($team)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;
@@ -85,15 +97,17 @@ class TeamPolicy
      * @param  User  $user
      * @param  Team  $team
      * @return mixed
+     * @throws PermissionDeniedException
+     * @throws UserNotInTeamException
      */
     public function delete(User $user, Team $team)
     {
         if (! $user->tokenCan(PermissionType::TEAM_DELETE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         if (! $user->hasTeam($team)) {
-            return Response::deny(null, ErrorType::USER_NOT_IN_TEAM);
+            throw new UserNotInTeamException();
         }
 
         return true;

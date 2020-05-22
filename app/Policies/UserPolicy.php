@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Exceptions\PermissionDeniedException;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -17,11 +16,12 @@ class UserPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function viewAny(User $user)
     {
         if (! $user->tokenCan(PermissionType::USER_VIEW_ANY)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -33,11 +33,12 @@ class UserPolicy
      * @param  User  $user
      * @param  User  $model
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function view(User $user, User $model)
     {
         if (! $user->tokenCan(PermissionType::USER_VIEW)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -48,11 +49,12 @@ class UserPolicy
      *
      * @param  User  $user
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
         if (! $user->tokenCan(PermissionType::USER_CREATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -64,11 +66,12 @@ class UserPolicy
      * @param  User  $user
      * @param  User  $model
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function update(User $user, User $model)
     {
         if (! $user->tokenCan(PermissionType::USER_UPDATE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
@@ -80,11 +83,12 @@ class UserPolicy
      * @param  User  $user
      * @param  User  $model
      * @return mixed
+     * @throws PermissionDeniedException
      */
     public function delete(User $user, User $model)
     {
         if (! $user->tokenCan(PermissionType::USER_DELETE)) {
-            return Response::deny(null, ErrorType::PERMISSION_DENIED);
+            throw new PermissionDeniedException();
         }
 
         return true;
