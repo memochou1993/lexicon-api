@@ -108,7 +108,7 @@ class UserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewAllForbidden()
+    public function testViewAllWithoutPermission()
     {
         Sanctum::actingAs($this->user);
 
@@ -124,7 +124,7 @@ class UserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testViewForbidden()
+    public function testViewWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
 
@@ -140,7 +140,7 @@ class UserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testUpdateForbidden()
+    public function testUpdateWithoutPermission()
     {
         $user = Sanctum::actingAs($this->user);
 
@@ -156,7 +156,7 @@ class UserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteForbidden()
+    public function testDeleteWithoutPermission()
     {
         Sanctum::actingAs($this->user);
 

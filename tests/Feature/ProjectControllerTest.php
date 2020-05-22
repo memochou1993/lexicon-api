@@ -184,8 +184,13 @@ class ProjectControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/projects/'.$project->id)
+        $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
     }
 
     /**
