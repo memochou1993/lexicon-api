@@ -32,6 +32,7 @@ class RoleIndexRequest extends FormRequest
             'relations' => [
                 new In([
                     'users',
+                    'permissions',
                 ]),
             ],
         ];

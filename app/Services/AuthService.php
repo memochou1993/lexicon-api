@@ -44,8 +44,8 @@ class AuthService
             ->flatMap(function ($role) {
                 return $role->permissions;
             })
-            ->unique()
             ->pluck('name')
+            ->unique()
             ->toArray();
 
         return $user->createToken($device, $abilities)->plainTextToken;

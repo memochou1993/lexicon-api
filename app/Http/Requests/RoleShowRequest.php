@@ -28,6 +28,7 @@ class RoleShowRequest extends FormRequest
             'relations' => [
                 new In([
                     'users',
+                    'permissions',
                 ]),
             ],
         ];

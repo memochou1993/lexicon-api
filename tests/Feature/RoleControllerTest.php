@@ -24,13 +24,14 @@ class RoleControllerTest extends TestCase
         factory(Role::class)->create();
 
         $this->json('GET', 'api/roles', [
-            'relations' => 'users',
+            'relations' => 'users,permissions',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
                         'users',
+                        'permissions',
                     ],
                 ],
             ]);
@@ -83,9 +84,15 @@ class RoleControllerTest extends TestCase
         $role = factory(Role::class)->create();
 
         $this->json('GET', 'api/roles/'.$role->id, [
-            'relations' => 'users',
+            'relations' => 'users,permissions',
         ])
             ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    'users',
+                    'permissions',
+                ],
+            ])
             ->assertJson([
                 'data' => $role->toArray(),
             ]);
