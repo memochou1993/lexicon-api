@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class FormPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-form');
+        return $user->tokenCan(PermissionType::FORM_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class FormPolicy
      */
     public function view(User $user, Form $form)
     {
-        return $user->tokenCan('view-form')
+        return $user->tokenCan(PermissionType::FORM_VIEW)
             && $user->hasTeam($form->teams->first());
     }
 
@@ -42,7 +43,7 @@ class FormPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-form');
+        return $user->tokenCan(PermissionType::FORM_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class FormPolicy
      */
     public function update(User $user, Form $form)
     {
-        return $user->tokenCan('update-form')
+        return $user->tokenCan(PermissionType::FORM_UPDATE)
             && $user->hasTeam($form->teams->first());
     }
 
@@ -67,7 +68,7 @@ class FormPolicy
      */
     public function delete(User $user, Form $form)
     {
-        return $user->tokenCan('delete-form')
+        return $user->tokenCan(PermissionType::FORM_DELETE)
             && $user->hasTeam($form->teams->first());
     }
 }

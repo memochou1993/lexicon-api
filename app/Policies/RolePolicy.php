@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-role');
+        return $user->tokenCan(PermissionType::ROLE_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return $user->tokenCan('view-role');
+        return $user->tokenCan(PermissionType::ROLE_VIEW);
     }
 
     /**
@@ -41,7 +42,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-role');
+        return $user->tokenCan(PermissionType::ROLE_CREATE);
     }
 
     /**
@@ -53,7 +54,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        return $user->tokenCan('update-role');
+        return $user->tokenCan(PermissionType::ROLE_UPDATE);
     }
 
     /**
@@ -65,6 +66,6 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        return $user->tokenCan('delete-role');
+        return $user->tokenCan(PermissionType::ROLE_DELETE);
     }
 }

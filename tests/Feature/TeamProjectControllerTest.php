@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +19,7 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs($this->user, ['view-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
@@ -45,7 +46,7 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $data = factory(Project::class)->make()->toArray();
@@ -66,7 +67,7 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make([
@@ -90,7 +91,7 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testGuestViewAll()
     {
-        Sanctum::actingAs($this->user, ['view-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_VIEW]);
 
         $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());
@@ -104,7 +105,7 @@ class TeamProjectControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user, ['update-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = factory(Team::class)->create();
 

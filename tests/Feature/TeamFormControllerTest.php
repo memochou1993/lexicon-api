@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +19,7 @@ class TeamFormControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
@@ -40,7 +41,7 @@ class TeamFormControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->forms()->save(factory(Form::class)->make([
@@ -64,7 +65,7 @@ class TeamFormControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        Sanctum::actingAs($this->user, ['update-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = factory(Team::class)->create();
 

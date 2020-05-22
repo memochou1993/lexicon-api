@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\User;
 use App\Models\Value;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class ValuePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-value');
+        return $user->tokenCan(PermissionType::VALUE_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class ValuePolicy
      */
     public function view(User $user, Value $value)
     {
-        return $user->tokenCan('view-value')
+        return $user->tokenCan(PermissionType::VALUE_VIEW)
             && $user->hasProject($value->key->project);
     }
 
@@ -42,7 +43,7 @@ class ValuePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-value');
+        return $user->tokenCan(PermissionType::VALUE_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class ValuePolicy
      */
     public function update(User $user, Value $value)
     {
-        return $user->tokenCan('update-value')
+        return $user->tokenCan(PermissionType::VALUE_UPDATE)
             && $user->hasProject($value->key->project);
     }
 
@@ -67,7 +68,7 @@ class ValuePolicy
      */
     public function delete(User $user, Value $value)
     {
-        return $user->tokenCan('delete-value')
+        return $user->tokenCan(PermissionType::VALUE_DELETE)
             && $user->hasProject($value->key->project);
     }
 }

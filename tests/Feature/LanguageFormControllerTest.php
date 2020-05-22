@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
 use App\Models\Project;
@@ -20,7 +21,7 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-language']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
@@ -42,7 +43,7 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testSync()
     {
-        $user = Sanctum::actingAs($this->user, ['update-language']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
@@ -66,7 +67,7 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-language']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->projects()->save(factory(Project::class)->make());
@@ -87,7 +88,7 @@ class LanguageFormControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        Sanctum::actingAs($this->user, ['update-language']);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());

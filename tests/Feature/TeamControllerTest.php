@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
 use App\Models\Team;
@@ -19,7 +20,7 @@ class TeamControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
@@ -45,7 +46,7 @@ class TeamControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
@@ -67,7 +68,7 @@ class TeamControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $teams = $user->teams()->saveMany(factory(Team::class, 2)->make());
 
@@ -86,7 +87,7 @@ class TeamControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
@@ -125,7 +126,7 @@ class TeamControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, ['view-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_VIEW]);
 
         $team = factory(Team::class)->create();
 
@@ -138,7 +139,7 @@ class TeamControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, ['update-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = factory(Team::class)->create();
 
@@ -151,7 +152,7 @@ class TeamControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, ['delete-team']);
+        Sanctum::actingAs($this->user, [PermissionType::TEAM_DELETE]);
 
         $team = factory(Team::class)->create();
 

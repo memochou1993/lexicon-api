@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +18,7 @@ class UserRoleControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $role = factory(Role::class)->create();
 
@@ -36,7 +37,7 @@ class UserRoleControllerTest extends TestCase
      */
     public function testSync()
     {
-        $user = Sanctum::actingAs($this->user, ['update-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $roles = $user->roles()->saveMany(factory(Role::class, 2)->make());
 
@@ -56,7 +57,7 @@ class UserRoleControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $role = $user->roles()->save(factory(Role::class)->make());
 

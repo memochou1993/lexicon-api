@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -17,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-user');
+        return $user->tokenCan(PermissionType::USER_VIEW);
     }
 
     /**
@@ -29,7 +30,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return $user->tokenCan('view-user');
+        return $user->tokenCan(PermissionType::USER_VIEW);
     }
 
     /**
@@ -40,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->tokenCan(PermissionType::USER_CREATE);
     }
 
     /**
@@ -52,7 +53,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->tokenCan('update-user');
+        return $user->tokenCan(PermissionType::USER_UPDATE);
     }
 
     /**
@@ -64,6 +65,6 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->tokenCan('delete-user');
+        return $user->tokenCan(PermissionType::USER_DELETE);
     }
 }

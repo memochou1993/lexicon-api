@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +18,7 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, ['view-user']);
+        Sanctum::actingAs($this->user, [PermissionType::USER_VIEW]);
 
         $this->json('GET', 'api/users', [
             'relations' => 'teams,projects',
@@ -38,7 +39,7 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_VIEW]);
 
         $this->json('GET', 'api/users/'.$user->id, [
             'relations' => 'teams,projects',
@@ -60,7 +61,7 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $data = factory(User::class)->make([
             'name' => 'New User',
@@ -78,7 +79,7 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-user']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $data = factory(User::class)->create()->toArray();
 
@@ -93,7 +94,7 @@ class UserControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        Sanctum::actingAs($this->user, ['delete-user']);
+        Sanctum::actingAs($this->user, [PermissionType::USER_DELETE]);
 
         $user = factory(User::class)->create();
 

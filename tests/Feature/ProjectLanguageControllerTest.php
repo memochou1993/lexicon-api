@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
@@ -19,7 +20,7 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -40,7 +41,7 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testSync()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -63,7 +64,7 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -83,7 +84,7 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -97,7 +98,7 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testGuestDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());

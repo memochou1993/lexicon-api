@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\Key;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class KeyPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-key');
+        return $user->tokenCan(PermissionType::KEY_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class KeyPolicy
      */
     public function view(User $user, Key $key)
     {
-        return $user->tokenCan('view-key')
+        return $user->tokenCan(PermissionType::KEY_VIEW)
             && $user->hasProject($key->project);
     }
 
@@ -42,7 +43,7 @@ class KeyPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-key');
+        return $user->tokenCan(PermissionType::KEY_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class KeyPolicy
      */
     public function update(User $user, Key $key)
     {
-        return $user->tokenCan('update-key')
+        return $user->tokenCan(PermissionType::KEY_UPDATE)
             && $user->hasProject($key->project);
     }
 
@@ -67,7 +68,7 @@ class KeyPolicy
      */
     public function delete(User $user, Key $key)
     {
-        return $user->tokenCan('delete-key')
+        return $user->tokenCan(PermissionType::KEY_DELETE)
             && $user->hasProject($key->project);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +18,7 @@ class RoleControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, ['view-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_VIEW]);
 
         factory(Role::class)->create();
 
@@ -39,7 +40,7 @@ class RoleControllerTest extends TestCase
      */
     public function testStore()
     {
-        Sanctum::actingAs($this->user, ['create-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_CREATE]);
 
         $data = factory(Role::class)->make()->toArray();
 
@@ -55,7 +56,7 @@ class RoleControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        Sanctum::actingAs($this->user, ['create-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_CREATE]);
 
         factory(Role::class)->create([
             'name' => 'Unique Role',
@@ -76,7 +77,7 @@ class RoleControllerTest extends TestCase
      */
     public function testShow()
     {
-        Sanctum::actingAs($this->user, ['view-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_VIEW]);
 
         $role = factory(Role::class)->create();
 
@@ -94,7 +95,7 @@ class RoleControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        Sanctum::actingAs($this->user, ['update-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_UPDATE]);
 
         $role = factory(Role::class)->create();
 
@@ -114,7 +115,7 @@ class RoleControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        Sanctum::actingAs($this->user, ['update-role']);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_UPDATE]);
 
         $role = factory(Role::class)->create();
 
@@ -131,7 +132,7 @@ class RoleControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-role']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::ROLE_DELETE]);
 
         $role = $user->roles()->save(factory(Role::class)->make());
 

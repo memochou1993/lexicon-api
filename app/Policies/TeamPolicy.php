@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class TeamPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-team');
+        return $user->tokenCan(PermissionType::TEAM_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class TeamPolicy
      */
     public function view(User $user, Team $team)
     {
-        return $user->tokenCan('view-team')
+        return $user->tokenCan(PermissionType::TEAM_VIEW)
             && $user->hasTeam($team);
     }
 
@@ -42,7 +43,7 @@ class TeamPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-team');
+        return $user->tokenCan(PermissionType::TEAM_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class TeamPolicy
      */
     public function update(User $user, Team $team)
     {
-        return $user->tokenCan('update-team')
+        return $user->tokenCan(PermissionType::TEAM_UPDATE)
             && $user->hasTeam($team);
     }
 
@@ -67,7 +68,7 @@ class TeamPolicy
      */
     public function delete(User $user, Team $team)
     {
-        return $user->tokenCan('delete-team')
+        return $user->tokenCan(PermissionType::TEAM_DELETE)
             && $user->hasTeam($team);
     }
 }

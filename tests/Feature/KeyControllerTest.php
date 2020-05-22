@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Key;
 use App\Models\Project;
 use App\Models\Team;
@@ -19,7 +20,7 @@ class KeyControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -45,7 +46,7 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -69,7 +70,7 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -90,7 +91,7 @@ class KeyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -107,7 +108,7 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, ['view-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -122,7 +123,7 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -137,7 +138,7 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());

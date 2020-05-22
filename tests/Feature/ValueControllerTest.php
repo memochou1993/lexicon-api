@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Key;
 use App\Models\Language;
@@ -22,7 +23,7 @@ class ValueControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->create());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -47,7 +48,7 @@ class ValueControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->create());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -74,7 +75,7 @@ class ValueControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->create());
         $language = $team->languages()->save(factory(Language::class)->make());
@@ -113,7 +114,7 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, ['view-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -129,7 +130,7 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -145,7 +146,7 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-value']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());

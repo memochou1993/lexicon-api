@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\User;
 use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-project');
+        return $user->tokenCan(PermissionType::PROJECT_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        return $user->tokenCan('view-project')
+        return $user->tokenCan(PermissionType::PROJECT_VIEW)
             && $user->hasProject($project);
     }
 
@@ -42,7 +43,7 @@ class ProjectPolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-project');
+        return $user->tokenCan(PermissionType::PROJECT_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project)
     {
-        return $user->tokenCan('update-project')
+        return $user->tokenCan(PermissionType::PROJECT_UPDATE)
             && $user->hasProject($project);
     }
 
@@ -67,7 +68,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project)
     {
-        return $user->tokenCan('delete-project')
+        return $user->tokenCan(PermissionType::PROJECT_DELETE)
             && $user->hasProject($project);
     }
 }

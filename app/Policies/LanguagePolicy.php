@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class LanguagePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan('view-language');
+        return $user->tokenCan(PermissionType::LANGUAGE_VIEW);
     }
 
     /**
@@ -30,7 +31,7 @@ class LanguagePolicy
      */
     public function view(User $user, Language $language)
     {
-        return $user->tokenCan('view-language')
+        return $user->tokenCan(PermissionType::LANGUAGE_VIEW)
             && $user->hasTeam($language->teams->first());
     }
 
@@ -42,7 +43,7 @@ class LanguagePolicy
      */
     public function create(User $user)
     {
-        return $user->tokenCan('create-language');
+        return $user->tokenCan(PermissionType::LANGUAGE_CREATE);
     }
 
     /**
@@ -54,7 +55,7 @@ class LanguagePolicy
      */
     public function update(User $user, Language $language)
     {
-        return $user->tokenCan('update-language')
+        return $user->tokenCan(PermissionType::LANGUAGE_UPDATE)
             && $user->hasTeam($language->teams->first());
     }
 
@@ -67,7 +68,7 @@ class LanguagePolicy
      */
     public function delete(User $user, Language $language)
     {
-        return $user->tokenCan('delete-language')
+        return $user->tokenCan(PermissionType::LANGUAGE_DELETE)
             && $user->hasTeam($language->teams->first());
     }
 }

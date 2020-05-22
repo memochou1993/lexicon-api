@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +19,7 @@ class TeamUserControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $member = factory(User::class)->create();
@@ -38,7 +39,7 @@ class TeamUserControllerTest extends TestCase
      */
     public function testSync()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $team->users()->save(factory(User::class)->make());
@@ -59,7 +60,7 @@ class TeamUserControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $member = $team->users()->save(factory(User::class)->make());
@@ -77,7 +78,7 @@ class TeamUserControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = factory(Team::class)->create();
 
@@ -92,7 +93,7 @@ class TeamUserControllerTest extends TestCase
      */
     public function testGuestDetach()
     {
-        $user = Sanctum::actingAs($this->user, ['update-team']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
 
         $team = factory(Team::class)->create();
 

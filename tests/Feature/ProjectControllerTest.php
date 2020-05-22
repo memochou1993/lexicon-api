@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
@@ -19,7 +20,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -45,7 +46,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -68,7 +69,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
@@ -88,7 +89,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -120,7 +121,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, ['view-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -134,7 +135,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -148,7 +149,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());

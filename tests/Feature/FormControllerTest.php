@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +19,7 @@ class FormControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, ['view-form']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
@@ -40,7 +41,7 @@ class FormControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-form']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
@@ -63,7 +64,7 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-form']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
@@ -83,7 +84,7 @@ class FormControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, ['delete-form']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
@@ -99,7 +100,7 @@ class FormControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, ['view-form']);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
 
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());
@@ -113,7 +114,7 @@ class FormControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, ['update-form']);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());
@@ -127,7 +128,7 @@ class FormControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, ['delete-form']);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
 
         $team = factory(Team::class)->create();
         $form = $team->forms()->save(factory(Form::class)->make());

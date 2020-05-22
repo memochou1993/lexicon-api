@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Key;
 use App\Models\Project;
 use App\Models\Team;
@@ -19,7 +20,7 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs($this->user, ['view-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -46,7 +47,7 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -69,7 +70,7 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -94,7 +95,7 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testGuestViewAll()
     {
-        $user = Sanctum::actingAs($this->user, ['view-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
@@ -109,7 +110,7 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-project']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());

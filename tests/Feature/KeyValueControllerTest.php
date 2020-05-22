@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Key;
 use App\Models\Language;
@@ -22,7 +23,7 @@ class KeyValueControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, ['update-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
@@ -51,7 +52,7 @@ class KeyValueControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, ['update-key']);
+        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
