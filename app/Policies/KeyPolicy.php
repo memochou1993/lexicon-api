@@ -19,7 +19,7 @@ class KeyPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::KEY_VIEW);
+        return $user->tokenCan(PermissionType::KEY_VIEW_ANY);
     }
 
     /**

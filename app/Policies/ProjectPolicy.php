@@ -19,7 +19,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::PROJECT_VIEW);
+        return $user->tokenCan(PermissionType::PROJECT_VIEW_ANY);
     }
 
     /**

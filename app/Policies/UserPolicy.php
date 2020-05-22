@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::USER_VIEW);
+        return $user->tokenCan(PermissionType::USER_VIEW_ANY);
     }
 
     /**

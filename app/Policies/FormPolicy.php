@@ -19,7 +19,7 @@ class FormPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::FORM_VIEW);
+        return $user->tokenCan(PermissionType::FORM_VIEW_ANY);
     }
 
     /**

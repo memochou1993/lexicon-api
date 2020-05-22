@@ -19,7 +19,7 @@ class TeamPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::TEAM_VIEW);
+        return $user->tokenCan(PermissionType::TEAM_VIEW_ANY);
     }
 
     /**

@@ -19,7 +19,7 @@ class LanguagePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::LANGUAGE_VIEW);
+        return $user->tokenCan(PermissionType::LANGUAGE_VIEW_ANY);
     }
 
     /**

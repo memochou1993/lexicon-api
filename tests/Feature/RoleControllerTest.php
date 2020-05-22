@@ -18,7 +18,7 @@ class RoleControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, [PermissionType::ROLE_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::ROLE_VIEW_ANY]);
 
         factory(Role::class)->create();
 

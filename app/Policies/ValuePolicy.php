@@ -19,7 +19,7 @@ class ValuePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->tokenCan(PermissionType::VALUE_VIEW);
+        return $user->tokenCan(PermissionType::VALUE_VIEW_ANY);
     }
 
     /**

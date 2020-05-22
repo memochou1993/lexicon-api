@@ -18,7 +18,7 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, [PermissionType::USER_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::USER_VIEW_ANY]);
 
         $this->json('GET', 'api/users', [
             'relations' => 'teams,projects',
