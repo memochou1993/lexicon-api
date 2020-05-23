@@ -86,7 +86,11 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, Role $role)
     {
-        $role = $this->roleService->update($role, $request->all());
+        $role = $this->roleService->update(
+            $role,
+            $request->all(),
+            $request->permission_ids
+        );
 
         return new Resource($role);
     }

@@ -65,13 +65,15 @@ class RoleService
     /**
      * @param  Role  $role
      * @param  array  $data
+     * @param  array|null  $permission_ids
      * @return Model
      */
-    public function update(Role $role, array $data): Model
+    public function update(Role $role, array $data, ?array $permission_ids = []): Model
     {
         $role = $this->role->find($role->id);
 
         $role->update($data);
+        $role->permissions()->sync($permission_ids);
 
         return $role;
     }

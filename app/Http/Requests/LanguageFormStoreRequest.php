@@ -50,16 +50,9 @@ class LanguageFormStoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->explode('form_ids');
-        $this->prepareSync();
-    }
 
-    /**
-     * @return void
-     */
-    private function prepareSync()
-    {
         $this->merge([
-            'sync' => $this->sync ?? false,
+            'sync' => $this->input('sync', false),
         ]);
     }
 }

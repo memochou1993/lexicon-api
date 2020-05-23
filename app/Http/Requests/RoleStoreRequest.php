@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class RoleStoreRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -43,16 +46,6 @@ class RoleStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->preparePermissionIds();
-    }
-
-    /**
-     * @return void
-     */
-    private function preparePermissionIds()
-    {
-        $this->merge([
-            'permission_ids' => collect($this->permission_ids)->explode(',')->toArray(),
-        ]);
+        $this->explode('permission_ids');
     }
 }

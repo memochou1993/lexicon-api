@@ -117,19 +117,27 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::ROLE_UPDATE]);
 
+        $permission_ids = factory(Permission::class, 2)->create()->pluck('id')->toArray();
+
         $role = factory(Role::class)->create();
 
         $data = factory(Role::class)->make([
             'name' => 'New Role',
-        ])->toArray();
+            'permission_ids' => $permission_ids,
+        ]);
 
-        $this->json('PATCH', 'api/roles/'.$role->id, $data)
+        $response = $this->json('PATCH', 'api/roles/'.$role->id, $data->toArray())
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('permission_ids')->toArray(),
             ]);
 
-        $this->assertDatabaseHas('roles', $data);
+        $this->assertDatabaseHas('roles', $data->toArray());
+
+        $this->assertCount(
+            count($permission_ids),
+            Role::find(json_decode($response->getContent())->data->id)->permissions
+        );
     }
 
     /**

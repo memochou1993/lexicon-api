@@ -52,7 +52,7 @@ class AuthController extends Controller
         $token = $this->authService->getToken(
             $request->email,
             $request->password,
-            $request->device ?? ''
+            $request->device
         );
 
         if (! $token) {
