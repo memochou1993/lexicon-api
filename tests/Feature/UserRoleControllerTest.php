@@ -36,26 +36,6 @@ class UserRoleControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testSync()
-    {
-        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
-
-        $roles = $user->roles()->saveMany(factory(Role::class, 2)->make());
-
-        $this->assertCount(2, $user->roles);
-
-        $this->json('POST', 'api/users/'.$user->id.'/roles', [
-            'role_ids' => $roles->first()->id,
-            'sync' => true,
-        ])
-            ->assertNoContent();
-
-        $this->assertCount(1, $user->refresh()->roles);
-    }
-
-    /**
-     * @return void
-     */
     public function testDetach()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);

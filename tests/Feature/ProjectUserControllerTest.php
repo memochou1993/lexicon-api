@@ -40,28 +40,6 @@ class ProjectUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testSync()
-    {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
-
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->users()->save(factory(User::class)->make());
-
-        $this->assertCount(2, $project->users);
-
-        $this->json('POST', 'api/projects/'.$project->id.'/users', [
-            'user_ids' => $user->id,
-            'sync' => true,
-        ])
-            ->assertNoContent();
-
-        $this->assertCount(1, $project->refresh()->users);
-    }
-
-    /**
-     * @return void
-     */
     public function testDetach()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);

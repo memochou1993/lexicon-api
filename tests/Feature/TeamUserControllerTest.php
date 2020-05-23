@@ -38,27 +38,6 @@ class TeamUserControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testSync()
-    {
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
-
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $team->users()->save(factory(User::class)->make());
-
-        $this->assertCount(2, $team->users);
-
-        $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $user->id,
-            'sync' => true,
-        ])
-            ->assertNoContent();
-
-        $this->assertCount(1, $team->refresh()->users);
-    }
-
-    /**
-     * @return void
-     */
     public function testDetach()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
