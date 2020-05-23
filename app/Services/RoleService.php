@@ -73,7 +73,10 @@ class RoleService
         $role = $this->role->find($role->id);
 
         $role->update($data);
-        $role->permissions()->sync($permission_ids);
+
+        if ($permission_ids) {
+            $role->permissions()->sync($permission_ids);
+        }
 
         return $role;
     }

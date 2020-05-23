@@ -6,6 +6,7 @@ use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
 use App\Models\Language;
+use App\Models\Permission;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -47,20 +48,25 @@ class LanguageControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
+        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
+
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $data = factory(Language::class)->make([
             'name' => 'New Language',
-        ])->toArray();
+            'form_ids' => $form_ids,
+        ]);
 
-        $this->json('PATCH', 'api/languages/'.$language->id, $data)
+        $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('form_ids')->toArray(),
             ]);
 
-        $this->assertDatabaseHas('languages', $data);
+        $this->assertDatabaseHas('languages', $data->toArray());
+
+        $this->assertCount(count($form_ids), $language->forms);
     }
 
     /**

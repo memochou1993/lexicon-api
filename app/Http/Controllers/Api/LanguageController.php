@@ -54,7 +54,11 @@ class LanguageController extends Controller
      */
     public function update(LanguageUpdateRequest $request, Language $language)
     {
-        $language = $this->languageService->update($language, $request->all());
+        $language = $this->languageService->update(
+            $language,
+            $request->all(),
+            $request->form_ids
+        );
 
         return new Resource($language);
     }

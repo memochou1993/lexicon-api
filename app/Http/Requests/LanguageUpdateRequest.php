@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class LanguageUpdateRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -33,6 +36,20 @@ class LanguageUpdateRequest extends FormRequest
                     );
                 })->ignore($this->route('language')->id),
             ],
+            'form_ids' => [
+                'array',
+                Rule::exists('forms', 'id'),
+            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->explode('form_ids');
     }
 }

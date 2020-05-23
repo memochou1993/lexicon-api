@@ -39,13 +39,18 @@ class LanguageService
     /**
      * @param  Language  $language
      * @param  array  $data
+     * @param  array|null  $form_ids
      * @return Model
      */
-    public function update(Language $language, array $data): Model
+    public function update(Language $language, array $data, array $form_ids = []): Model
     {
         $language = $this->language->find($language->id);
 
         $language->update($data);
+
+        if ($form_ids) {
+            $language->forms()->sync($form_ids);
+        }
 
         return $language;
     }

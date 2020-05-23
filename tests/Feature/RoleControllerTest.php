@@ -134,10 +134,7 @@ class RoleControllerTest extends TestCase
 
         $this->assertDatabaseHas('roles', $data->toArray());
 
-        $this->assertCount(
-            count($permission_ids),
-            Role::find(json_decode($response->getContent())->data->id)->permissions
-        );
+        $this->assertCount(count($permission_ids), $role->permissions);
     }
 
     /**
