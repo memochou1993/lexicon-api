@@ -134,6 +134,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
+    'relations' => 'Invalid relations. Valid relations are :values.',
 
     /*
     |--------------------------------------------------------------------------

@@ -12,6 +12,6 @@ class UserNotInTeamException extends AuthorizationException
      */
     public function __construct()
     {
-        parent::__construct('Access denied.', ErrorType::USER_NOT_IN_TEAM);
+        parent::__construct(trans('error.access'), ErrorType::USER_NOT_IN_TEAM);
     }
 }
