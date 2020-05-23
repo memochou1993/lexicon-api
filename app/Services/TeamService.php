@@ -89,11 +89,16 @@ class TeamService
     /**
      * @param  Team  $team
      * @param  array  $data
+     * @param  array|null  $form_ids
      * @return Model
      */
-    public function storeLanguage(Team $team, array $data): Model
+    public function storeLanguage(Team $team, array $data, ?array $form_ids = []): Model
     {
-        return $team->languages()->create($data);
+        $language = $team->languages()->create($data);
+
+        $language->forms()->sync($form_ids);
+
+        return $language;
     }
 
     /**

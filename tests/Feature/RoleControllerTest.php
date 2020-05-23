@@ -45,10 +45,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::ROLE_CREATE]);
 
-        $permission_ids = factory(Permission::class, 2)
-            ->create()
-            ->pluck('id')
-            ->toArray();
+        $permission_ids = factory(Permission::class, 2)->create()->pluck('id')->toArray();
 
         $data = factory(Role::class)->make([
             'permission_ids' => $permission_ids,
@@ -60,9 +57,11 @@ class RoleControllerTest extends TestCase
                 'data' => $data->makeHidden('permission_ids')->toArray(),
             ]);
 
+        $this->assertDatabaseHas('roles', $data->toArray());
+
         $this->assertCount(
             count($permission_ids),
-            Role::find(json_decode($response->getContent())->data->id)->permissions,
+            Role::find(json_decode($response->getContent())->data->id)->permissions
         );
     }
 
@@ -129,6 +128,8 @@ class RoleControllerTest extends TestCase
             ->assertJson([
                 'data' => $data,
             ]);
+
+        $this->assertDatabaseHas('roles', $data);
     }
 
     /**
@@ -159,6 +160,8 @@ class RoleControllerTest extends TestCase
 
         $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertNoContent();
+
+        $this->assertDeleted($role);
 
         $this->assertDatabaseMissing('model_has_users', [
             'user_id' => $user->id,

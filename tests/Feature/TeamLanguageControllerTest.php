@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Models\Form;
 use App\Models\Language;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,18 +27,26 @@ class TeamLanguageControllerTest extends TestCase
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
+        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
 
-        $data = factory(Language::class)->make()->toArray();
+        $data = factory(Language::class)->make([
+            'form_ids' => $form_ids,
+        ]);
 
-        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data->toArray())
             ->assertCreated()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('form_ids')->toArray(),
             ]);
 
-        $this->assertDatabaseHas('languages', $data);
+        $this->assertDatabaseHas('languages', $data->toArray());
 
         $this->assertCount(1, $team->languages);
+
+        $this->assertCount(
+            count($form_ids),
+            Language::find(json_decode($response->getContent())->data->id)->forms
+        );
     }
 
     /**

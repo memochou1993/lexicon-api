@@ -35,7 +35,11 @@ class TeamLanguageController extends Controller
      */
     public function store(TeamLanguageStoreRequest $request, Team $team)
     {
-        $language = $this->teamService->storeLanguage($team, $request->all());
+        $language = $this->teamService->storeLanguage(
+            $team,
+            $request->all(),
+            $request->form_ids
+        );
 
         return new Resource($language);
     }

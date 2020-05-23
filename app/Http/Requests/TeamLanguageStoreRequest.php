@@ -39,6 +39,30 @@ class TeamLanguageStoreRequest extends FormRequest
                     );
                 }),
             ],
+            'form_ids' => [
+                'array',
+                Rule::exists('forms', 'id'),
+            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->prepareFormIds();
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareFormIds()
+    {
+        $this->merge([
+            'form_ids' => collect($this->form_ids)->explode(',')->toArray(),
+        ]);
     }
 }

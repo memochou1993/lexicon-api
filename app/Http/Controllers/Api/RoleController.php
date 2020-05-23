@@ -55,7 +55,10 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        $role = $this->roleService->store($request->all(), $request->permission_ids);
+        $role = $this->roleService->store(
+            $request->all(),
+            $request->permission_ids
+        );
 
         return new Resource($role);
     }
