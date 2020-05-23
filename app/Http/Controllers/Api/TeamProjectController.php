@@ -51,7 +51,7 @@ class TeamProjectController extends Controller
      */
     public function store(TeamProjectStoreRequest $request, Team $team)
     {
-        $project = $this->teamService->storeProject($team, $request->all());
+        $project = $this->teamService->storeProject($team, $request);
 
         return new Resource($project);
     }

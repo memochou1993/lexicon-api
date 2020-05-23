@@ -38,11 +38,7 @@ class TeamUserController extends Controller
      */
     public function store(TeamUserStoreRequest $request, Team $team)
     {
-        $this->teamService->attachUser(
-            $team,
-            $request->user_ids,
-            $request->sync
-        );
+        $this->teamService->attachUser($team, $request->user_ids);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

@@ -54,7 +54,7 @@ class KeyController extends Controller
      */
     public function update(KeyUpdateRequest $request, Key $key)
     {
-        $key = $this->keyService->update($key, $request->all());
+        $key = $this->keyService->update($key, $request);
 
         return new Resource($key);
     }

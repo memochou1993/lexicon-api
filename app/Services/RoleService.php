@@ -37,15 +37,16 @@ class RoleService
     }
 
     /**
-     * @param  array  $data
-     * @param  array|null  $permission_ids
+     * @param  Request  $request
      * @return Model
      */
-    public function store(array $data, ?array $permission_ids = []): Model
+    public function store(Request $request): Model
     {
-        $role = $this->role->create($data);
+        $role = $this->role->create($request->all());
 
-        $role->permissions()->sync($permission_ids);
+        if ($request->permission_ids) {
+            $role->permissions()->sync($request->permission_ids);
+        }
 
         return $role;
     }
@@ -64,18 +65,15 @@ class RoleService
 
     /**
      * @param  Role  $role
-     * @param  array  $data
-     * @param  array|null  $permission_ids
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Role $role, array $data, ?array $permission_ids = []): Model
+    public function update(Role $role, Request $request): Model
     {
-        $role = $this->role->find($role->id);
+        $role->update($request->all());
 
-        $role->update($data);
-
-        if ($permission_ids) {
-            $role->permissions()->sync($permission_ids);
+        if ($request->permission_ids) {
+            $role->permissions()->sync($request->permission_ids);
         }
 
         return $role;

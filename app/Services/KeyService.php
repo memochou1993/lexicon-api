@@ -38,14 +38,12 @@ class KeyService
 
     /**
      * @param  Key  $key
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Key $key, array $data): Model
+    public function update(Key $key, Request $request): Model
     {
-        $key = $this->key->find($key->id);
-
-        $key->update($data);
+        $key->update($request->all());
 
         return $key;
     }
@@ -61,17 +59,15 @@ class KeyService
 
     /**
      * @param  Key  $key
-     * @param  int  $languageId
-     * @param  int  $formId
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeValue(Key $key, int $languageId, int $formId, array $data): Model
+    public function storeValue(Key $key, Request $request): Model
     {
-        $value = $key->values()->create($data);
+        $value = $key->values()->create($request->all());
 
-        $value->languages()->attach($languageId);
-        $value->forms()->attach($formId);
+        $value->languages()->attach($request->languageId);
+        $value->forms()->attach($request->formId);
 
         return $value;
     }

@@ -35,12 +35,7 @@ class KeyValueController extends Controller
      */
     public function store(KeyValueStoreRequest $request, Key $key)
     {
-        $value = $this->keyService->storeValue(
-            $key,
-            $request->language_id,
-            $request->form_id,
-            $request->all()
-        );
+        $value = $this->keyService->storeValue($key, $request);
 
         return new Resource($value);
     }

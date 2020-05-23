@@ -39,14 +39,12 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Project $project, array $data): Model
+    public function update(Project $project, Request $request): Model
     {
-        $project = $this->project->find($project->id);
-
-        $project->update($data);
+        $project->update($request->all());
 
         return $project;
     }
@@ -82,22 +80,21 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeKey(Project $project, array $data): Model
+    public function storeKey(Project $project, Request $request): Model
     {
-        return $project->keys()->create($data);
+        return $project->keys()->create($request->all());
     }
 
     /**
      * @param  Project  $project
      * @param  array  $user_ids
-     * @param  bool  $detaching
      */
-    public function attachUser(Project $project, array $user_ids, bool $detaching): void
+    public function attachUser(Project $project, array $user_ids): void
     {
-        $project->users()->sync($user_ids, $detaching);
+        $project->users()->syncWithoutDetaching($user_ids);
     }
 
     /**
@@ -112,11 +109,10 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  array  $language_ids
-     * @param  bool  $detaching
      */
-    public function attachLanguage(Project $project, array $language_ids, bool $detaching): void
+    public function attachLanguage(Project $project, array $language_ids): void
     {
-        $project->languages()->sync($language_ids, $detaching);
+        $project->languages()->syncWithoutDetaching($language_ids);
     }
 
     /**

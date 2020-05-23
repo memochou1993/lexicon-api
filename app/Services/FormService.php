@@ -38,14 +38,12 @@ class FormService
 
     /**
      * @param  Form  $form
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Form $form, array $data): Model
+    public function update(Form $form, Request $request): Model
     {
-        $form = $this->form->find($form->id);
-
-        $form->update($data);
+        $form->update($request->all());
 
         return $form;
     }

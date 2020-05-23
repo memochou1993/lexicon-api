@@ -51,7 +51,7 @@ class ProjectKeyController extends Controller
      */
     public function store(ProjectKeyStoreRequest $request, Project $project)
     {
-        $key = $this->projectService->storekey($project, $request->all());
+        $key = $this->projectService->storekey($project, $request);
 
         return new Resource($key);
     }

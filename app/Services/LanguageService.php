@@ -38,18 +38,15 @@ class LanguageService
 
     /**
      * @param  Language  $language
-     * @param  array  $data
-     * @param  array|null  $form_ids
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Language $language, array $data, array $form_ids = []): Model
+    public function update(Language $language, Request $request): Model
     {
-        $language = $this->language->find($language->id);
+        $language->update($request->all());
 
-        $language->update($data);
-
-        if ($form_ids) {
-            $language->forms()->sync($form_ids);
+        if ($request->form_ids) {
+            $language->forms()->sync($request->form_ids);
         }
 
         return $language;
@@ -62,24 +59,5 @@ class LanguageService
     public function destroy(Language $language): bool
     {
         return $this->language->destroy($language->id);
-    }
-
-    /**
-     * @param  Language  $language
-     * @param  array  $form_ids
-     * @param  bool  $detaching
-     */
-    public function attachForm(Language $language, array $form_ids, bool $detaching): void
-    {
-        $language->forms()->sync($form_ids, $detaching);
-    }
-
-    /**
-     * @param  Language  $language
-     * @param  int  $form_id
-     */
-    public function detachForm(Language $language, int $form_id): void
-    {
-        $language->forms()->detach($form_id);
     }
 }

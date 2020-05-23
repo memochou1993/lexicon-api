@@ -54,7 +54,7 @@ class ValueController extends Controller
      */
     public function update(ValueUpdateRequest $request, Value $value)
     {
-        $value = $this->valueService->update($value, $request->all());
+        $value = $this->valueService->update($value, $request);
 
         return new Resource($value);
     }

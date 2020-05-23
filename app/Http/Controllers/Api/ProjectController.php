@@ -54,7 +54,7 @@ class ProjectController extends Controller
      */
     public function update(ProjectUpdateRequest $request, Project $project)
     {
-        $project = $this->projectService->update($project, $request->all());
+        $project = $this->projectService->update($project, $request);
 
         return new Resource($project);
     }

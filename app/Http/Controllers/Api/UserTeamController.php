@@ -49,7 +49,7 @@ class UserTeamController extends Controller
      */
     public function store(UserTeamStoreRequest $request)
     {
-        $team = $this->userService->storeTeam(Auth::guard()->user(), $request->all());
+        $team = $this->userService->storeTeam(Auth::guard()->user(), $request);
 
         return new Resource($team);
     }

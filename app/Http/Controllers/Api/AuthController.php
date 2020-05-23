@@ -37,7 +37,7 @@ class AuthController extends Controller
      */
     public function register(AuthRegisterRequest $request)
     {
-        $user = $this->authService->storeUser($request->all());
+        $user = $this->authService->storeUser($request);
 
         return new UserResource($user);
     }
@@ -83,7 +83,7 @@ class AuthController extends Controller
      */
     public function updateUser(AuthUserUpdateRequest $request)
     {
-        $user = $this->authService->updateUser($request->all());
+        $user = $this->authService->updateUser($request);
 
         return new UserResource($user);
     }

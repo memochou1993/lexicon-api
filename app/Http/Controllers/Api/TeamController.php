@@ -54,7 +54,7 @@ class TeamController extends Controller
      */
     public function update(TeamUpdateRequest $request, Team $team)
     {
-        $team = $this->teamService->update($team, $request->all());
+        $team = $this->teamService->update($team, $request);
 
         return new Resource($team);
     }

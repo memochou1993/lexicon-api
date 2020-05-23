@@ -35,7 +35,7 @@ class TeamFormController extends Controller
      */
     public function store(TeamFormStoreRequest $request, Team $team)
     {
-        $form = $this->teamService->storeForm($team, $request->all());
+        $form = $this->teamService->storeForm($team, $request);
 
         return new Resource($form);
     }

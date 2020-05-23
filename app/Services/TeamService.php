@@ -39,14 +39,12 @@ class TeamService
 
     /**
      * @param  Team  $team
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Team $team, array $data): Model
+    public function update(Team $team, Request $request): Model
     {
-        $team = $this->team->find($team->id);
-
-        $team->update($data);
+        $team->update($request->all());
 
         return $team;
     }
@@ -78,47 +76,47 @@ class TeamService
 
     /**
      * @param  Team  $team
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeProject(Team $team, array $data): Model
+    public function storeProject(Team $team, Request $request): Model
     {
-        return $team->projects()->create($data);
+        return $team->projects()->create($request->all());
     }
 
     /**
      * @param  Team  $team
-     * @param  array  $data
-     * @param  array|null  $form_ids
+     * @param  Request  $request
      * @return Model
      */
-    public function storeLanguage(Team $team, array $data, ?array $form_ids = []): Model
+    public function storeLanguage(Team $team, Request $request): Model
     {
-        $language = $team->languages()->create($data);
+        $language = $team->languages()->create($request->all());
 
-        $language->forms()->sync($form_ids);
+        if ($request->form_ids) {
+            $language->forms()->sync($request->form_ids);
+        }
 
         return $language;
     }
 
     /**
      * @param  Team  $team
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeForm(Team $team, array $data): Model
+    public function storeForm(Team $team, Request $request): Model
     {
-        return $team->forms()->create($data);
+        return $team->forms()->create($request->all());
     }
 
     /**
      * @param  Team  $team
      * @param  array  $user_ids
-     * @param  bool  $detaching
      */
-    public function attachUser(Team $team, array $user_ids, bool $detaching): void
+    public function attachUser(Team $team, array $user_ids): void
     {
-        $team->users()->sync($user_ids, $detaching);
+        $team->users()->syncWithoutDetaching($user_ids);
     }
 
     /**

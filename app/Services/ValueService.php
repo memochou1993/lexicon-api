@@ -38,14 +38,12 @@ class ValueService
 
     /**
      * @param  Value  $value
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(Value $value, array $data): Model
+    public function update(Value $value, Request $request): Model
     {
-        $value = $this->value->find($value->id);
-
-        $value->update($data);
+        $value->update($request->all());
 
         return $value;
     }

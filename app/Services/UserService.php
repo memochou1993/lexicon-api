@@ -50,14 +50,12 @@ class UserService
 
     /**
      * @param  User  $user
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function update(User $user, array $data): Model
+    public function update(User $user, Request $request): Model
     {
-        $user = $this->user->find($user->id);
-
-        $user->update($data);
+        $user->update($request->all());
 
         return $user;
     }
@@ -86,22 +84,21 @@ class UserService
 
     /**
      * @param  User  $user
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeTeam(User $user, array $data): Model
+    public function storeTeam(User $user, Request $request): Model
     {
-        return $user->teams()->create($data);
+        return $user->teams()->create($request->all());
     }
 
     /**
      * @param  User  $user
      * @param  array  $role_ids
-     * @param  bool  $detaching
      */
-    public function attachRole(User $user, array $role_ids, bool $detaching): void
+    public function attachRole(User $user, array $role_ids): void
     {
-        $user->roles()->sync($role_ids, $detaching);
+        $user->roles()->syncWithoutDetaching($role_ids);
     }
 
     /**

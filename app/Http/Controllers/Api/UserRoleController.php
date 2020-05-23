@@ -38,11 +38,7 @@ class UserRoleController extends Controller
      */
     public function store(UserRoleStoreRequest $request, User $user)
     {
-        $this->userService->attachRole(
-            $user,
-            $request->role_ids,
-            $request->sync
-        );
+        $this->userService->attachRole($user, $request->role_ids);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

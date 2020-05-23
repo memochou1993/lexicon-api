@@ -63,23 +63,23 @@ class AuthService
     }
 
     /**
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function storeUser(array $data): Model
+    public function storeUser(Request $request): Model
     {
-        return $this->user->create($data);
+        return $this->user->create($request->all());
     }
 
     /**
-     * @param  array  $data
+     * @param  Request  $request
      * @return Model
      */
-    public function updateUser(array $data): Model
+    public function updateUser(Request $request): Model
     {
         $user = Auth::guard()->user();
 
-        $user->update($data);
+        $user->update($request->all());
 
         return $user;
     }

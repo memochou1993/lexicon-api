@@ -54,7 +54,7 @@ class FormController extends Controller
      */
     public function update(FormUpdateRequest $request, Form $form)
     {
-        $form = $this->formService->update($form, $request->all());
+        $form = $this->formService->update($form, $request);
 
         return new Resource($form);
     }
