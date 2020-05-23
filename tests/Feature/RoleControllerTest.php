@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -44,13 +45,25 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::ROLE_CREATE]);
 
-        $data = factory(Role::class)->make()->toArray();
+        $permission_ids = factory(Permission::class, 2)
+            ->create()
+            ->pluck('id')
+            ->toArray();
 
-        $this->json('POST', 'api/roles', $data)
+        $data = factory(Role::class)->make([
+            'permission_ids' => $permission_ids,
+        ]);
+
+        $response = $this->json('POST', 'api/roles', $data->toArray())
             ->assertCreated()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('permission_ids')->toArray(),
             ]);
+
+        $this->assertCount(
+            count($permission_ids),
+            Role::find(json_decode($response->getContent())->data->id)->permissions,
+        );
     }
 
     /**

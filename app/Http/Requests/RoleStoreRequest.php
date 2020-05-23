@@ -29,6 +29,30 @@ class RoleStoreRequest extends FormRequest
                 'required',
                 Rule::unique('roles', 'name'),
             ],
+            'permission_ids' => [
+                'array',
+                Rule::exists('permissions', 'id'),
+            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->preparePermissionIds();
+    }
+
+    /**
+     * @return void
+     */
+    private function preparePermissionIds()
+    {
+        $this->merge([
+            'permission_ids' => collect($this->permission_ids)->explode(',')->toArray(),
+        ]);
     }
 }

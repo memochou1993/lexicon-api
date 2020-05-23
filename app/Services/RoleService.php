@@ -38,11 +38,16 @@ class RoleService
 
     /**
      * @param  array  $data
+     * @param  array|null  $permission_ids
      * @return Model
      */
-    public function store(array $data): Model
+    public function store(array $data, ?array $permission_ids = []): Model
     {
-        return $this->role->create($data);
+        $role = $this->role->create($data);
+
+        $role->permissions()->sync($permission_ids);
+
+        return $role;
     }
 
     /**
