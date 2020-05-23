@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -35,6 +38,20 @@ class UserUpdateRequest extends FormRequest
             'password' => [
                 'min:8',
             ],
+            'role_ids' => [
+                'array',
+                Rule::exists('roles', 'id'),
+            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->explode('role_ids');
     }
 }

@@ -77,15 +77,20 @@ class UserControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
+        $role_ids = factory(Role::class, 2)->create()->pluck('id')->toArray();
+
         $data = factory(User::class)->make([
             'name' => 'New User',
-        ])->toArray();
+            'role_ids' => $role_ids,
+        ]);
 
-        $this->json('PATCH', 'api/users/'.$user->id, $data)
+        $this->json('PATCH', 'api/users/'.$user->id, $data->toArray())
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('role_ids')->toArray(),
             ]);
+
+        $this->assertCount(count($role_ids), $user->roles);
     }
 
     /**

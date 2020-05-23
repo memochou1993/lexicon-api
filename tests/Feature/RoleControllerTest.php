@@ -126,7 +126,7 @@ class RoleControllerTest extends TestCase
             'permission_ids' => $permission_ids,
         ]);
 
-        $response = $this->json('PATCH', 'api/roles/'.$role->id, $data->toArray())
+        $this->json('PATCH', 'api/roles/'.$role->id, $data->toArray())
             ->assertOk()
             ->assertJson([
                 'data' => $data->makeHidden('permission_ids')->toArray(),
