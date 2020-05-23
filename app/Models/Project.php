@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasLanguages;
-use App\Traits\HasUsers;
+use App\Models\Traits\HasLanguages;
+use App\Models\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

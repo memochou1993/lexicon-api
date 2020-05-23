@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasForms;
-use App\Traits\HasLanguages;
+use App\Models\Traits\HasForms;
+use App\Models\Traits\HasLanguages;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
