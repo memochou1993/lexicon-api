@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class LanguageFormStoreRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -46,18 +49,8 @@ class LanguageFormStoreRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareFormIds();
+        $this->explode('form_ids');
         $this->prepareSync();
-    }
-
-    /**
-     * @return void
-     */
-    private function prepareFormIds()
-    {
-        $this->merge([
-            'form_ids' => collect($this->form_ids)->explode(',')->toArray(),
-        ]);
     }
 
     /**

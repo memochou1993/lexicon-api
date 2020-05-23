@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\In;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserIndexRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -47,16 +50,6 @@ class UserIndexRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareRelations();
-    }
-
-    /**
-     * @return void
-     */
-    private function prepareRelations()
-    {
-        $this->merge([
-            'relations' => $relations = collect($this->relations)->explode(',')->toArray(),
-        ]);
+        $this->explode('relations');
     }
 }
