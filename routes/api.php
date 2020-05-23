@@ -59,8 +59,6 @@ Route::namespace('Api')->group(function () {
 
         Route::apiResource('languages', 'LanguageController')
             ->only('show', 'update', 'destroy');
-        Route::apiResource('languages.forms', 'LanguageFormController')
-            ->only('store', 'destroy');
 
         Route::apiResource('forms', 'FormController')
             ->only('show', 'update', 'destroy');
