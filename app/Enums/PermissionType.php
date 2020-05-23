@@ -19,7 +19,14 @@ final class PermissionType extends AbstractEnum implements EnumContract
     const ROLE_UPDATE = 'update-roles';
     const ROLE_DELETE = 'delete-roles';
     const ROLE_RESTORE = 'restore-roles';
-    const ROLE_FORCE_DELETE = 'force-delete-roles';
+    const ROLE_FORCE_DELETE = 'force-delete-permissions';
+    const PERMISSION_VIEW_ANY = 'view-any-permissions';
+    const PERMISSION_VIEW = 'view-permissions';
+    const PERMISSION_CREATE = 'create-permissions';
+    const PERMISSION_UPDATE = 'update-permissions';
+    const PERMISSION_DELETE = 'delete-permissions';
+    const PERMISSION_RESTORE = 'restore-permissions';
+    const PERMISSION_FORCE_DELETE = 'force-delete-permissions';
     const TEAM_VIEW_ANY = 'view-any-teams';
     const TEAM_VIEW = 'view-teams';
     const TEAM_CREATE = 'create-teams';

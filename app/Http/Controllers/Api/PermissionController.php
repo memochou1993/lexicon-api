@@ -3,28 +3,57 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PermissionIndexRequest;
+use App\Http\Requests\PermissionShowRequest;
+use App\Http\Resources\PermissionResource as Resource;
 use App\Models\Permission;
+use App\Services\PermissionService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PermissionController extends Controller
 {
     /**
+     * @var PermissionService
+     */
+    private PermissionService $permissionService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @param  PermissionService  $permissionService
+     */
+    public function __construct(
+        PermissionService $permissionService
+    ) {
+        $this->authorizeResource(Permission::class);
+
+        $this->permissionService = $permissionService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  PermissionIndexRequest  $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(PermissionIndexRequest $request)
     {
-        // TODO
+        $permissions = $this->permissionService->getAll($request);
+
+        return Resource::collection($permissions);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @param  PermissionShowRequest  $request
+     * @param  Permission  $permission
+     * @return Resource
      */
-    public function show(Permission $permission)
+    public function show(PermissionShowRequest $request, Permission $permission)
     {
-        // TODO
+        $permission = $this->permissionService->get($permission, $request);
+
+        return new Resource($permission);
     }
 }

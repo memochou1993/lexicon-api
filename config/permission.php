@@ -21,6 +21,8 @@ return [
                 Permission::ROLE_CREATE,
                 Permission::ROLE_UPDATE,
                 Permission::ROLE_DELETE,
+                Permission::PERMISSION_VIEW_ANY,
+                Permission::PERMISSION_VIEW,
                 Permission::TEAM_VIEW_ANY,
                 Permission::TEAM_VIEW,
                 Permission::TEAM_CREATE,
