@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
-use App\Rules\In;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectShowRequest extends FormRequest
@@ -29,7 +29,7 @@ class ProjectShowRequest extends FormRequest
     {
         return [
             'relations' => [
-                new In([
+                new Relations([
                     'users',
                     'team',
                     'languages',

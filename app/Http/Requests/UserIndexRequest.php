@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
-use App\Rules\In;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserIndexRequest extends FormRequest
 {
@@ -33,11 +34,23 @@ class UserIndexRequest extends FormRequest
                 'numeric',
             ],
             'relations' => [
-                new In([
+                new Relations([
                     'roles',
                     'roles.permissions',
                     'teams',
                     'projects',
+                ]),
+            ],
+            'sort' => [
+                Rule::in([
+                    'name',
+                    'email',
+                ]),
+            ],
+            'direction' => [
+                Rule::in([
+                    'asc',
+                    'desc',
                 ]),
             ],
         ];

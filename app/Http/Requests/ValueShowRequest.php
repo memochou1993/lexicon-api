@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\In;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ValueShowRequest extends FormRequest
@@ -26,7 +26,7 @@ class ValueShowRequest extends FormRequest
     {
         return [
             'relations' => [
-                new In([
+                new Relations([
                     'languages',
                     'forms',
                 ]),

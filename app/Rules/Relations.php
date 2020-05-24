@@ -3,9 +3,8 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Str;
 
-class In implements Rule
+class Relations implements Rule
 {
     /**
      * @var array
@@ -41,12 +40,8 @@ class In implements Rule
      */
     public function message()
     {
-        $relations = collect($this->values)->map(function ($value) {
-            return '"'.$value.'"';
-        })->implode(', ');
-
-        $values = Str::of($relations)->replaceLast(', ', ' and ');
-
-        return trans('validation.relations', ['values' => $values]);
+        return trans('validation.relations', [
+            'values' => implode(', ', $this->values),
+        ]);
     }
 }

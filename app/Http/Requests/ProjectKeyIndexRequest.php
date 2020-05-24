@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\In;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class ProjectKeyIndexRequest extends FormRequest
 {
@@ -33,10 +34,21 @@ class ProjectKeyIndexRequest extends FormRequest
                 'numeric',
             ],
             'relations' => [
-                new In([
+                new Relations([
                     'values',
                     'values.languages',
                     'values.forms',
+                ]),
+            ],
+            'sort' => [
+                Rule::in([
+                    'name',
+                ]),
+            ],
+            'direction' => [
+                Rule::in([
+                    'asc',
+                    'desc',
                 ]),
             ],
         ];
