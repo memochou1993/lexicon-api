@@ -33,6 +33,7 @@ class PermissionService
     {
         return $this->permission
             ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
             ->paginate($request->per_page);
     }
 

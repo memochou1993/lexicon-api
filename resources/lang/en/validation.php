@@ -130,11 +130,15 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'sort' => [
+            'in' => 'Invalid sort. Valid sort: :values.',
+        ],
+        'direction' => [
+            'in' => 'Invalid direction. Valid direction: :values.',
         ],
     ],
-    'relations' => 'Invalid relations. Valid relations are :values.',
+
+    'relations' => 'Invalid relations. Valid relations: :values.',
 
     /*
     |--------------------------------------------------------------------------

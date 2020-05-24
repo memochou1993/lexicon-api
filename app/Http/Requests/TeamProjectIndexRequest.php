@@ -4,9 +4,10 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
 use App\Models\Project;
-use App\Rules\In;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class TeamProjectIndexRequest extends FormRequest
 {
@@ -37,9 +38,20 @@ class TeamProjectIndexRequest extends FormRequest
                 'numeric',
             ],
             'relations' => [
-                new In([
+                new Relations([
                     'users',
                     'languages',
+                ]),
+            ],
+            'sort' => [
+                Rule::in([
+                    'name',
+                ]),
+            ],
+            'direction' => [
+                Rule::in([
+                    'asc',
+                    'desc',
                 ]),
             ],
         ];

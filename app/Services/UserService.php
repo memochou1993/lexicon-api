@@ -33,6 +33,7 @@ class UserService
     {
         return $this->user
             ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
             ->paginate($request->per_page);
     }
 
@@ -83,6 +84,7 @@ class UserService
         return $user
             ->teams()
             ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
             ->paginate($request->per_page);
     }
 

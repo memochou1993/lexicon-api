@@ -71,6 +71,7 @@ class TeamService
                 $query->where('name', 'LIKE', '%'.$q.'%');
             })
             ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
             ->paginate($request->per_page);
     }
 
