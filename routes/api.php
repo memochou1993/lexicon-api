@@ -52,12 +52,8 @@ Route::namespace('Api')->group(function () {
 
         Route::apiResource('teams.languages', 'LanguageController')
             ->shallow()->except('index');
-
-        Route::apiResource('teams.forms', 'TeamFormController')
-            ->only('store');
-        Route::apiResource('forms', 'FormController')
-            ->only('show', 'update', 'destroy');
-
+        Route::apiResource('teams.forms', 'FormController')
+            ->shallow()->except('index');
         Route::apiResource('teams.projects', 'ProjectController')
             ->shallow();
         Route::apiResource('projects.keys', 'KeyController')
