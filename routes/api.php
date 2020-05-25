@@ -68,10 +68,8 @@ Route::namespace('Api')->group(function () {
 
         Route::apiResource('keys', 'KeyController')
             ->only('show', 'update', 'destroy');
-        Route::apiResource('keys.values', 'KeyValueController')
-            ->only('store');
 
-        Route::apiResource('values', 'ValueController')
-            ->only('show', 'update', 'destroy');
+        Route::apiResource('keys.values', 'ValueController')
+            ->shallow()->except('index');
     });
 });

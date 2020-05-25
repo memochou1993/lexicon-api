@@ -22,6 +22,38 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testStore()
+    {
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+            PermissionType::VALUE_CREATE,
+        ]);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
+
+        $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+            ->assertCreated()
+            ->assertJson([
+                'data' => $value->makeHidden('language_id', 'form_id')->toArray(),
+            ]);
+
+        $this->assertDatabaseHas('values', $value->toArray());
+
+        $this->assertCount(1, $key->values);
+    }
+
+    /**
+     * @return void
+     */
     public function testShow()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
@@ -113,6 +145,36 @@ class ValueControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testGuestCreate()
+    {
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+            PermissionType::VALUE_CREATE,
+        ]);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
+
+        $response = $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
     public function testGuestView()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
@@ -169,6 +231,33 @@ class ValueControllerTest extends TestCase
 
         $this->assertEquals(
             ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $key = $project->keys()->save(factory(Key::class)->make());
+
+        $value = factory(Value::class)->make([
+            'language_id' => $language->id,
+            'form_id' => $form->id,
+        ]);
+
+        $response = $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
             $response->exception->getCode()
         );
     }
