@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class TeamProjectStoreRequest extends FormRequest
+class ProjectStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +17,6 @@ class TeamProjectStoreRequest extends FormRequest
     public function authorize()
     {
         Gate::authorize('view', $this->route('team'));
-        Gate::authorize('create', Project::class);
 
         return true;
     }

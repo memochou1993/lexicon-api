@@ -3,13 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
-use App\Models\Project;
 use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class TeamProjectIndexRequest extends FormRequest
+class ProjectIndexRequest extends FormRequest
 {
     use HasPreparation;
 

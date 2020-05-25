@@ -44,15 +44,11 @@ Route::namespace('Api')->group(function () {
             ->only('show', 'update', 'destroy');
         Route::apiResource('teams.users', 'TeamUserController')
             ->only('store', 'destroy');
-        Route::apiResource('teams.projects', 'TeamProjectController')
-            ->only('index', 'store');
         Route::apiResource('teams.languages', 'TeamLanguageController')
             ->only('store');
         Route::apiResource('teams.forms', 'TeamFormController')
             ->only('store');
 
-        Route::apiResource('projects', 'ProjectController')
-            ->only('show', 'update', 'destroy');
         Route::apiResource('projects.users', 'ProjectUserController')
             ->only('store', 'destroy');
         Route::apiResource('projects.languages', 'ProjectLanguageController')
@@ -64,9 +60,10 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('forms', 'FormController')
             ->only('show', 'update', 'destroy');
 
+        Route::apiResource('teams.projects', 'ProjectController')
+            ->shallow();
         Route::apiResource('projects.keys', 'KeyController')
             ->shallow();
-
         Route::apiResource('keys.values', 'ValueController')
             ->shallow()
             ->except('index');
