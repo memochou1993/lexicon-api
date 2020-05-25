@@ -2,14 +2,12 @@
 
 namespace App\Policies;
 
-use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Exceptions\PermissionDeniedException;
 use App\Exceptions\UserNotInTeamException;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class TeamPolicy
 {
@@ -58,15 +56,10 @@ class TeamPolicy
      *
      * @param  User  $user
      * @return mixed
-     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
-        if (! $user->tokenCan(PermissionType::TEAM_CREATE)) {
-            throw new PermissionDeniedException();
-        }
-
-        return true;
+        return false;
     }
 
     /**

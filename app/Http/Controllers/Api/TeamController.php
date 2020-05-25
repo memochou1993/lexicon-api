@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TeamIndexRequest;
 use App\Http\Requests\TeamShowRequest;
 use App\Http\Requests\TeamUpdateRequest;
 use App\Http\Resources\TeamResource as Resource;
 use App\Models\Team;
 use App\Services\TeamService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeamController extends Controller
@@ -29,6 +31,19 @@ class TeamController extends Controller
         $this->authorizeResource(Team::class);
 
         $this->teamService = $teamService;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  TeamIndexRequest  $request
+     * @return AnonymousResourceCollection
+     */
+    public function index(TeamIndexRequest $request)
+    {
+        $teams = $this->teamService->getAll($request);
+
+        return Resource::collection($teams);
     }
 
     /**

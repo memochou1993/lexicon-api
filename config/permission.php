@@ -63,6 +63,7 @@ return [
 
             'permissions' => [
                 Permission::TEAM_VIEW,
+                Permission::PROJECT_VIEW_ANY,
                 Permission::PROJECT_VIEW,
                 Permission::PROJECT_CREATE,
                 Permission::PROJECT_UPDATE,
@@ -87,6 +88,7 @@ return [
 
             'permissions' => [
                 Permission::TEAM_VIEW,
+                Permission::PROJECT_VIEW_ANY,
                 Permission::PROJECT_VIEW,
                 Permission::KEY_VIEW_ANY,
                 Permission::KEY_VIEW,

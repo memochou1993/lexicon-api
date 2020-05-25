@@ -7,7 +7,7 @@ use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserTeamIndexRequest extends FormRequest
+class TeamIndexRequest extends FormRequest
 {
     use HasPreparation;
 

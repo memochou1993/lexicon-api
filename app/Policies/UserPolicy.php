@@ -49,15 +49,10 @@ class UserPolicy
      *
      * @param  User  $user
      * @return mixed
-     * @throws PermissionDeniedException
      */
     public function create(User $user)
     {
-        if (! $user->tokenCan(PermissionType::USER_CREATE)) {
-            throw new PermissionDeniedException();
-        }
-
-        return true;
+        return false;
     }
 
     /**

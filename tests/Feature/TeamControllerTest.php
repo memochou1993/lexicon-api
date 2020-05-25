@@ -19,6 +19,38 @@ class TeamControllerTest extends TestCase
     /**
      * @return void
      */
+    public function testIndex()
+    {
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW_ANY,
+        ]);
+
+        $team = $user->teams()->save(factory(Team::class)->create());
+
+        $this->json('GET', 'api/teams', [
+            'relations' => 'users,projects,languages,forms',
+        ])
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    [
+                        'users',
+                        'projects',
+                        'languages',
+                        'forms',
+                    ],
+                ],
+            ])
+            ->assertJson([
+                'data' => [
+                    $team->toArray(),
+                ],
+            ]);
+    }
+
+    /**
+     * @return void
+     */
     public function testShow()
     {
         $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_VIEW]);
@@ -172,6 +204,24 @@ class TeamControllerTest extends TestCase
 
         $this->assertEquals(
             ErrorType::USER_NOT_IN_TEAM,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testViewAllWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+
+        $response = $this->json('GET', 'api/teams')
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
             $response->exception->getCode()
         );
     }

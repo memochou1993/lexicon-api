@@ -25,40 +25,38 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResource('users', 'UserController')
-            ->only('index', 'show', 'update', 'destroy');
-        Route::apiResource('users.roles', 'UserRoleController')
-            ->only('store', 'destroy');
-
         Route::apiResource('roles', 'RoleController');
-
         Route::apiResource('permissions', 'PermissionController')
             ->only('index', 'show');
+
+        Route::apiResource('users', 'UserController')
+            ->except('create');
+        Route::apiResource('teams', 'TeamController')
+            ->except('create');
 
         Route::prefix('user')->group(function () {
             Route::apiResource('teams', 'UserTeamController')
                 ->only('index', 'store');
         });
 
-        Route::apiResource('teams', 'TeamController')
-            ->only('show', 'update', 'destroy');
-        Route::apiResource('teams.users', 'TeamUserController')
-            ->only('store', 'destroy');
-
-        Route::apiResource('projects.users', 'ProjectUserController')
-            ->only('store', 'destroy');
-        Route::apiResource('projects.languages', 'ProjectLanguageController')
-            ->only('store', 'destroy');
-
+        Route::apiResource('teams.projects', 'ProjectController')
+            ->shallow();
         Route::apiResource('teams.languages', 'LanguageController')
             ->shallow()->except('index');
         Route::apiResource('teams.forms', 'FormController')
             ->shallow()->except('index');
-        Route::apiResource('teams.projects', 'ProjectController')
-            ->shallow();
         Route::apiResource('projects.keys', 'KeyController')
             ->shallow();
         Route::apiResource('keys.values', 'ValueController')
             ->shallow()->except('index');
+
+        Route::apiResource('users.roles', 'UserRoleController')
+            ->only('store', 'destroy');
+        Route::apiResource('teams.users', 'TeamUserController')
+            ->only('store', 'destroy');
+        Route::apiResource('projects.users', 'ProjectUserController')
+            ->only('store', 'destroy');
+        Route::apiResource('projects.languages', 'ProjectLanguageController')
+            ->only('store', 'destroy');
     });
 });

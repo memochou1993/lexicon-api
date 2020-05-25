@@ -26,6 +26,18 @@ class TeamService
     }
 
     /**
+     * @param  Request  $request
+     * @return LengthAwarePaginator
+     */
+    public function getAll(Request $request): LengthAwarePaginator
+    {
+        return $this->team
+            ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
+            ->paginate($request->per_page);
+    }
+
+    /**
      * @param  Team  $team
      * @param  Request  $request
      * @return Model

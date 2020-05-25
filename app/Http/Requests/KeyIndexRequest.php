@@ -29,10 +29,6 @@ class KeyIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'per_page' => [
-                'between:1,100',
-                'numeric',
-            ],
             'relations' => [
                 new Relations([
                     'values',
@@ -50,6 +46,10 @@ class KeyIndexRequest extends FormRequest
                     'asc',
                     'desc',
                 ]),
+            ],
+            'per_page' => [
+                'between:1,100',
+                'numeric',
             ],
         ];
     }

@@ -43,6 +43,10 @@ class PermissionIndexRequest extends FormRequest
                     'desc',
                 ]),
             ],
+            'per_page' => [
+                'between:1,100',
+                'numeric',
+            ],
         ];
     }
 
