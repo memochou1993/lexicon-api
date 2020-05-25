@@ -57,8 +57,6 @@ Route::namespace('Api')->group(function () {
             ->only('store', 'destroy');
         Route::apiResource('projects.languages', 'ProjectLanguageController')
             ->only('store', 'destroy');
-        Route::apiResource('projects.keys', 'ProjectKeyController')
-            ->only('index', 'store');
 
         Route::apiResource('languages', 'LanguageController')
             ->only('show', 'update', 'destroy');
@@ -66,10 +64,11 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('forms', 'FormController')
             ->only('show', 'update', 'destroy');
 
-        Route::apiResource('keys', 'KeyController')
-            ->only('show', 'update', 'destroy');
+        Route::apiResource('projects.keys', 'KeyController')
+            ->shallow();
 
         Route::apiResource('keys.values', 'ValueController')
-            ->shallow()->except('index');
+            ->shallow()
+            ->except('index');
     });
 });

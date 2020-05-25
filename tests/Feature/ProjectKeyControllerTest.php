@@ -21,7 +21,10 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::KEY_VIEW_ANY,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
@@ -102,7 +105,10 @@ class ProjectKeyControllerTest extends TestCase
      */
     public function testGuestViewAll()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::KEY_VIEW_ANY,
+        ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
