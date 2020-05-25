@@ -5,14 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LanguageShowRequest;
 use App\Http\Requests\LanguageUpdateRequest;
+use App\Http\Requests\LanguageStoreRequest;
 use App\Http\Resources\LanguageResource as Resource;
 use App\Models\Language;
+use App\Models\Team;
 use App\Services\LanguageService;
+use App\Services\TeamService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class LanguageController extends Controller
 {
+    /**
+     * @var TeamService
+     */
+    private TeamService $teamService;
+
     /**
      * @var LanguageService
      */
@@ -21,14 +29,31 @@ class LanguageController extends Controller
     /**
      * Instantiate a new controller instance.
      *
+     * @param  TeamService  $teamService
      * @param  LanguageService  $languageService
      */
     public function __construct(
+        TeamService $teamService,
         LanguageService $languageService
     ) {
         $this->authorizeResource(Language::class);
 
+        $this->teamService = $teamService;
         $this->languageService = $languageService;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  LanguageStoreRequest  $request
+     * @param  Team  $team
+     * @return Resource
+     */
+    public function store(LanguageStoreRequest $request, Team $team)
+    {
+        $language = $this->teamService->storeLanguage($team, $request);
+
+        return new Resource($language);
     }
 
     /**
