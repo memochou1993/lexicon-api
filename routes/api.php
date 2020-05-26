@@ -52,13 +52,16 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('keys.values', 'ValueController')
             ->shallow()->except('index');
 
-        Route::apiResource('users.roles', 'UserRoleController')
-            ->only('store', 'destroy');
-        Route::apiResource('teams.users', 'TeamUserController')
-            ->only('store', 'destroy');
-        Route::apiResource('projects.users', 'ProjectUserController')
-            ->only('store', 'destroy');
-        Route::apiResource('projects.languages', 'ProjectLanguageController')
-            ->only('store', 'destroy');
+        Route::apiResources([
+            'users.roles' => 'UserRoleController',
+            'teams.users' => 'TeamUserController',
+            'projects.users' => 'ProjectUserController',
+            'projects.languages' => 'ProjectLanguageController',
+        ], [
+            'only' => [
+                'store',
+                'destroy',
+            ],
+        ]);
     });
 });
