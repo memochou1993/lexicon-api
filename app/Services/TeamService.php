@@ -124,22 +124,6 @@ class TeamService
 
     /**
      * @param  Team  $team
-     * @param  Request  $request
-     * @return Model
-     */
-    public function storeLanguage(Team $team, Request $request): Model
-    {
-        $language = $team->languages()->create($request->all());
-
-        if ($request->form_ids) {
-            $language->forms()->sync($request->form_ids);
-        }
-
-        return $language;
-    }
-
-    /**
-     * @param  Team  $team
      * @param  array  $user_ids
      */
     public function attachUser(Team $team, array $user_ids): void

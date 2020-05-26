@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Language;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,22 @@ class LanguageService
         return $this->language
             ->with($request->relations ?? [])
             ->find($language->id);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  Request  $request
+     * @return Model
+     */
+    public function storeByTeam(Team $team, Request $request): Model
+    {
+        $language = $team->languages()->create($request->all());
+
+        if ($request->form_ids) {
+            $language->forms()->sync($request->form_ids);
+        }
+
+        return $language;
     }
 
     /**

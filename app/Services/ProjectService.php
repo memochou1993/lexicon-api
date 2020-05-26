@@ -75,37 +75,6 @@ class ProjectService
 
     /**
      * @param  Project  $project
-     * @param  Request  $request
-     * @return LengthAwarePaginator
-     */
-    public function getKeys(Project $project, Request $request): LengthAwarePaginator
-    {
-        return $project
-            ->keys()
-            ->when($request->q, function ($query, $q) {
-                $query
-                    ->where('name', 'LIKE', '%'.$q.'%')
-                    ->orWhereHas('values', function ($query) use ($q) {
-                        $query->where('text', $q);
-                    });
-            })
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
-    }
-
-    /**
-     * @param  Project  $project
-     * @param  Request  $request
-     * @return Model
-     */
-    public function storeKey(Project $project, Request $request): Model
-    {
-        return $project->keys()->create($request->all());
-    }
-
-    /**
-     * @param  Project  $project
      * @param  array  $user_ids
      */
     public function attachUser(Project $project, array $user_ids): void

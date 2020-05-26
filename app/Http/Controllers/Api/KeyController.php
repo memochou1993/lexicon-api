@@ -19,11 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class KeyController extends Controller
 {
     /**
-     * @var ProjectService
-     */
-    private ProjectService $projectService;
-
-    /**
      * @var KeyService
      */
     private KeyService $keyService;
@@ -31,16 +26,13 @@ class KeyController extends Controller
     /**
      * Instantiate a new controller instance.
      *
-     * @param  ProjectService  $projectService
      * @param  KeyService  $keyService
      */
     public function __construct(
-        ProjectService $projectService,
         KeyService $keyService
     ) {
         $this->authorizeResource(Key::class);
 
-        $this->projectService = $projectService;
         $this->keyService = $keyService;
     }
 
@@ -53,7 +45,7 @@ class KeyController extends Controller
      */
     public function index(KeyIndexRequest $request, Project $project)
     {
-        $keys = $this->projectService->getKeys($project, $request);
+        $keys = $this->keyService->getByProject($project, $request);
 
         return Resource::collection($keys);
     }
@@ -67,7 +59,7 @@ class KeyController extends Controller
      */
     public function store(KeyStoreRequest $request, Project $project)
     {
-        $key = $this->projectService->storekey($project, $request);
+        $key = $this->keyService->storeByProject($project, $request);
 
         return new Resource($key);
     }
