@@ -34,9 +34,11 @@ Route::namespace('Api')->group(function () {
         Route::apiResource('teams', 'TeamController')
             ->except('create');
 
-        Route::prefix('user')->group(function () {
-            Route::apiResource('teams', 'UserTeamController')
+        Route::namespace('User')->prefix('user')->group(function () {
+            Route::apiResource('teams', 'TeamController')
                 ->only('index', 'store');
+            Route::apiResource('projects', 'ProjectController')
+                ->only('index');
         });
 
         Route::apiResource('teams.projects', 'ProjectController')

@@ -25,7 +25,7 @@ class TeamControllerTest extends TestCase
             PermissionType::TEAM_VIEW_ANY,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->create());
+        $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('GET', 'api/teams', [
             'relations' => 'users,projects,languages,forms',

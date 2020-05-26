@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserTeamIndexRequest;
@@ -10,7 +10,7 @@ use App\Services\UserService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
-class UserTeamController extends Controller
+class TeamController extends Controller
 {
     /**
      * @var UserService
