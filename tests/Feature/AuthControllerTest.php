@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -70,67 +69,6 @@ class AuthControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGetUser()
-    {
-        $user = Sanctum::actingAs($this->user);
-        $user->roles()->save(factory(Role::class)->make());
-
-        $this->json('GET', 'api/auth/user', [
-            'relations' => 'roles,roles.permissions,teams,projects',
-        ])
-            ->assertOk()
-            ->assertJsonStructure([
-                'data' => [
-                    'roles' => [
-                        [
-                            'permissions',
-                        ],
-                    ],
-                    'teams',
-                    'projects',
-                ],
-            ])
-            ->assertJson([
-                'data' => $user->toArray(),
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUpdateUser()
-    {
-        Sanctum::actingAs($this->user);
-
-        $data = factory(User::class)->make([
-            'name' => 'New User',
-        ])->toArray();
-
-        $this->json('PATCH', 'api/auth/user', $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUpdateUserDuplicate()
-    {
-        Sanctum::actingAs($this->user);
-
-        $data = factory(User::class)->create()->toArray();
-
-        $this->json('PATCH', 'api/auth/user', $data)
-            ->assertJsonValidationErrors([
-                'email',
-            ]);
-    }
-
-    /**
-     * @return void
-     */
     public function testLogout()
     {
         Sanctum::actingAs($this->user);
@@ -150,24 +88,6 @@ class AuthControllerTest extends TestCase
             'email' => $user->email,
             'password' => 'secret',
         ])
-            ->assertUnauthorized();
-    }
-
-    /**
-     * @return void
-     */
-    public function testGetUserUnauthorized()
-    {
-        $this->json('GET', 'api/auth/user')
-            ->assertUnauthorized();
-    }
-
-    /**
-     * @return void
-     */
-    public function testUpdateUserUnauthorized()
-    {
-        $this->json('PATCH', 'api/auth/user')
             ->assertUnauthorized();
     }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserTeamStoreRequest extends FormRequest
+class TeamStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

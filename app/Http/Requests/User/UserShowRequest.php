@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserTeamIndexRequest extends FormRequest
+class UserShowRequest extends FormRequest
 {
     use HasPreparation;
 
@@ -31,26 +30,11 @@ class UserTeamIndexRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
-                    'users',
+                    'roles',
+                    'roles.permissions',
+                    'teams',
                     'projects',
-                    'languages',
-                    'forms',
                 ]),
-            ],
-            'sort' => [
-                Rule::in([
-                    'name',
-                ]),
-            ],
-            'direction' => [
-                Rule::in([
-                    'asc',
-                    'desc',
-                ]),
-            ],
-            'per_page' => [
-                'between:1,100',
-                'numeric',
             ],
         ];
     }

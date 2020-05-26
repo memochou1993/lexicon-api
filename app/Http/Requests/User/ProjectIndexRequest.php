@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserProjectIndexRequest extends FormRequest
+class ProjectIndexRequest extends FormRequest
 {
     use HasPreparation;
 

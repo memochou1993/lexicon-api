@@ -17,11 +17,8 @@ Route::namespace('Api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
-        Route::middleware('auth:sanctum')->group(function () {
-            Route::get('user', 'AuthController@getUser');
-            Route::patch('user', 'AuthController@updateUser');
-            Route::post('logout', 'AuthController@logout');
-        });
+        Route::post('logout', 'AuthController@logout')
+            ->middleware('auth:sanctum');
     });
 
     Route::middleware('auth:sanctum')->group(function () {
@@ -35,6 +32,8 @@ Route::namespace('Api')->group(function () {
             ->except('create');
 
         Route::namespace('User')->prefix('user')->group(function () {
+            Route::get('/', 'UserController@show');
+            Route::patch('/', 'UserController@update');
             Route::apiResource('teams', 'TeamController')
                 ->only('index', 'store');
             Route::apiResource('projects', 'ProjectController')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\User;
 
 use App\Models\Project;
 use App\Models\Team;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class UserProjectControllerTest extends TestCase
+class ProjectControllerTest extends TestCase
 {
     use RefreshDatabase;
 

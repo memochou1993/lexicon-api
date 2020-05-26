@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserProjectIndexRequest;
+use App\Http\Requests\User\ProjectIndexRequest;
 use App\Http\Resources\ProjectResource as Resource;
 use App\Services\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -30,10 +30,10 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  UserProjectIndexRequest  $request
+     * @param  ProjectIndexRequest  $request
      * @return AnonymousResourceCollection
      */
-    public function index(UserProjectIndexRequest $request)
+    public function index(ProjectIndexRequest $request)
     {
         $teams = $this->projectService->getByUser(Auth::guard()->user(), $request);
 
