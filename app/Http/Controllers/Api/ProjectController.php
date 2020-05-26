@@ -11,18 +11,12 @@ use App\Http\Resources\ProjectResource as Resource;
 use App\Models\Project;
 use App\Models\Team;
 use App\Services\ProjectService;
-use App\Services\TeamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends Controller
 {
-    /**
-     * @var TeamService
-     */
-    private TeamService $teamService;
-
     /**
      * @var ProjectService
      */
@@ -31,16 +25,13 @@ class ProjectController extends Controller
     /**
      * Instantiate a new controller instance.
      *
-     * @param  TeamService  $teamService
      * @param  ProjectService  $projectService
      */
     public function __construct(
-        TeamService $teamService,
         ProjectService $projectService
     ) {
         $this->authorizeResource(Project::class);
 
-        $this->teamService = $teamService;
         $this->projectService = $projectService;
     }
 
@@ -53,7 +44,7 @@ class ProjectController extends Controller
      */
     public function index(ProjectIndexRequest $request, Team $team)
     {
-        $projects = $this->teamService->getProjects($team, $request);
+        $projects = $this->projectService->getByTeam($team, $request);
 
         return Resource::collection($projects);
     }
@@ -67,7 +58,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request, Team $team)
     {
-        $project = $this->teamService->storeProject($team, $request);
+        $project = $this->projectService->storeByTeam($team, $request);
 
         return new Resource($project);
     }

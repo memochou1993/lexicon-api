@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Project;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,47 @@ class ProjectService
     }
 
     /**
+     * @param  User  $user
+     * @param  Request  $request
+     * @return LengthAwarePaginator
+     */
+    public function getByUser(User $user, Request $request): LengthAwarePaginator
+    {
+        return $user
+            ->projects()
+            ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
+            ->paginate($request->per_page);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  Request  $request
+     * @return LengthAwarePaginator
+     */
+    public function getByTeam(Team $team, Request $request): LengthAwarePaginator
+    {
+        return $team
+            ->projects()
+            ->when($request->q, function ($query, $q) {
+                $query->where('name', 'LIKE', '%'.$q.'%');
+            })
+            ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
+            ->paginate($request->per_page);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  Request  $request
+     * @return Model
+     */
+    public function storeByTeam(Team $team, Request $request): Model
+    {
+        return $team->projects()->create($request->all());
+    }
+
+    /**
      * @param  Project  $project
      * @param  Request  $request
      * @return Model
@@ -57,20 +99,6 @@ class ProjectService
     public function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
-    }
-
-    /**
-     * @param  User  $user
-     * @param  Request  $request
-     * @return LengthAwarePaginator
-     */
-    public function getByUser(User $user, Request $request): LengthAwarePaginator
-    {
-        return $user
-            ->projects()
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
     }
 
     /**

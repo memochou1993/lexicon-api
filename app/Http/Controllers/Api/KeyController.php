@@ -11,7 +11,6 @@ use App\Http\Resources\KeyResource as Resource;
 use App\Models\Key;
 use App\Models\Project;
 use App\Services\KeyService;
-use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;

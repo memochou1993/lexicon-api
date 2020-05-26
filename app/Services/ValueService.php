@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Key;
 use App\Models\Value;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -34,6 +35,21 @@ class ValueService
         return $this->value
             ->with($request->relations ?? [])
             ->find($value->id);
+    }
+
+    /**
+     * @param  Key  $key
+     * @param  Request  $request
+     * @return Model
+     */
+    public function storeByKey(Key $key, Request $request): Model
+    {
+        $value = $key->values()->create($request->all());
+
+        $value->languages()->attach($request->languageId);
+        $value->forms()->attach($request->formId);
+
+        return $value;
     }
 
     /**

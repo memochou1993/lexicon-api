@@ -9,18 +9,12 @@ use App\Http\Requests\ValueUpdateRequest;
 use App\Http\Resources\ValueResource as Resource;
 use App\Models\Key;
 use App\Models\Value;
-use App\Services\KeyService;
 use App\Services\ValueService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ValueController extends Controller
 {
-    /**
-     * @var KeyService
-     */
-    private KeyService $keyService;
-
     /**
      * @var ValueService
      */
@@ -29,16 +23,13 @@ class ValueController extends Controller
     /**
      * Instantiate a new controller instance.
      *
-     * @param  KeyService  $keyService
      * @param  ValueService  $valueService
      */
     public function __construct(
-        KeyService $keyService,
         ValueService $valueService
     ) {
         $this->authorizeResource(Value::class);
 
-        $this->keyService = $keyService;
         $this->valueService = $valueService;
     }
 
@@ -51,7 +42,7 @@ class ValueController extends Controller
      */
     public function store(ValueStoreRequest $request, Key $key)
     {
-        $value = $this->keyService->storeValue($key, $request);
+        $value = $this->valueService->storeByKey($key, $request);
 
         return new Resource($value);
     }

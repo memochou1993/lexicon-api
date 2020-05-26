@@ -39,27 +39,6 @@ class KeyService
     }
 
     /**
-     * @param  Key  $key
-     * @param  Request  $request
-     * @return Model
-     */
-    public function update(Key $key, Request $request): Model
-    {
-        $key->update($request->all());
-
-        return $key;
-    }
-
-    /**
-     * @param  Key  $key
-     * @return bool
-     */
-    public function destroy(Key $key): bool
-    {
-        return $this->key->destroy($key->id);
-    }
-
-    /**
      * @param  Project  $project
      * @param  Request  $request
      * @return LengthAwarePaginator
@@ -95,13 +74,19 @@ class KeyService
      * @param  Request  $request
      * @return Model
      */
-    public function storeValue(Key $key, Request $request): Model
+    public function update(Key $key, Request $request): Model
     {
-        $value = $key->values()->create($request->all());
+        $key->update($request->all());
 
-        $value->languages()->attach($request->languageId);
-        $value->forms()->attach($request->formId);
+        return $key;
+    }
 
-        return $value;
+    /**
+     * @param  Key  $key
+     * @return bool
+     */
+    public function destroy(Key $key): bool
+    {
+        return $this->key->destroy($key->id);
     }
 }

@@ -51,27 +51,6 @@ class TeamService
     }
 
     /**
-     * @param  Team  $team
-     * @param  Request  $request
-     * @return Model
-     */
-    public function update(Team $team, Request $request): Model
-    {
-        $team->update($request->all());
-
-        return $team;
-    }
-
-    /**
-     * @param  Team  $team
-     * @return bool
-     */
-    public function destroy(Team $team): bool
-    {
-        return $this->team->destroy($team->id);
-    }
-
-    /**
      * @param  User  $user
      * @param  Request  $request
      * @return LengthAwarePaginator
@@ -98,28 +77,22 @@ class TeamService
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return LengthAwarePaginator
+     * @return Model
      */
-    public function getProjects(Team $team, Request $request): LengthAwarePaginator
+    public function update(Team $team, Request $request): Model
     {
-        return $team
-            ->projects()
-            ->when($request->q, function ($query, $q) {
-                $query->where('name', 'LIKE', '%'.$q.'%');
-            })
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+        $team->update($request->all());
+
+        return $team;
     }
 
     /**
      * @param  Team  $team
-     * @param  Request  $request
-     * @return Model
+     * @return bool
      */
-    public function storeProject(Team $team, Request $request): Model
+    public function destroy(Team $team): bool
     {
-        return $team->projects()->create($request->all());
+        return $this->team->destroy($team->id);
     }
 
     /**
