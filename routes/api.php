@@ -63,5 +63,10 @@ Route::namespace('Api')->group(function () {
                 'destroy',
             ],
         ]);
+
+        // TODO
+        // Route::namespace('Client')->prefix('client')->group(function () {
+        //     Route::get('keys', 'KeyController@index');
+        // });
     });
 });

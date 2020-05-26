@@ -76,44 +76,6 @@ class UserService
 
     /**
      * @param  User  $user
-     * @param  Request  $request
-     * @return LengthAwarePaginator
-     */
-    public function getTeams(User $user, Request $request): LengthAwarePaginator
-    {
-        return $user
-            ->teams()
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
-    }
-
-    /**
-     * @param  User  $user
-     * @param  Request  $request
-     * @return Model
-     */
-    public function storeTeam(User $user, Request $request): Model
-    {
-        return $user->teams()->create($request->all());
-    }
-
-    /**
-     * @param  User  $user
-     * @param  Request  $request
-     * @return LengthAwarePaginator
-     */
-    public function getProjects(User $user, Request $request): LengthAwarePaginator
-    {
-        return $user
-            ->projects()
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
-    }
-
-    /**
-     * @param  User  $user
      * @param  array  $role_ids
      */
     public function attachRole(User $user, array $role_ids): void

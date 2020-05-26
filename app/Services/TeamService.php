@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -71,6 +72,30 @@ class TeamService
     }
 
     /**
+     * @param  User  $user
+     * @param  Request  $request
+     * @return LengthAwarePaginator
+     */
+    public function getByUser(User $user, Request $request): LengthAwarePaginator
+    {
+        return $user
+            ->teams()
+            ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
+            ->paginate($request->per_page);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  Request  $request
+     * @return Model
+     */
+    public function storeByUser(User $user, Request $request): Model
+    {
+        return $user->teams()->create($request->all());
+    }
+
+    /**
      * @param  Team  $team
      * @param  Request  $request
      * @return LengthAwarePaginator
@@ -111,16 +136,6 @@ class TeamService
         }
 
         return $language;
-    }
-
-    /**
-     * @param  Team  $team
-     * @param  Request  $request
-     * @return Model
-     */
-    public function storeForm(Team $team, Request $request): Model
-    {
-        return $team->forms()->create($request->all());
     }
 
     /**

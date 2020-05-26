@@ -6,26 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserTeamIndexRequest;
 use App\Http\Requests\UserTeamStoreRequest;
 use App\Http\Resources\TeamResource as Resource;
-use App\Services\UserService;
+use App\Services\TeamService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
     /**
-     * @var UserService
+     * @var TeamService
      */
-    private UserService $userService;
+    private TeamService $teamService;
 
     /**
      * Instantiate a new controller instance.
      *
-     * @param  UserService  $userService
+     * @param  TeamService  $teamService
      */
     public function __construct(
-        UserService $userService
+        TeamService $teamService
     ) {
-        $this->userService = $userService;
+        $this->teamService = $teamService;
     }
 
     /**
@@ -36,7 +36,7 @@ class TeamController extends Controller
      */
     public function index(UserTeamIndexRequest $request)
     {
-        $teams = $this->userService->getTeams(Auth::guard()->user(), $request);
+        $teams = $this->teamService->getByUser(Auth::guard()->user(), $request);
 
         return Resource::collection($teams);
     }
@@ -49,7 +49,7 @@ class TeamController extends Controller
      */
     public function store(UserTeamStoreRequest $request)
     {
-        $team = $this->userService->storeTeam(Auth::guard()->user(), $request);
+        $team = $this->teamService->storeByUser(Auth::guard()->user(), $request);
 
         return new Resource($team);
     }

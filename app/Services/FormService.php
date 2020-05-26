@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Form;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,16 @@ class FormService
         return $this->form
             ->with($request->relations ?? [])
             ->find($form->id);
+    }
+
+    /**
+     * @param  Team  $team
+     * @param  Request  $request
+     * @return Model
+     */
+    public function storeByTeam(Team $team, Request $request): Model
+    {
+        return $team->forms()->create($request->all());
     }
 
     /**

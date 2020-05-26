@@ -5,26 +5,26 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserProjectIndexRequest;
 use App\Http\Resources\ProjectResource as Resource;
-use App\Services\UserService;
+use App\Services\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
     /**
-     * @var UserService
+     * @var ProjectService
      */
-    private UserService $userService;
+    private ProjectService $projectService;
 
     /**
      * Instantiate a new controller instance.
      *
-     * @param  UserService  $userService
+     * @param  ProjectService  $projectService
      */
     public function __construct(
-        UserService $userService
+        ProjectService $projectService
     ) {
-        $this->userService = $userService;
+        $this->projectService = $projectService;
     }
 
     /**
@@ -35,7 +35,7 @@ class ProjectController extends Controller
      */
     public function index(UserProjectIndexRequest $request)
     {
-        $teams = $this->userService->getProjects(Auth::guard()->user(), $request);
+        $teams = $this->projectService->getByUser(Auth::guard()->user(), $request);
 
         return Resource::collection($teams);
     }

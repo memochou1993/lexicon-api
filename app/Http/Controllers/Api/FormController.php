@@ -10,17 +10,11 @@ use App\Http\Resources\FormResource as Resource;
 use App\Models\Form;
 use App\Models\Team;
 use App\Services\FormService;
-use App\Services\TeamService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormController extends Controller
 {
-    /**
-     * @var TeamService
-     */
-    private TeamService $teamService;
-
     /**
      * @var FormService
      */
@@ -29,16 +23,13 @@ class FormController extends Controller
     /**
      * Instantiate a new controller instance.
      *
-     * @param  TeamService  $teamService
      * @param  FormService  $formService
      */
     public function __construct(
-        TeamService $teamService,
         FormService $formService
     ) {
         $this->authorizeResource(Form::class);
 
-        $this->teamService = $teamService;
         $this->formService = $formService;
     }
 
@@ -51,7 +42,7 @@ class FormController extends Controller
      */
     public function store(FormStoreRequest $request, Team $team)
     {
-        $form = $this->teamService->storeForm($team, $request);
+        $form = $this->formService->storeByTeam($team, $request);
 
         return new Resource($form);
     }

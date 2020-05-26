@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -56,6 +57,20 @@ class ProjectService
     public function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  Request  $request
+     * @return LengthAwarePaginator
+     */
+    public function getByUser(User $user, Request $request): LengthAwarePaginator
+    {
+        return $user
+            ->projects()
+            ->with($request->relations ?? [])
+            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
+            ->paginate($request->per_page);
     }
 
     /**
