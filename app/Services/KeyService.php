@@ -46,7 +46,10 @@ class KeyService
      */
     public function getByProject(Project $project, Request $request): Collection
     {
-        return $project->keys()->get();
+        return $project
+            ->keys()
+            ->with($request->relations ?? [])
+            ->get();
     }
 
     /**

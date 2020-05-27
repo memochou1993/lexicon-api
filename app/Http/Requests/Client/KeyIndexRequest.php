@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Client;
 
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 
 class KeyIndexRequest extends FormRequest
@@ -13,7 +14,7 @@ class KeyIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO
+        // TODO: should check API key
         return true;
     }
 
@@ -25,7 +26,39 @@ class KeyIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'relations' => [
+                new Relations([
+                    'values',
+                    'values.languages',
+                    'values.forms',
+                ]),
+            ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->prepareRelations();
+    }
+
+    /**
+     * @return void
+     */
+    private function prepareRelations()
+    {
+        $relations = collect($this->relations)->explode(',')->merge([
+            'values',
+            'values.languages',
+            'values.forms',
+        ]);
+
+        $this->merge([
+            'relations' => $relations->toArray(),
+        ]);
     }
 }

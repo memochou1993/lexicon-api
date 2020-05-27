@@ -49,10 +49,10 @@ class ValueShowRequest extends FormRequest
      */
     private function prepareRelations()
     {
-        $relations = collect($this->relations)->explode(',');
-
-        $relations->push('languages');
-        $relations->push('forms');
+        $relations = collect($this->relations)->explode(',')->merge([
+            'languages',
+            'forms',
+        ]);
 
         $this->merge([
             'relations' => $relations->toArray(),

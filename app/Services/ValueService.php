@@ -46,8 +46,8 @@ class ValueService
     {
         $value = $key->values()->create($request->all());
 
-        $value->languages()->attach($request->languageId);
-        $value->forms()->attach($request->formId);
+        $value->languages()->attach($request->language_id);
+        $value->forms()->attach($request->form_id);
 
         return $value;
     }

@@ -53,10 +53,12 @@ class KeyShowRequest extends FormRequest
     {
         $relations = collect($this->relations)->explode(',');
 
-        $relations->when($relations->contains('values'), function ($relations) {
-            $relations->push('values.languages');
-            $relations->push('values.forms');
-        });
+        if ($relations->contains('values')) {
+            $relations = $relations->merge([
+                'values.languages',
+                'values.forms',
+            ]);
+        }
 
         $this->merge([
             'relations' => $relations->toArray(),

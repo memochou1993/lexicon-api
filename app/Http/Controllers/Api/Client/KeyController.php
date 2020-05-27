@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\KeyIndexRequest;
-use App\Http\Resources\KeyResource as Resource;
+use App\Http\Resources\Client\KeyResource as Resource;
 use App\Models\Project;
 use App\Services\KeyService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -36,7 +36,6 @@ class KeyController extends Controller
      */
     public function index(KeyIndexRequest $request, Project $project)
     {
-        // TODO
         $keys = $this->keyService->getByProject($project, $request);
 
         return Resource::collection($keys);
