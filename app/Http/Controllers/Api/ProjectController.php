@@ -44,7 +44,7 @@ class ProjectController extends Controller
      */
     public function index(ProjectIndexRequest $request, Team $team)
     {
-        $projects = $this->projectService->getByTeam($team, $request);
+        $projects = $this->projectService->paginateByTeam($team, $request);
 
         return Resource::collection($projects);
     }

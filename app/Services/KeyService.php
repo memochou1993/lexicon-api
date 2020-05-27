@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Key;
 use App\Models\Project;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -41,9 +42,19 @@ class KeyService
     /**
      * @param  Project  $project
      * @param  Request  $request
+     * @return Collection
+     */
+    public function getByProject(Project $project, Request $request): Collection
+    {
+        return $project->keys()->get();
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  Request  $request
      * @return LengthAwarePaginator
      */
-    public function getByProject(Project $project, Request $request): LengthAwarePaginator
+    public function paginateByProject(Project $project, Request $request): LengthAwarePaginator
     {
         return $project
             ->keys()

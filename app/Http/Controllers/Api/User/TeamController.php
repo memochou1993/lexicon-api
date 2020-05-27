@@ -36,7 +36,7 @@ class TeamController extends Controller
      */
     public function index(TeamIndexRequest $request)
     {
-        $teams = $this->teamService->getByUser(Auth::guard()->user(), $request);
+        $teams = $this->teamService->paginateByUser(Auth::guard()->user(), $request);
 
         return Resource::collection($teams);
     }

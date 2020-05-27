@@ -35,7 +35,7 @@ class ProjectController extends Controller
      */
     public function index(ProjectIndexRequest $request)
     {
-        $teams = $this->projectService->getByUser(Auth::guard()->user(), $request);
+        $teams = $this->projectService->paginateByUser(Auth::guard()->user(), $request);
 
         return Resource::collection($teams);
     }

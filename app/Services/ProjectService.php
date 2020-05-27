@@ -44,7 +44,7 @@ class ProjectService
      * @param  Request  $request
      * @return LengthAwarePaginator
      */
-    public function getByUser(User $user, Request $request): LengthAwarePaginator
+    public function paginateByUser(User $user, Request $request): LengthAwarePaginator
     {
         return $user
             ->projects()
@@ -58,7 +58,7 @@ class ProjectService
      * @param  Request  $request
      * @return LengthAwarePaginator
      */
-    public function getByTeam(Team $team, Request $request): LengthAwarePaginator
+    public function paginateByTeam(Team $team, Request $request): LengthAwarePaginator
     {
         return $team
             ->projects()

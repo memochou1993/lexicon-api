@@ -55,7 +55,7 @@ class TeamService
      * @param  Request  $request
      * @return LengthAwarePaginator
      */
-    public function getByUser(User $user, Request $request): LengthAwarePaginator
+    public function paginateByUser(User $user, Request $request): LengthAwarePaginator
     {
         return $user
             ->teams()
