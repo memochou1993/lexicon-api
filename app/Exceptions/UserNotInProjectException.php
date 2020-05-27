@@ -12,6 +12,6 @@ class UserNotInProjectException extends AuthorizationException
      */
     public function __construct()
     {
-        parent::__construct(trans('error.access'), ErrorType::USER_NOT_IN_PROJECT);
+        parent::__construct(__('error.access'), ErrorType::USER_NOT_IN_PROJECT);
     }
 }

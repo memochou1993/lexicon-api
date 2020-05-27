@@ -53,8 +53,11 @@ Route::namespace('Api')->group(function () {
         ]);
     });
 
-    Route::namespace('Client')->prefix('client')->group(function () {
-        Route::apiResource('projects.keys', 'KeyController')
-            ->only('index');
-    });
+    Route::namespace('Client')
+        ->prefix('client')
+        ->middleware('client')
+        ->group(function () {
+            Route::apiResource('projects.keys', 'KeyController')
+                ->only('index');
+        });
 });

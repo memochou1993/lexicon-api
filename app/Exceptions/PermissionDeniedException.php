@@ -12,6 +12,6 @@ class PermissionDeniedException extends AuthorizationException
      */
     public function __construct()
     {
-        parent::__construct(trans('error.permission'), ErrorType::PERMISSION_DENIED);
+        parent::__construct(__('error.permission'), ErrorType::PERMISSION_DENIED);
     }
 }
