@@ -40,9 +40,6 @@ class ProjectControllerTest extends TestCase
                         'languages',
                     ],
                 ],
-            ])
-            ->assertJson([
-                'data' => $team->projects->toArray(),
             ]);
     }
 
@@ -63,10 +60,10 @@ class ProjectControllerTest extends TestCase
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertCreated()
             ->assertJson([
-                'data' => $data,
+                'data' => [
+                    'name' => $data['name'],
+                ],
             ]);
-
-        $this->assertDatabaseHas('projects', $data);
 
         $this->assertCount(1, $team->projects);
     }
@@ -120,7 +117,9 @@ class ProjectControllerTest extends TestCase
                 ],
             ])
             ->assertJson([
-                'data' => $project->toArray(),
+                'data' => [
+                    'name' => $project->name,
+                ],
             ]);
     }
 
@@ -141,7 +140,9 @@ class ProjectControllerTest extends TestCase
         $this->json('PATCH', 'api/projects/'.$project->id, $data)
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => [
+                    'name' => $data['name'],
+                ],
             ]);
 
         $this->assertDatabaseHas('projects', $data);

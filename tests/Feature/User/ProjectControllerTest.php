@@ -34,11 +34,6 @@ class ProjectControllerTest extends TestCase
                         'languages',
                     ],
                 ],
-            ])
-            ->assertJson([
-                'data' => [
-                    $projects->toArray(),
-                ],
             ]);
     }
 }

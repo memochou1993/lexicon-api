@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProjectService
 {
@@ -77,6 +78,13 @@ class ProjectService
      */
     public function storeByTeam(Team $team, Request $request): Model
     {
+        $request->merge([
+            'api_keys' => json_encode([
+                'public_key' => Str::random(36),
+                'secret_key' => Str::random(36),
+            ]),
+        ]);
+
         return $team->projects()->create($request->all());
     }
 
