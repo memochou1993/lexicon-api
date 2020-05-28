@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Mixins\CollectionMixin;
-use App\Mixins\FactoryBuilderMixin;
+use App\Mixins\FactoryMixin;
+use App\Mixins\ResponseMixin;
 use Illuminate\Database\Eloquent\FactoryBuilder;
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use ReflectionException;
@@ -30,6 +32,7 @@ class MixinServiceProvider extends ServiceProvider
     public function boot()
     {
         Collection::mixin(new CollectionMixin());
-        FactoryBuilder::mixin(new FactoryBuilderMixin());
+        FactoryBuilder::mixin(new FactoryMixin());
+        ResponseFactory::mixin(new ResponseMixin());
     }
 }

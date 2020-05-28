@@ -5,7 +5,7 @@ namespace App\Mixins;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 
-class FactoryBuilderMixin
+class FactoryMixin
 {
     /**
      * @var Model
