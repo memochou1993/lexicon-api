@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
-use App\Models\Key;
+use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class KeyControllerTest extends TestCase
+class ProjectControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,27 +22,24 @@ class KeyControllerTest extends TestCase
     public function testIndex()
     {
         $user = Sanctum::actingAs($this->user, [
-            PermissionType::PROJECT_VIEW,
-            PermissionType::KEY_VIEW_ANY,
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_VIEW_ANY,
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
 
-        $this->json('GET', 'api/projects/'.$project->id.'/keys', [
-            'relations' => 'values',
+        $this->json('GET', 'api/teams/'.$team->id.'/projects', [
+            'relations' => 'users,languages',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
-                        'values',
+                        'users',
+                        'languages',
                     ],
                 ],
-            ])
-            ->assertJson([
-                'data' => $project->keys->toArray(),
             ]);
     }
 
@@ -52,24 +49,23 @@ class KeyControllerTest extends TestCase
     public function testStore()
     {
         $user = Sanctum::actingAs($this->user, [
-            PermissionType::PROJECT_VIEW,
-            PermissionType::KEY_CREATE,
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = factory(Project::class)->make()->toArray();
 
-        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertCreated()
             ->assertJson([
-                'data' => $data,
+                'data' => [
+                    'name' => $data['name'],
+                ],
             ]);
 
-        $this->assertDatabaseHas('keys', $data);
-
-        $this->assertCount(1, $project->keys);
+        $this->assertCount(1, $team->projects);
     }
 
     /**
@@ -78,26 +74,25 @@ class KeyControllerTest extends TestCase
     public function testStoreDuplicate()
     {
         $user = Sanctum::actingAs($this->user, [
-            PermissionType::PROJECT_VIEW,
-            PermissionType::KEY_CREATE,
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make([
-            'name' => 'Unique Key',
+        $team->projects()->save(factory(Project::class)->make([
+            'name' => 'Unique Project',
         ]));
 
-        $data = factory(Key::class)->make([
-            'name' => 'Unique Key',
+        $data = factory(Project::class)->make([
+            'name' => 'Unique Project',
         ])->toArray();
 
-        $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertJsonValidationErrors([
                 'name',
             ]);
 
-        $this->assertCount(1, $project->keys);
+        $this->assertCount(1, $team->projects);
     }
 
     /**
@@ -105,24 +100,26 @@ class KeyControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $this->json('GET', 'api/keys/'.$key->id, [
-            'relations' => 'project,values',
+        $this->json('GET', 'api/projects/'.$project->id, [
+            'relations' => 'users,team,languages',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    'project',
-                    'values',
+                    'users',
+                    'team',
+                    'languages',
                 ],
             ])
             ->assertJson([
-                'data' => $key->toArray(),
+                'data' => [
+                    'name' => $project->name,
+                ],
             ]);
     }
 
@@ -131,23 +128,24 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $data = factory(Key::class)->make([
-            'name' => 'New Key',
+        $data = factory(Project::class)->make([
+            'name' => 'New Project',
         ])->toArray();
 
-        $this->json('PATCH', 'api/keys/'.$key->id, $data)
+        $this->json('PATCH', 'api/projects/'.$project->id, $data)
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => [
+                    'name' => $data['name'],
+                ],
             ]);
 
-        $this->assertDatabaseHas('keys', $data);
+        $this->assertDatabaseHas('projects', $data);
     }
 
     /**
@@ -155,17 +153,16 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $keys = $project->keys()->saveMany(factory(Key::class, 2)->make());
+        $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
 
-        $data = factory(Key::class)->make([
-            'name' => $keys->last()->name,
+        $data = factory(Project::class)->make([
+            'name' => $projects->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/keys/'.$keys->first()->id, $data)
+        $this->json('PATCH', 'api/projects/'.$projects->first()->id, $data)
             ->assertJsonValidationErrors([
                 'name',
             ]);
@@ -176,16 +173,31 @@ class KeyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $language = $project->languages()->save(factory(Language::class)->make());
 
-        $this->json('DELETE', 'api/keys/'.$key->id)
+        $this->assertCount(1, $project->users);
+        $this->assertCount(1, $project->languages);
+
+        $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertNoContent();
 
-        $this->assertDeleted($key);
+        $this->assertDeleted($project);
+
+        $this->assertDatabaseMissing('model_has_users', [
+            'user_id' => $user->id,
+            'model_type' => 'project',
+            'model_id' => $project->id,
+        ]);
+
+        $this->assertDatabaseMissing('model_has_languages', [
+            'language_id' => $language->id,
+            'model_type' => 'project',
+            'model_id' => $project->id,
+        ]);
     }
 
     /**
@@ -193,20 +205,19 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestViewAll()
     {
-        $user = Sanctum::actingAs($this->user, [
-            PermissionType::PROJECT_VIEW,
-            PermissionType::KEY_VIEW_ANY,
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_VIEW_ANY,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $team = factory(Team::class)->create();
+        $team->projects()->save(factory(Project::class)->make());
 
-        $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
+        $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
 
         $this->assertEquals(
-            ErrorType::USER_NOT_IN_PROJECT,
+            ErrorType::USER_NOT_IN_TEAM,
             $response->exception->getCode()
         );
     }
@@ -216,21 +227,20 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, [
-            PermissionType::PROJECT_VIEW,
-            PermissionType::KEY_CREATE,
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_VIEW,
+            PermissionType::PROJECT_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $team = factory(Team::class)->create();
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = factory(Project::class)->make()->toArray();
 
-        $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
 
         $this->assertEquals(
-            ErrorType::USER_NOT_IN_PROJECT,
+            ErrorType::USER_NOT_IN_TEAM,
             $response->exception->getCode()
         );
     }
@@ -240,13 +250,12 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('GET', 'api/keys/'.$key->id)
+        $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -260,13 +269,12 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('PATCH', 'api/keys/'.$key->id)
+        $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -280,13 +288,12 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('DELETE', 'api/keys/'.$key->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -303,10 +310,9 @@ class KeyControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $team->projects()->save(factory(Project::class)->make());
 
-        $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
+        $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
 
         $this->assertEquals(
@@ -323,11 +329,10 @@ class KeyControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->make());
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = factory(Project::class)->make()->toArray();
 
-        $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -345,9 +350,8 @@ class KeyControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('GET', 'api/keys/'.$key->id)
+        $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -365,9 +369,8 @@ class KeyControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('PATCH', 'api/keys/'.$key->id)
+        $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -375,7 +378,6 @@ class KeyControllerTest extends TestCase
             $response->exception->getCode()
         );
     }
-
 
     /**
      * @return void
@@ -386,9 +388,8 @@ class KeyControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
         $project = $team->projects()->save(factory(Project::class)->make());
-        $key = $project->keys()->save(factory(Key::class)->make());
 
-        $response = $this->json('DELETE', 'api/keys/'.$key->id)
+        $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
 
         $this->assertEquals(

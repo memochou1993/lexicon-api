@@ -1,17 +1,18 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api;
 
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
+use App\Models\Language;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class FormControllerTest extends TestCase
+class LanguageControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,22 +23,30 @@ class FormControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
-            PermissionType::FORM_CREATE,
+            PermissionType::LANGUAGE_CREATE,
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
+        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = factory(Language::class)->make([
+            'form_ids' => $form_ids,
+        ]);
 
-        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data->toArray())
             ->assertCreated()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('form_ids')->toArray(),
             ]);
 
-        $this->assertDatabaseHas('forms', $data);
+        $this->assertDatabaseHas('languages', $data->toArray());
 
-        $this->assertCount(1, $team->forms);
+        $this->assertCount(1, $team->languages);
+
+        $this->assertCount(
+            count($form_ids),
+            Language::find(json_decode($response->getContent())->data->id)->forms
+        );
     }
 
     /**
@@ -47,24 +56,24 @@ class FormControllerTest extends TestCase
     {
         $user = Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
-            PermissionType::FORM_CREATE,
+            PermissionType::LANGUAGE_CREATE,
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $team->forms()->save(factory(Form::class)->make([
-            'name' => 'Unique Form',
+        $team->languages()->save(factory(Language::class)->make([
+            'name' => 'Unique Language',
         ]));
 
-        $data = factory(Form::class)->make([
-            'name' => 'Unique Form',
+        $data = factory(Language::class)->make([
+            'name' => 'Unique Language',
         ])->toArray();
 
-        $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertJsonValidationErrors([
                 'name',
             ]);
 
-        $this->assertCount(1, $team->forms);
+        $this->assertCount(1, $team->languages);
     }
 
     /**
@@ -72,20 +81,22 @@ class FormControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $this->json('GET', 'api/forms/'.$form->id, [
-            'relations' => '',
+        $this->json('GET', 'api/languages/'.$language->id, [
+            'relations' => 'forms',
         ])
             ->assertOk()
             ->assertJsonStructure([
-                'data',
+                'data' => [
+                    'forms',
+                ],
             ])
             ->assertJson([
-                'data' => $form->toArray(),
+                'data' => $language->toArray(),
             ]);
     }
 
@@ -94,22 +105,27 @@ class FormControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
+
+        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $data = factory(Form::class)->make([
-            'name' => 'New Form',
-        ])->toArray();
+        $data = factory(Language::class)->make([
+            'name' => 'New Language',
+            'form_ids' => $form_ids,
+        ]);
 
-        $this->json('PATCH', 'api/forms/'.$form->id, $data)
+        $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
             ->assertOk()
             ->assertJson([
-                'data' => $data,
+                'data' => $data->makeHidden('form_ids')->toArray(),
             ]);
 
-        $this->assertDatabaseHas('forms', $data);
+        $this->assertDatabaseHas('languages', $data->toArray());
+
+        $this->assertCount(count($form_ids), $language->forms);
     }
 
     /**
@@ -117,16 +133,16 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
+        $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
 
-        $data = factory(Form::class)->make([
-            'name' => $forms->last()->name,
+        $data = factory(Language::class)->make([
+            'name' => $languages->last()->name,
         ])->toArray();
 
-        $this->json('PATCH', 'api/forms/'.$forms->first()->id, $data)
+        $this->json('PATCH', 'api/languages/'.$languages->first()->id, $data)
             ->assertJsonValidationErrors([
                 'name',
             ]);
@@ -137,15 +153,22 @@ class FormControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
+        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
+        $form = $language->forms()->save(factory(Form::class)->make());
 
-        $this->json('DELETE', 'api/forms/'.$form->id)
+        $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertNoContent();
 
-        $this->assertDeleted($form);
+        $this->assertDeleted($language);
+
+        $this->assertDatabaseMissing('model_has_forms', [
+            'form_id' => $form->id,
+            'model_type' => 'language',
+            'model_id' => $language->id,
+        ]);
     }
 
     /**
@@ -155,14 +178,14 @@ class FormControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
-            PermissionType::FORM_CREATE,
+            PermissionType::LANGUAGE_CREATE,
         ]);
 
         $team = factory(Team::class)->create();
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = factory(Language::class)->make()->toArray();
 
-        $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -176,12 +199,12 @@ class FormControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_VIEW]);
 
         $team = factory(Team::class)->create();
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('GET', 'api/forms/'.$form->id)
+        $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -195,12 +218,12 @@ class FormControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
         $team = factory(Team::class)->create();
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('PATCH', 'api/forms/'.$form->id)
+        $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -214,12 +237,12 @@ class FormControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_DELETE]);
 
         $team = factory(Team::class)->create();
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('DELETE', 'api/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -237,9 +260,9 @@ class FormControllerTest extends TestCase
 
         $team = $user->teams()->save(factory(Team::class)->make());
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = factory(Language::class)->make()->toArray();
 
-        $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -256,9 +279,9 @@ class FormControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('GET', 'api/forms/'.$form->id)
+        $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -275,9 +298,9 @@ class FormControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('PATCH', 'api/forms/'.$form->id)
+        $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
@@ -294,9 +317,9 @@ class FormControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
 
-        $response = $this->json('DELETE', 'api/forms/'.$form->id)
+        $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();
 
         $this->assertEquals(
