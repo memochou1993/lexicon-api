@@ -36,7 +36,7 @@ class KeyController extends Controller
      */
     public function index(KeyIndexRequest $request, Project $project)
     {
-        $keys = $this->keyService->getByProject($project, $request);
+        $keys = $this->keyService->getCachedByProject($project, $request);
 
         return Resource::collection($keys);
     }

@@ -59,5 +59,7 @@ Route::namespace('Api')->group(function () {
         ->group(function () {
             Route::apiResource('projects.keys', 'KeyController')
                 ->only('index');
+            Route::apiResource('projects.cache', 'CacheController')
+                ->only('destroy');
         });
 });

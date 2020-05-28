@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class KeyService
 {
@@ -44,12 +45,16 @@ class KeyService
      * @param  Request  $request
      * @return Collection
      */
-    public function getByProject(Project $project, Request $request): Collection
+    public function getCachedByProject(Project $project, Request $request): Collection
     {
-        return $project
-            ->keys()
-            ->with($request->relations ?? [])
-            ->get();
+        $cacheKey = sprintf('projects:%s:keys', $project->id);
+
+        return Cache::rememberForever($cacheKey, function () use ($project, $request) {
+            return $project
+                ->keys()
+                ->with($request->relations ?? [])
+                ->get();
+        });
     }
 
     /**
