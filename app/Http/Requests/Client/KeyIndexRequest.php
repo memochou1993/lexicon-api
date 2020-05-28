@@ -14,7 +14,6 @@ class KeyIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: should check API key
         return true;
     }
 
