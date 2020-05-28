@@ -98,18 +98,24 @@ class TeamService
     /**
      * @param  Team  $team
      * @param  array  $user_ids
+     * @return bool
      */
-    public function attachUser(Team $team, array $user_ids): void
+    public function attachUser(Team $team, array $user_ids): bool
     {
-        $team->users()->syncWithoutDetaching($user_ids);
+        $changes = $team->users()->syncWithoutDetaching($user_ids);
+
+        return count($changes['attached']) > 0;
     }
 
     /**
      * @param  Team  $team
      * @param  int  $user_id
+     * @return bool
      */
-    public function detachUser(Team $team, int $user_id): void
+    public function detachUser(Team $team, int $user_id): bool
     {
-        $team->users()->detach($user_id);
+        $detached = $team->users()->detach($user_id);
+
+        return $detached > 0;
     }
 }

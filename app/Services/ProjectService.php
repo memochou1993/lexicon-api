@@ -112,36 +112,48 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  array  $user_ids
+     * @return bool
      */
-    public function attachUser(Project $project, array $user_ids): void
+    public function attachUser(Project $project, array $user_ids): bool
     {
-        $project->users()->syncWithoutDetaching($user_ids);
+        $changes = $project->users()->syncWithoutDetaching($user_ids);
+
+        return count($changes['attached']) > 0;
     }
 
     /**
      * @param  Project  $project
      * @param  int  $user_id
+     * @return bool
      */
-    public function detachUser(Project $project, int $user_id): void
+    public function detachUser(Project $project, int $user_id): bool
     {
-        $project->users()->detach($user_id);
+        $detached = $project->users()->detach($user_id);
+
+        return $detached > 0;
     }
 
     /**
      * @param  Project  $project
      * @param  array  $language_ids
+     * @return bool
      */
-    public function attachLanguage(Project $project, array $language_ids): void
+    public function attachLanguage(Project $project, array $language_ids): bool
     {
-        $project->languages()->syncWithoutDetaching($language_ids);
+        $changes = $project->languages()->syncWithoutDetaching($language_ids);
+
+        return count($changes['attached']) > 0;
     }
 
     /**
      * @param  Project  $project
      * @param  int  $language_id
+     * @return bool
      */
-    public function detachLanguage(Project $project, int $language_id): void
+    public function detachLanguage(Project $project, int $language_id): bool
     {
-        $project->languages()->detach($language_id);
+        $detached = $project->languages()->detach($language_id);
+
+        return $detached > 0;
     }
 }

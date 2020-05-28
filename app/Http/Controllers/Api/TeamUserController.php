@@ -38,9 +38,9 @@ class TeamUserController extends Controller
      */
     public function store(TeamUserStoreRequest $request, Team $team)
     {
-        $this->teamService->attachUser($team, $request->user_ids);
+        $success = $this->teamService->attachUser($team, $request->user_ids);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 
     /**
@@ -55,8 +55,8 @@ class TeamUserController extends Controller
     {
         $this->authorize('update', $team);
 
-        $this->teamService->detachUser($team, $user->id);
+        $success = $this->teamService->detachUser($team, $user->id);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 }

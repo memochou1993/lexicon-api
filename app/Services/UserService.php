@@ -77,18 +77,24 @@ class UserService
     /**
      * @param  User  $user
      * @param  array  $role_ids
+     * @return bool
      */
-    public function attachRole(User $user, array $role_ids): void
+    public function attachRole(User $user, array $role_ids): bool
     {
-        $user->roles()->syncWithoutDetaching($role_ids);
+        $changes = $user->roles()->syncWithoutDetaching($role_ids);
+
+        return count($changes['attached']) > 0;
     }
 
     /**
      * @param  User  $user
      * @param  int  $role_id
+     * @return bool
      */
-    public function detachRole(User $user, int $role_id): void
+    public function detachRole(User $user, int $role_id): bool
     {
-        $user->roles()->detach($role_id);
+        $detached = $user->roles()->detach($role_id);
+
+        return $detached > 0;
     }
 }

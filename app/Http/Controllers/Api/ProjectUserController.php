@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class ProjectUserController extends Controller
 {
@@ -38,9 +37,9 @@ class ProjectUserController extends Controller
      */
     public function store(ProjectUserStoreRequest $request, Project $project)
     {
-        $this->projectService->attachUser($project, $request->user_ids);
+        $success = $this->projectService->attachUser($project, $request->user_ids);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 
     /**
@@ -55,8 +54,8 @@ class ProjectUserController extends Controller
     {
         $this->authorize('update', $project);
 
-        $this->projectService->detachUser($project, $user->id);
+        $success = $this->projectService->detachUser($project, $user->id);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 }

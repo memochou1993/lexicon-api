@@ -38,9 +38,9 @@ class ProjectLanguageController extends Controller
      */
     public function store(ProjectLanguageStoreRequest $request, Project $project)
     {
-        $this->projectService->attachLanguage($project, $request->language_ids);
+        $success = $this->projectService->attachLanguage($project, $request->language_ids);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 
     /**
@@ -55,8 +55,8 @@ class ProjectLanguageController extends Controller
     {
         $this->authorize('update', $project);
 
-        $this->projectService->detachLanguage($project, $language->id);
+        $success = $this->projectService->detachLanguage($project, $language->id);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 }

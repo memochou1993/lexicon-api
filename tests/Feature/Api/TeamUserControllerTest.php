@@ -30,7 +30,10 @@ class TeamUserControllerTest extends TestCase
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $member->id,
         ])
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(2, $team->refresh()->users);
     }
@@ -48,7 +51,10 @@ class TeamUserControllerTest extends TestCase
         $this->assertCount(2, $team->users);
 
         $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$member->id)
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(1, $team->refresh()->users);
     }

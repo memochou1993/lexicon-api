@@ -32,7 +32,10 @@ class ProjectLanguageControllerTest extends TestCase
         $this->json('POST', 'api/projects/'.$project->id.'/languages', [
             'language_ids' => $language->id,
         ])
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(1, $project->refresh()->languages);
     }
@@ -52,7 +55,10 @@ class ProjectLanguageControllerTest extends TestCase
         $this->assertCount(1, $project->languages);
 
         $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(0, $project->refresh()->languages);
     }

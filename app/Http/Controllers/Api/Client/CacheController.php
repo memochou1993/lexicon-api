@@ -7,7 +7,6 @@ use App\Http\Requests\Client\CacheDestroyRequest;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpFoundation\Response;
 
 class CacheController extends Controller
 {
@@ -22,8 +21,8 @@ class CacheController extends Controller
     {
         $cacheKey = sprintf('projects:%s:%s', $project->id, $request->cache);
 
-        Cache::forget($cacheKey);
+        $success = Cache::forget($cacheKey);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->api($success);
     }
 }

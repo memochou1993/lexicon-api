@@ -28,7 +28,10 @@ class UserRoleControllerTest extends TestCase
         $this->json('POST', 'api/users/'.$user->id.'/roles', [
             'role_ids' => $role->id,
         ])
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(1, $user->refresh()->roles);
     }
@@ -45,7 +48,10 @@ class UserRoleControllerTest extends TestCase
         $this->assertCount(1, $user->roles);
 
         $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(0, $user->refresh()->roles);
     }

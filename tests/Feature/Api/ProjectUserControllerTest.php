@@ -32,7 +32,10 @@ class ProjectUserControllerTest extends TestCase
         $this->json('POST', 'api/projects/'.$project->id.'/users', [
             'user_ids' => $member->id,
         ])
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(2, $project->refresh()->users);
     }
@@ -51,7 +54,10 @@ class ProjectUserControllerTest extends TestCase
         $this->assertCount(2, $project->users);
 
         $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$member->id)
-            ->assertNoContent();
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertCount(1, $project->refresh()->users);
     }
