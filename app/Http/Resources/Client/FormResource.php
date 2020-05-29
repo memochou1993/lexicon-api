@@ -4,7 +4,7 @@ namespace App\Http\Resources\Client;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class KeyResource extends JsonResource
+class FormResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,6 @@ class KeyResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'values' => ValueResource::collection($this->whenLoaded('values')),
         ];
     }
 }

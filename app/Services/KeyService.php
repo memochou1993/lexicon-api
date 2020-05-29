@@ -5,10 +5,8 @@ namespace App\Services;
 use App\Models\Key;
 use App\Models\Project;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class KeyService
 {
@@ -38,23 +36,6 @@ class KeyService
         return $this->key
             ->with($request->relations ?? [])
             ->find($key->id);
-    }
-
-    /**
-     * @param  Project  $project
-     * @param  Request  $request
-     * @return Collection
-     */
-    public function getCachedByProject(Project $project, Request $request): Collection
-    {
-        $cacheKey = sprintf('projects:%s:keys', $project->id);
-
-        return Cache::rememberForever($cacheKey, function () use ($project, $request) {
-            return $project
-                ->keys()
-                ->with($request->relations ?? [])
-                ->get();
-        });
     }
 
     /**

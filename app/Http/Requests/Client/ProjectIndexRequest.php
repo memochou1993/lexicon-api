@@ -5,7 +5,7 @@ namespace App\Http\Requests\Client;
 use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
 
-class KeyIndexRequest extends FormRequest
+class ProjectIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,9 +27,10 @@ class KeyIndexRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
-                    'values',
-                    'values.languages',
-                    'values.forms',
+                    'keys',
+                    'keys.values',
+                    'keys.values.languages',
+                    'keys.values.forms',
                 ]),
             ],
         ];
@@ -51,9 +52,10 @@ class KeyIndexRequest extends FormRequest
     private function prepareRelations()
     {
         $relations = collect($this->relations)->explode(',')->merge([
-            'values',
-            'values.languages',
-            'values.forms',
+            'keys',
+            'keys.values',
+            'keys.values.languages',
+            'keys.values.forms',
         ]);
 
         $this->merge([
