@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
-use App\Http\Requests\AuthRegisterRequest;
-use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends Controller
+class TokenController extends Controller
 {
     /**
      * @var AuthService
@@ -30,22 +28,11 @@ class AuthController extends Controller
     }
 
     /**
-     * @param  AuthRegisterRequest  $request
-     * @return UserResource
-     */
-    public function register(AuthRegisterRequest $request)
-    {
-        $user = $this->authService->storeUser($request);
-
-        return new UserResource($user);
-    }
-
-    /**
      * @param  AuthLoginRequest  $request
      * @return JsonResponse
      * @throws AuthenticationException
      */
-    public function login(AuthLoginRequest $request)
+    public function store(AuthLoginRequest $request)
     {
         $token = $this->authService->getToken(
             $request->email,
@@ -67,7 +54,7 @@ class AuthController extends Controller
     /**
      * @return JsonResponse
      */
-    public function logout()
+    public function destroy()
     {
         $this->authService->destroyTokens();
 

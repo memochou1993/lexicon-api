@@ -38,6 +38,15 @@ class UserService
     }
 
     /**
+     * @param  Request  $request
+     * @return Model
+     */
+    public function store(Request $request): Model
+    {
+        return $this->user->create($request->all());
+    }
+
+    /**
      * @param  User  $user
      * @param  Request  $request
      * @return Model

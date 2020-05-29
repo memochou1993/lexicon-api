@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -49,39 +47,6 @@ class AuthService
             ->toArray();
 
         return $user->createToken($device, $abilities)->plainTextToken;
-    }
-
-    /**
-     * @param  Request  $request
-     * @return Model
-     */
-    public function getUser(Request $request): Model
-    {
-        return $this->user
-            ->with($request->relations ?? [])
-            ->find(Auth::id());
-    }
-
-    /**
-     * @param  Request  $request
-     * @return Model
-     */
-    public function storeUser(Request $request): Model
-    {
-        return $this->user->create($request->all());
-    }
-
-    /**
-     * @param  Request  $request
-     * @return Model
-     */
-    public function updateUser(Request $request): Model
-    {
-        $user = Auth::guard()->user();
-
-        $user->update($request->all());
-
-        return $user;
     }
 
     /**

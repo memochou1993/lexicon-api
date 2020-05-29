@@ -80,7 +80,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/auth')
             ->middleware('api')
-            ->namespace($this->namespace.'\Api')
+            ->namespace($this->namespace.'\Api\Auth')
             ->group(base_path('routes/api/auth.php'));
     }
 
