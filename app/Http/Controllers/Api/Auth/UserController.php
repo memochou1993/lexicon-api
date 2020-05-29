@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthRegisterRequest;
+use App\Http\Requests\Auth\UserStoreRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 
@@ -26,10 +26,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param  AuthRegisterRequest  $request
+     * @param  UserStoreRequest  $request
      * @return UserResource
      */
-    public function store(AuthRegisterRequest $request)
+    public function store(UserStoreRequest $request)
     {
         $user = $this->userService->store($request);
 

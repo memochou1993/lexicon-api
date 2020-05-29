@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\Auth\TokenStoreRequest;
 use App\Services\AuthService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
@@ -28,11 +28,11 @@ class TokenController extends Controller
     }
 
     /**
-     * @param  AuthLoginRequest  $request
+     * @param  TokenStoreRequest  $request
      * @return JsonResponse
      * @throws AuthenticationException
      */
-    public function store(AuthLoginRequest $request)
+    public function store(TokenStoreRequest $request)
     {
         $token = $this->authService->getToken(
             $request->email,
