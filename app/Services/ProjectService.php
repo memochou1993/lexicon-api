@@ -41,6 +41,21 @@ class ProjectService
     }
 
     /**
+     * @param  Project  $project
+     * @param  Request  $request
+     * @param  mixed  $ttl
+     * @return Model
+     */
+    public function getCached(Project $project, Request $request, $ttl = null): Model
+    {
+        $callback = function () use ($project, $request) {
+            return $this->get($project, $request);
+        };
+
+        return $project->remember($callback, $ttl);
+    }
+
+    /**
      * @param  User  $user
      * @param  Request  $request
      * @return LengthAwarePaginator
@@ -107,6 +122,15 @@ class ProjectService
     public function destroy(Project $project): bool
     {
         return $this->project->destroy($project->id);
+    }
+
+    /**
+     * @param  Project  $project
+     * @return bool
+     */
+    public function destroyCached(Project $project): bool
+    {
+        return $project->forget();
     }
 
     /**

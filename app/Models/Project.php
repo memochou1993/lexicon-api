@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends Model
 {
+    use HasCache;
     use HasUsers;
     use HasLanguages;
 

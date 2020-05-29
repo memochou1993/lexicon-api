@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Client\ProjectIndexRequest;
-use App\Http\Resources\Client\ProjectResource as Resource;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
 
-class ProjectController extends Controller
+class ProjectCacheController extends Controller
 {
     /**
      * @var ProjectService
@@ -27,16 +26,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Remove the specified resource from the cache.
      *
-     * @param  ProjectIndexRequest  $request
      * @param  Project  $project
-     * @return Resource
+     * @return JsonResponse
      */
-    public function show(ProjectIndexRequest $request, Project $project)
+    public function destroy(Project $project)
     {
-        $keys = $this->projectService->getCached($project, $request);
+        $success = $this->projectService->destroyCached($project);
 
-        return new Resource($keys);
+        return response()->api($success);
     }
 }
