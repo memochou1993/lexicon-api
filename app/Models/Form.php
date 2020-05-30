@@ -21,6 +21,8 @@ class Form extends Model
      */
     protected $fillable = [
         'name',
+        'range_min',
+        'range_max',
     ];
 
     /**

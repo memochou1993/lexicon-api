@@ -12,5 +12,7 @@ $factory->define(Form::class, function (Faker $faker) {
 
     return [
         'name' => 'Form '.$index,
+        'range_min' => pow(10, $index - 1) + ((int) $index > 1),
+        'range_max' => pow(10, $index),
     ];
 });

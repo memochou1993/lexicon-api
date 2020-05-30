@@ -37,6 +37,14 @@ class FormStoreRequest extends FormRequest
                     );
                 }),
             ],
+            'range_min' => [
+                'numeric',
+                'required',
+            ],
+            'range_max' => [
+                'numeric',
+                'required',
+            ],
         ];
     }
 }

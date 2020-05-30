@@ -17,6 +17,8 @@ class FormResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'range_min' => $this->range_min,
+            'range_max' => $this->range_max,
         ];
     }
 }
