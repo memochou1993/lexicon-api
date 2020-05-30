@@ -75,6 +75,8 @@ class LanguageService
      */
     public function destroy(Language $language): bool
     {
+        $language->values()->delete();
+
         return $this->language->destroy($language->id);
     }
 }

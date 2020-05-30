@@ -35,4 +35,14 @@ class Language extends Model
     {
         return $this->morphedByMany(Team::class, 'model', 'model_has_languages');
     }
+
+    /**
+     * Get all of the values that are assigned this languages.
+     *
+     * @return MorphToMany
+     */
+    public function values()
+    {
+        return $this->morphedByMany(Value::class, 'model', 'model_has_languages');
+    }
 }

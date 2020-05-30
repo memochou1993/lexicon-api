@@ -65,6 +65,8 @@ class FormService
      */
     public function destroy(Form $form): bool
     {
+        $form->values()->delete();
+
         return $this->form->destroy($form->id);
     }
 }

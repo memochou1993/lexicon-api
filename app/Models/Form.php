@@ -26,12 +26,22 @@ class Form extends Model
     ];
 
     /**
-     * Get all of the teams that are assigned this languages.
+     * Get all of the teams that are assigned this form.
      *
      * @return MorphToMany
      */
     public function teams()
     {
         return $this->morphedByMany(Team::class, 'model', 'model_has_forms');
+    }
+
+    /**
+     * Get all of the values that are assigned this form.
+     *
+     * @return MorphToMany
+     */
+    public function values()
+    {
+        return $this->morphedByMany(Value::class, 'model', 'model_has_forms');
     }
 }

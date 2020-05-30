@@ -5,7 +5,11 @@ namespace Tests\Feature\Api;
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Form;
+use App\Models\Key;
+use App\Models\Language;
+use App\Models\Project;
 use App\Models\Team;
+use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -140,12 +144,22 @@ class FormControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
+        $language = $team->languages()->save(factory(Language::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
+        $language->forms()->attach($form);
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $project->languages()->attach($language);
+        $key = $project->keys()->save(factory(Key::class)->make());
+        $value = $key->values()->save(factory(Value::class)->make());
+        $value->languages()->attach($language);
+        $value->forms()->attach($form);
 
         $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertNoContent();
 
         $this->assertDeleted($form);
+
+        $this->assertDeleted($value);
     }
 
     /**
