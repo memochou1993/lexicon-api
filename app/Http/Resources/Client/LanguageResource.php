@@ -16,6 +16,7 @@ class LanguageResource extends JsonResource
     {
         return [
             'name' => $this->name,
+            'forms' => FormResource::collection($this->whenLoaded('forms')),
         ];
     }
 }

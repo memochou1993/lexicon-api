@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class KeyControllerTest extends TestCase
+class ProjectControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,15 +26,14 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/client/projects/'.$project->id.'/keys', [], [
+        $this->json('GET', 'api/client/projects/'.$project->id, [], [
             'X-Localize-Secret-Key' => json_decode($project->api_keys)->secret_key,
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    [
-                        'values',
-                    ],
+                    'languages',
+                    'keys',
                 ],
             ]);
     }
@@ -51,7 +50,7 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
         $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/client/projects/'.$project->id.'/keys')
+        $this->json('GET', 'api/client/projects/'.$project->id)
             ->assertUnauthorized();
     }
 }

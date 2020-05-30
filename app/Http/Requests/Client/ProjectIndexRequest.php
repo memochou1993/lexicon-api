@@ -27,6 +27,8 @@ class ProjectIndexRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
+                    'languages',
+                    'languages.forms',
                     'keys',
                     'keys.values',
                     'keys.values.languages',
@@ -52,6 +54,8 @@ class ProjectIndexRequest extends FormRequest
     private function prepareRelations()
     {
         $relations = collect($this->relations)->explode(',')->merge([
+            'languages',
+            'languages.forms',
             'keys',
             'keys.values',
             'keys.values.languages',
