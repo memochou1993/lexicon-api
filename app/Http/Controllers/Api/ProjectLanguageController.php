@@ -40,7 +40,7 @@ class ProjectLanguageController extends Controller
         $changes = $this->projectService->attachLanguage($project, $request->language_ids);
 
         return response()->json([
-            'attached' => count($changes['attached']),
+            'success' => count($changes['attached']) > 0,
         ]);
     }
 
@@ -59,7 +59,7 @@ class ProjectLanguageController extends Controller
         $count = $this->projectService->detachLanguage($project, $language);
 
         return response()->json([
-            'detached' => $count,
+            'success' => $count > 0,
         ]);
     }
 }

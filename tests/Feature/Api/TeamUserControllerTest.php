@@ -32,7 +32,7 @@ class TeamUserControllerTest extends TestCase
         ])
             ->assertOk()
             ->assertJson([
-                'attached' => 1,
+                'success' => true,
             ]);
 
         $this->assertCount(2, $team->refresh()->users);
@@ -53,7 +53,7 @@ class TeamUserControllerTest extends TestCase
         $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$member->id)
             ->assertOk()
             ->assertJson([
-                'detached' => 1,
+                'success' => true,
             ]);
 
         $this->assertCount(1, $team->refresh()->users);

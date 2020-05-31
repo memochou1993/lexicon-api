@@ -34,7 +34,7 @@ class ProjectUserControllerTest extends TestCase
         ])
             ->assertOk()
             ->assertJson([
-                'attached' => 1,
+                'success' => true,
             ]);
 
         $this->assertCount(2, $project->refresh()->users);
@@ -56,7 +56,7 @@ class ProjectUserControllerTest extends TestCase
         $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$member->id)
             ->assertOk()
             ->assertJson([
-                'detached' => 1,
+                'success' => true,
             ]);
 
         $this->assertCount(1, $project->refresh()->users);

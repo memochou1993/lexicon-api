@@ -40,7 +40,7 @@ class ProjectUserController extends Controller
         $changes = $this->projectService->attachUser($project, $request->user_ids);
 
         return response()->json([
-            'attached' => count($changes['attached']),
+            'success' => count($changes['attached']) > 0,
         ]);
     }
 
@@ -59,7 +59,7 @@ class ProjectUserController extends Controller
         $count = $this->projectService->detachUser($project, $user);
 
         return response()->json([
-            'detached' => $count,
+            'success' => $count > 0,
         ]);
     }
 }

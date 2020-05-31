@@ -35,6 +35,8 @@ class ProjectCacheController extends Controller
     {
         $success = $this->projectService->destroyCached($project);
 
-        return response()->api($success);
+        return response()->json([
+            'success' => $success,
+        ]);
     }
 }
