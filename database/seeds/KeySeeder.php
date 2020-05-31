@@ -9,7 +9,7 @@ class KeySeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 10;
+    public const DATA_AMOUNT = 5;
 
     /**
      * Run the database seeds.

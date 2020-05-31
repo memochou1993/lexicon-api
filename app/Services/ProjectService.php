@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
@@ -136,48 +137,58 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  array  $user_ids
-     * @return bool
+     * @return array
      */
-    public function attachUser(Project $project, array $user_ids): bool
+    public function attachUser(Project $project, array $user_ids): array
     {
-        $changes = $project->users()->syncWithoutDetaching($user_ids);
-
-        return count($changes['attached']) > 0;
+        return $project->users()->syncWithoutDetaching($user_ids);
     }
 
     /**
      * @param  Project  $project
-     * @param  int  $user_id
-     * @return bool
+     * @param  User  $user
+     * @return int
      */
-    public function detachUser(Project $project, int $user_id): bool
+    public function detachUser(Project $project, User $user): int
     {
-        $detached = $project->users()->detach($user_id);
-
-        return $detached > 0;
+        return $project->users()->detach($user);
     }
 
     /**
      * @param  Project  $project
      * @param  array  $language_ids
-     * @return bool
+     * @return array
      */
-    public function attachLanguage(Project $project, array $language_ids): bool
+    public function attachLanguage(Project $project, array $language_ids): array
     {
-        $changes = $project->languages()->syncWithoutDetaching($language_ids);
-
-        return count($changes['attached']) > 0;
+        return $project->languages()->syncWithoutDetaching($language_ids);
     }
 
     /**
      * @param  Project  $project
-     * @param  int  $language_id
-     * @return bool
+     * @param  Language  $language
+     * @return int
      */
-    public function detachLanguage(Project $project, int $language_id): bool
+    public function detachLanguage(Project $project, Language $language): int
     {
-        $detached = $project->languages()->detach($language_id);
+        $this->destroyValuesByLanguageIds($project, [$language->id]);
 
-        return $detached > 0;
+        return $project->languages()->detach($language);
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  array  $language_ids
+     * @return int
+     */
+    protected function destroyValuesByLanguageIds(Project $project, array $language_ids): int
+    {
+        if (! $language_ids) {
+            return 0;
+        }
+
+        return $project->values()->whereHas('languages', function ($query) use ($language_ids) {
+            $query->whereIn('language_id', $language_ids);
+        })->delete();
     }
 }

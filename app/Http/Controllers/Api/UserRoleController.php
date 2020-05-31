@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserRoleController extends Controller
 {
@@ -38,9 +37,11 @@ class UserRoleController extends Controller
      */
     public function store(UserRoleStoreRequest $request, User $user)
     {
-        $success = $this->userService->attachRole($user, $request->role_ids);
+        $changes = $this->userService->attachRole($user, $request->role_ids);
 
-        return response()->api($success);
+        return response()->json([
+            'attached' => count($changes['attached']),
+        ]);
     }
 
     /**
@@ -55,8 +56,10 @@ class UserRoleController extends Controller
     {
         $this->authorize('update', $user);
 
-        $success = $this->userService->detachRole($user, $role->id);
+        $count = $this->userService->detachRole($user, $role);
 
-        return response()->api($success);
+        return response()->json([
+            'detached' => $count,
+        ]);
     }
 }

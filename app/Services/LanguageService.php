@@ -63,7 +63,9 @@ class LanguageService
         $language->update($request->all());
 
         if ($request->form_ids) {
-            $language->forms()->sync($request->form_ids);
+            $changed = $language->forms()->sync($request->form_ids);
+
+            $this->destroyValuesByFormIds($language, $changed['detached']);
         }
 
         return $language;
@@ -78,5 +80,21 @@ class LanguageService
         $language->values()->delete();
 
         return $this->language->destroy($language->id);
+    }
+
+    /**
+     * @param  Language  $language
+     * @param  array  $form_ids
+     * @return int
+     */
+    protected function destroyValuesByFormIds(Language $language, array $form_ids): int
+    {
+        if (! $form_ids) {
+            return 0;
+        }
+
+        return $language->values()->whereHas('forms', function ($query) use ($form_ids) {
+            $query->whereIn('form_id', $form_ids);
+        })->delete();
     }
 }

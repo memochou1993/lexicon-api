@@ -37,9 +37,11 @@ class ProjectUserController extends Controller
      */
     public function store(ProjectUserStoreRequest $request, Project $project)
     {
-        $success = $this->projectService->attachUser($project, $request->user_ids);
+        $changes = $this->projectService->attachUser($project, $request->user_ids);
 
-        return response()->api($success);
+        return response()->json([
+            'attached' => count($changes['attached']),
+        ]);
     }
 
     /**
@@ -54,8 +56,10 @@ class ProjectUserController extends Controller
     {
         $this->authorize('update', $project);
 
-        $success = $this->projectService->detachUser($project, $user->id);
+        $count = $this->projectService->detachUser($project, $user);
 
-        return response()->api($success);
+        return response()->json([
+            'detached' => $count,
+        ]);
     }
 }

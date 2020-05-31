@@ -34,7 +34,7 @@ class ProjectLanguageControllerTest extends TestCase
         ])
             ->assertOk()
             ->assertJson([
-                'success' => true,
+                'attached' => 1,
             ]);
 
         $this->assertCount(1, $project->refresh()->languages);
@@ -57,7 +57,7 @@ class ProjectLanguageControllerTest extends TestCase
         $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
             ->assertOk()
             ->assertJson([
-                'success' => true,
+                'detached' => 1,
             ]);
 
         $this->assertCount(0, $project->refresh()->languages);

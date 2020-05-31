@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class ProjectLanguageController extends Controller
 {
@@ -38,9 +37,11 @@ class ProjectLanguageController extends Controller
      */
     public function store(ProjectLanguageStoreRequest $request, Project $project)
     {
-        $success = $this->projectService->attachLanguage($project, $request->language_ids);
+        $changes = $this->projectService->attachLanguage($project, $request->language_ids);
 
-        return response()->api($success);
+        return response()->json([
+            'attached' => count($changes['attached']),
+        ]);
     }
 
     /**
@@ -55,8 +56,10 @@ class ProjectLanguageController extends Controller
     {
         $this->authorize('update', $project);
 
-        $success = $this->projectService->detachLanguage($project, $language->id);
+        $count = $this->projectService->detachLanguage($project, $language);
 
-        return response()->api($success);
+        return response()->json([
+            'detached' => $count,
+        ]);
     }
 }

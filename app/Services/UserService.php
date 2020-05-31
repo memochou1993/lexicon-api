@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -86,24 +87,20 @@ class UserService
     /**
      * @param  User  $user
      * @param  array  $role_ids
-     * @return bool
+     * @return array
      */
-    public function attachRole(User $user, array $role_ids): bool
+    public function attachRole(User $user, array $role_ids): array
     {
-        $changes = $user->roles()->syncWithoutDetaching($role_ids);
-
-        return count($changes['attached']) > 0;
+        return $user->roles()->syncWithoutDetaching($role_ids);
     }
 
     /**
      * @param  User  $user
-     * @param  int  $role_id
-     * @return bool
+     * @param  Role  $role
+     * @return int
      */
-    public function detachRole(User $user, int $role_id): bool
+    public function detachRole(User $user, Role $role): int
     {
-        $detached = $user->roles()->detach($role_id);
-
-        return $detached > 0;
+        return $user->roles()->detach($role);
     }
 }

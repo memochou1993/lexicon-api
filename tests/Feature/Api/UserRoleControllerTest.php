@@ -30,7 +30,7 @@ class UserRoleControllerTest extends TestCase
         ])
             ->assertOk()
             ->assertJson([
-                'success' => true,
+                'attached' => 1,
             ]);
 
         $this->assertCount(1, $user->refresh()->roles);
@@ -50,7 +50,7 @@ class UserRoleControllerTest extends TestCase
         $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
             ->assertOk()
             ->assertJson([
-                'success' => true,
+                'detached' => 1,
             ]);
 
         $this->assertCount(0, $user->refresh()->roles);

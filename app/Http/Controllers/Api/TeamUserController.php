@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Services\TeamService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class TeamUserController extends Controller
 {
@@ -38,9 +37,11 @@ class TeamUserController extends Controller
      */
     public function store(TeamUserStoreRequest $request, Team $team)
     {
-        $success = $this->teamService->attachUser($team, $request->user_ids);
+        $changes = $this->teamService->attachUser($team, $request->user_ids);
 
-        return response()->api($success);
+        return response()->json([
+            'attached' => count($changes['attached']),
+        ]);
     }
 
     /**
@@ -55,8 +56,10 @@ class TeamUserController extends Controller
     {
         $this->authorize('update', $team);
 
-        $success = $this->teamService->detachUser($team, $user->id);
+        $count = $this->teamService->detachUser($team, $user);
 
-        return response()->api($success);
+        return response()->json([
+            'detached' => $count,
+        ]);
     }
 }
