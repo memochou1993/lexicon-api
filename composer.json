@@ -6,6 +6,12 @@
         "localization"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Memo Chou",
+            "email": "memochou1993@gmail.com"
+        }
+    ],
     "require": {
         "php": "^7.4",
         "fideloper/proxy": "^4.2",
