@@ -41,7 +41,7 @@ class FormControllerTest extends TestCase
 
         $this->assertDatabaseHas('forms', $data);
 
-        $this->assertCount(1, $team->forms);
+        $this->assertCount(1, $team->refresh()->forms);
     }
 
     /**
@@ -68,7 +68,7 @@ class FormControllerTest extends TestCase
                 'name',
             ]);
 
-        $this->assertCount(1, $team->forms);
+        $this->assertCount(1, $team->refresh()->forms);
     }
 
     /**

@@ -90,7 +90,7 @@ class UserControllerTest extends TestCase
                 'data' => $data->makeHidden('role_ids')->toArray(),
             ]);
 
-        $this->assertCount(count($role_ids), $user->roles);
+        $this->assertCount(count($role_ids), $user->refresh()->roles);
     }
 
     /**

@@ -59,7 +59,7 @@ class TeamControllerTest extends TestCase
 
         $this->assertDatabaseHas('teams', $data);
 
-        $this->assertCount(1, $user->teams);
+        $this->assertCount(1, $user->refresh()->teams);
     }
 
     /**
@@ -82,6 +82,6 @@ class TeamControllerTest extends TestCase
                 'name',
             ]);
 
-        $this->assertCount(1, $user->teams);
+        $this->assertCount(1, $user->refresh()->teams);
     }
 }

@@ -69,7 +69,7 @@ class KeyControllerTest extends TestCase
 
         $this->assertDatabaseHas('keys', $data);
 
-        $this->assertCount(1, $project->keys);
+        $this->assertCount(1, $project->refresh()->keys);
     }
 
     /**
@@ -97,7 +97,7 @@ class KeyControllerTest extends TestCase
                 'name',
             ]);
 
-        $this->assertCount(1, $project->keys);
+        $this->assertCount(1, $project->refresh()->keys);
     }
 
     /**

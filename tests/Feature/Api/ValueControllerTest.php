@@ -48,7 +48,7 @@ class ValueControllerTest extends TestCase
 
         $this->assertDatabaseHas('values', $value->toArray());
 
-        $this->assertCount(1, $key->values);
+        $this->assertCount(1, $key->refresh()->values);
     }
 
     /**
@@ -100,7 +100,7 @@ class ValueControllerTest extends TestCase
 
         $this->assertDatabaseHas('values', $data);
 
-        $this->assertCount(1, $key->values);
+        $this->assertCount(1, $key->refresh()->values);
     }
 
     /**

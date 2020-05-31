@@ -65,7 +65,7 @@ class ProjectControllerTest extends TestCase
                 ],
             ]);
 
-        $this->assertCount(1, $team->projects);
+        $this->assertCount(1, $team->refresh()->projects);
     }
 
     /**
@@ -92,7 +92,7 @@ class ProjectControllerTest extends TestCase
                 'name',
             ]);
 
-        $this->assertCount(1, $team->projects);
+        $this->assertCount(1, $team->refresh()->projects);
     }
 
     /**

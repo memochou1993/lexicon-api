@@ -27,7 +27,7 @@ class TokenControllerTest extends TestCase
                 'access_token',
             ]);
 
-        $this->assertCount(1, $user->tokens);
+        $this->assertCount(1, $user->refresh()->tokens);
     }
 
     /**
