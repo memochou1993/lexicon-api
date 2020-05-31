@@ -171,7 +171,7 @@ class ProjectService
      */
     public function detachLanguage(Project $project, Language $language): int
     {
-        $this->destroyValuesByLanguageIds($project, [$language->id]);
+        $this->destroyValuesByLanguageIds($project, (array) $language->id);
 
         return $project->languages()->detach($language);
     }
