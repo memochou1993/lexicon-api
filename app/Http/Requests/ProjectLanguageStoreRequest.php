@@ -20,6 +20,8 @@ class ProjectLanguageStoreRequest extends FormRequest
     {
         Gate::authorize('update', $this->route('project'));
 
+        // TODO: check language_ids belongs to project's team
+
         return true;
     }
 

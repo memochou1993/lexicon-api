@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Project;
 use App\Models\Team;
@@ -57,6 +58,81 @@ class ProjectTokenControllerTest extends TestCase
         $this->assertCount(0, $project->refresh()->tokens);
     }
 
-    // TODO: test guest
-    // TODO: test without permission
+    /**
+     * @return void
+     */
+    public function testGuestStore()
+    {
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/tokens')
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDestroy()
+    {
+        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $token = $project->createToken('')->accessToken;
+
+        $response = $this->json('DELETE', 'api/projects/'.$project->id.'/tokens/'.$token->id)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testStoreWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/tokens')
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testDestroyWithoutPermission()
+    {
+        $user = Sanctum::actingAs($this->user);
+
+        $team = $user->teams()->save(factory(Team::class)->make());
+        $project = $team->projects()->save(factory(Project::class)->make());
+        $token = $project->createToken('')->accessToken;
+
+        $response = $this->json('DELETE', 'api/projects/'.$project->id.'/tokens/'.$token->id)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::PERMISSION_DENIED,
+            $response->exception->getCode()
+        );
+    }
 }

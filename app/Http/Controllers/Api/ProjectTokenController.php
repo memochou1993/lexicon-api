@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Token;
 use App\Services\ProjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 
 class ProjectTokenController extends Controller
@@ -29,9 +30,12 @@ class ProjectTokenController extends Controller
     /**
      * @param  Project  $project
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function store(Project $project)
     {
+        $this->authorize('update', $project);
+
         $token = $this->projectService->createToken($project);
 
         $payload = [
@@ -45,9 +49,12 @@ class ProjectTokenController extends Controller
      * @param  Project  $project
      * @param  Token  $token
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Project $project, Token $token)
     {
+        $this->authorize('update', $project);
+
         $count = $this->projectService->destroyToken($project, $token);
 
         return response()->json([
