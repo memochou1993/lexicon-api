@@ -2,24 +2,22 @@
 
 namespace Tests\Feature\Api\Client;
 
-use App\Models\Key;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class ProjectControllerTest extends TestCase
+class ProjectCacheControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
      * @return void
      */
-    public function testShow()
+    public function testDestroy()
     {
         $user = $this->user;
 
@@ -28,18 +26,12 @@ class ProjectControllerTest extends TestCase
 
         Sanctum::actingAs($project);
 
-        $key = $project->keys()->save(factory(Key::class)->make());
-        $key->values()->save(factory(Value::class)->make());
+        Cache::shouldReceive('forget')->once()->andReturn(true);
 
-        $this->json('GET', 'api/client/project')
+        $this->json('DELETE', 'api/client/project/cache')
             ->assertOk()
-            ->assertJsonStructure([
-                'data' => [
-                    'languages',
-                    'keys',
-                ],
+            ->assertJson([
+                'success' => true,
             ]);
-
-        $this->assertTrue(Cache::has($project->cacheKey()));
     }
 }

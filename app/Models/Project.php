@@ -6,15 +6,18 @@ use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasUsers;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Project extends Model
+class Project extends Model implements AuthenticatableContract
 {
     use Authenticatable;
+    use Authorizable;
     use HasApiTokens;
     use HasCache;
     use HasUsers;

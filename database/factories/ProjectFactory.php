@@ -12,9 +12,5 @@ $factory->define(Project::class, function (Faker $faker) {
 
     return [
         'name' => 'Project '.$index,
-        'api_keys' => json_encode([
-            'public_key' => $faker->md5,
-            'secret_key' => $faker->md5,
-        ]),
     ];
 });
