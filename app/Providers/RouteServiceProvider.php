@@ -46,9 +46,9 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapUserRoutes();
 
-        $this->mapAppRoutes();
-
         $this->mapClientRoutes();
+
+        $this->mapAppRoutes();
     }
 
     /**
@@ -88,6 +88,25 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * Define the "client" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapClientRoutes()
+    {
+        Route::prefix('api/client')
+            ->middleware([
+                'api',
+                'token:project',
+                'auth:sanctum',
+            ])
+            ->namespace($this->namespace.'\Api\Client')
+            ->group(base_path('routes/api/client.php'));
+    }
+
+    /**
      * Define the "app" routes for the application.
      *
      * These routes are typically stateless.
@@ -103,23 +122,5 @@ class RouteServiceProvider extends ServiceProvider
             ])
             ->namespace($this->namespace.'\Api')
             ->group(base_path('routes/api/app.php'));
-    }
-
-    /**
-     * Define the "client" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapClientRoutes()
-    {
-        Route::prefix('api/client')
-            ->middleware([
-                'api',
-                'token:project',
-            ])
-            ->namespace($this->namespace.'\Api\Client')
-            ->group(base_path('routes/api/client.php'));
     }
 }

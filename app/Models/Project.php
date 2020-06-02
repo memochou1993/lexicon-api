@@ -5,13 +5,17 @@ namespace App\Models;
 use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasUsers;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Laravel\Sanctum\HasApiTokens;
 
 class Project extends Model
 {
+    use Authenticatable;
+    use HasApiTokens;
     use HasCache;
     use HasUsers;
     use HasLanguages;

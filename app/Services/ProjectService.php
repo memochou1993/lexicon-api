@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
+use App\Models\Token;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,15 @@ class ProjectService
         Project $project
     ) {
         $this->project = $project;
+    }
+
+    /**
+     * @param  int  $id
+     * @return Project
+     */
+    public function find(int $id): Project
+    {
+        return $this->project->find($id);
     }
 
     /**
@@ -190,5 +200,24 @@ class ProjectService
         return $project->values()->whereHas('languages', function ($query) use ($language_ids) {
             $query->whereIn('language_id', $language_ids);
         })->delete();
+    }
+
+    /**
+     * @param  Project  $project
+     * @return string
+     */
+    public function createToken(Project $project): string
+    {
+        return $project->createToken('')->plainTextToken;
+    }
+
+    /**
+     * @param  Project  $project
+     * @param  Token  $token
+     * @return int
+     */
+    public function destroyToken(Project $project, Token $token): int
+    {
+        return $project->tokens()->where('id', $token->id)->delete();
     }
 }
