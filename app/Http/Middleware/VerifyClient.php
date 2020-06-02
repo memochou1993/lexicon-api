@@ -19,7 +19,7 @@ class VerifyClient
 
         $secret_key = json_decode($project->api_keys)->secret_key;
 
-        if ($secret_key !== $request->header('X-Localize-Secret-Key')) {
+        if (! ($request->header('X-Localize-Secret-Key') === $secret_key)) {
             abort(401, __('error.secret_key'));
         }
 
