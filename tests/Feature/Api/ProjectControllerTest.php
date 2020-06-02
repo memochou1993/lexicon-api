@@ -253,7 +253,7 @@ class ProjectControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -272,7 +272,7 @@ class ProjectControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
 
         $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -291,7 +291,7 @@ class ProjectControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();

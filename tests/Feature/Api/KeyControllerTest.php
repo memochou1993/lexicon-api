@@ -199,7 +199,7 @@ class KeyControllerTest extends TestCase
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $project->keys()->save(factory(Key::class)->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
@@ -222,7 +222,7 @@ class KeyControllerTest extends TestCase
         ]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
 
         $data = factory(Key::class)->make()->toArray();
 
@@ -243,7 +243,7 @@ class KeyControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $response = $this->json('GET', 'api/keys/'.$key->id)
@@ -263,7 +263,7 @@ class KeyControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $response = $this->json('PATCH', 'api/keys/'.$key->id)
@@ -283,7 +283,7 @@ class KeyControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $response = $this->json('DELETE', 'api/keys/'.$key->id)

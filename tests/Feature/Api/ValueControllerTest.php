@@ -155,7 +155,7 @@ class ValueControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
         $language = $team->languages()->save(factory(Language::class)->make());
         $form = $team->forms()->save(factory(Form::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $value = factory(Value::class)->make([
@@ -180,7 +180,7 @@ class ValueControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
@@ -201,7 +201,7 @@ class ValueControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 
@@ -222,7 +222,7 @@ class ValueControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $key = $project->keys()->save(factory(Key::class)->make());
         $value = $key->values()->save(factory(Value::class)->make());
 

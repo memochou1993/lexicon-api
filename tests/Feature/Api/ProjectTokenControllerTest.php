@@ -66,7 +66,7 @@ class ProjectTokenControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/tokens')
             ->assertForbidden();
@@ -85,7 +85,7 @@ class ProjectTokenControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->withoutEvents()->make());
+        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
         $token = $project->createToken('')->accessToken;
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/tokens/'.$token->id)

@@ -15,7 +15,7 @@ class FactoryMixin
     /**
      * @return Closure
      */
-    public function withoutEvents()
+    public function disableEvents()
     {
         return function () {
             $this->class::flushEventListeners();
