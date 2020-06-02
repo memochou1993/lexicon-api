@@ -42,13 +42,49 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapAppRoutes();
-
         $this->mapAuthRoutes();
 
-        $this->mapClientRoutes();
-
         $this->mapUserRoutes();
+
+        $this->mapAppRoutes();
+
+        $this->mapClientRoutes();
+    }
+
+    /**
+     * Define the "auth" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapAuthRoutes()
+    {
+        Route::prefix('api/auth')
+            ->middleware([
+                'api',
+            ])
+            ->namespace($this->namespace.'\Api\Auth')
+            ->group(base_path('routes/api/auth.php'));
+    }
+
+    /**
+     * Define the "user" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapUserRoutes()
+    {
+        Route::prefix('api/user')
+            ->middleware([
+                'api',
+                'token:user',
+                'auth:sanctum',
+            ])
+            ->namespace($this->namespace.'\Api\User')
+            ->group(base_path('routes/api/user.php'));
     }
 
     /**
@@ -70,21 +106,6 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "auth" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapAuthRoutes()
-    {
-        Route::prefix('api/auth')
-            ->middleware('api')
-            ->namespace($this->namespace.'\Api\Auth')
-            ->group(base_path('routes/api/auth.php'));
-    }
-
-    /**
      * Define the "client" routes for the application.
      *
      * These routes are typically stateless.
@@ -96,27 +117,9 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/client')
             ->middleware([
                 'api',
-                'client',
+                'token:project',
             ])
             ->namespace($this->namespace.'\Api\Client')
             ->group(base_path('routes/api/client.php'));
-    }
-
-    /**
-     * Define the "user" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapUserRoutes()
-    {
-        Route::prefix('api/user')
-            ->middleware([
-                'api',
-                'auth:sanctum',
-            ])
-            ->namespace($this->namespace.'\Api\User')
-            ->group(base_path('routes/api/user.php'));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserShowRequest;
-use App\Http\Requests\AuthUserUpdateRequest;
+use App\Http\Requests\Auth\UserUpdateRequest;
 use App\Http\Resources\UserResource as Resource;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
@@ -39,10 +39,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param  AuthUserUpdateRequest  $request
+     * @param  UserUpdateRequest  $request
      * @return Resource
      */
-    public function update(AuthUserUpdateRequest $request)
+    public function update(UserUpdateRequest $request)
     {
         $user = $this->userService->update(Auth::guard()->user(), $request);
 

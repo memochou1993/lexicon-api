@@ -28,7 +28,7 @@ class AuthService
      * @param  string  $email
      * @param  string  $password
      * @param  string  $device
-     * @return mixed
+     * @return string|null
      */
     public function getToken(string $email, string $password, string $device): ?string
     {
