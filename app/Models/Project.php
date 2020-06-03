@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
+use App\Models\Traits\HasTokens;
 use App\Models\Traits\HasUsers;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -18,7 +19,9 @@ use Laravel\Sanctum\NewAccessToken;
 class Project extends Model implements AuthenticatableContract
 {
     use Authenticatable;
-    use HasApiTokens;
+    use HasApiTokens, HasTokens {
+        HasTokens::tokens insteadof HasApiTokens;
+    }
     use HasCache;
     use HasUsers;
     use HasLanguages;

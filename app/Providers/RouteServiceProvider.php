@@ -118,6 +118,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware([
                 'api',
+                'token:user',
                 'auth:sanctum',
             ])
             ->namespace($this->namespace.'\Api')

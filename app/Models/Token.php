@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class Token extends PersonalAccessToken
@@ -11,5 +12,25 @@ class Token extends PersonalAccessToken
      *
      * @var string
      */
-    protected $table = 'personal_access_tokens'; // TODO: change table name
+    protected $table = 'model_has_tokens';
+
+    /**
+     * Get the model that the token belongs to.
+     *
+     * @return MorphTo
+     */
+    public function model()
+    {
+        return $this->morphTo('model');
+    }
+
+    /**
+     * Get the model that the token belongs to.
+     *
+     * @return MorphTo
+     */
+    public function tokenable()
+    {
+        return $this->model();
+    }
 }
