@@ -27,7 +27,12 @@ class TeamStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('teams', 'name'),
+                Rule::unique('teams', 'name')->where(function ($query) {
+                    $query->whereIn(
+                        'id',
+                        $this->user()->teams()->pluck('id')->toArray()
+                    );
+                }),
             ],
         ];
     }
