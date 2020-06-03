@@ -42,7 +42,7 @@ class FormController extends Controller
      */
     public function store(FormStoreRequest $request, Team $team)
     {
-        $form = $this->formService->storeByTeam($team, $request);
+        $form = $this->formService->store($team, $request);
 
         return new Resource($form);
     }

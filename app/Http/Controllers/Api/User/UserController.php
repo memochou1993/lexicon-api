@@ -7,7 +7,6 @@ use App\Http\Requests\User\UserShowRequest;
 use App\Http\Requests\Auth\UserUpdateRequest;
 use App\Http\Resources\UserResource as Resource;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -33,7 +32,7 @@ class UserController extends Controller
      */
     public function show(UserShowRequest $request)
     {
-        $user = $this->userService->get(Auth::guard()->user(), $request);
+        $user = $this->userService->get($request->user(), $request);
 
         return new Resource($user);
     }
@@ -44,7 +43,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request)
     {
-        $user = $this->userService->update(Auth::guard()->user(), $request);
+        $user = $this->userService->update($request->user(), $request);
 
         return new Resource($user);
     }

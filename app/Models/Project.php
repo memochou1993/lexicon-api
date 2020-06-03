@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\NewAccessToken;
 
 class Project extends Model implements AuthenticatableContract
 {
@@ -68,5 +70,23 @@ class Project extends Model implements AuthenticatableContract
     public function values()
     {
         return $this->hasManyThrough(Value::class, Key::class);
+    }
+
+    /**
+     * Create a new personal access token for the user.
+     *
+     * @param  string  $name
+     * @param  array  $abilities
+     * @return NewAccessToken
+     */
+    public function createToken(string $name, array $abilities = ['*'])
+    {
+        $token = $this->tokens()->create([
+            'name' => $name,
+            'token' => hash('sha256', $plainTextToken = Str::random(40)),
+            'abilities' => $abilities,
+        ]);
+
+        return new NewAccessToken($token, $plainTextToken);
     }
 }

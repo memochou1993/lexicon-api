@@ -42,7 +42,7 @@ class LanguageService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByTeam(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Model
     {
         $language = $team->languages()->create($request->all());
 

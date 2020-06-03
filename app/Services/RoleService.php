@@ -38,6 +38,18 @@ class RoleService
     }
 
     /**
+     * @param  Role  $role
+     * @param  Request  $request
+     * @return Model
+     */
+    public function get(Role $role, Request $request): Model
+    {
+        return $this->role
+            ->with($request->relations ?? [])
+            ->find($role->id);
+    }
+
+    /**
      * @param  Request  $request
      * @return Model
      */
@@ -50,18 +62,6 @@ class RoleService
         }
 
         return $role;
-    }
-
-    /**
-     * @param  Role  $role
-     * @param  Request  $request
-     * @return Model
-     */
-    public function get(Role $role, Request $request): Model
-    {
-        return $this->role
-            ->with($request->relations ?? [])
-            ->find($role->id);
     }
 
     /**

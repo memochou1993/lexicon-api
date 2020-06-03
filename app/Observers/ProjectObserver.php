@@ -15,7 +15,7 @@ class ProjectObserver
      */
     public function created(Project $project)
     {
-        $project->users()->attach(Auth::guard()->user());
+        $project->users()->attach(Auth::user());
     }
 
     /**

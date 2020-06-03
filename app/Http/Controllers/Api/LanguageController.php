@@ -42,7 +42,7 @@ class LanguageController extends Controller
      */
     public function store(LanguageStoreRequest $request, Team $team)
     {
-        $language = $this->languageService->storeByTeam($team, $request);
+        $language = $this->languageService->store($team, $request);
 
         return new Resource($language);
     }

@@ -58,7 +58,7 @@ class KeyController extends Controller
      */
     public function store(KeyStoreRequest $request, Project $project)
     {
-        $key = $this->keyService->storeByProject($project, $request);
+        $key = $this->keyService->store($project, $request);
 
         return new Resource($key);
     }

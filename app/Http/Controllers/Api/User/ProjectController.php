@@ -7,7 +7,6 @@ use App\Http\Requests\User\ProjectIndexRequest;
 use App\Http\Resources\ProjectResource as Resource;
 use App\Services\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -35,7 +34,7 @@ class ProjectController extends Controller
      */
     public function index(ProjectIndexRequest $request)
     {
-        $teams = $this->projectService->paginateByUser(Auth::guard()->user(), $request);
+        $teams = $this->projectService->paginateByUser($request->user(), $request);
 
         return Resource::collection($teams);
     }

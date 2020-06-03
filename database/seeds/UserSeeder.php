@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
                 return $user;
             })
             ->merge(
-                factory(User::class, self::DATA_AMOUNT)->withoutEvents()->create()
+                factory(User::class, self::DATA_AMOUNT)->disableEvents()->create()
             );
 
         $this->set('users', $users);

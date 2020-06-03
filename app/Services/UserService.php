@@ -39,15 +39,6 @@ class UserService
     }
 
     /**
-     * @param  Request  $request
-     * @return Model
-     */
-    public function store(Request $request): Model
-    {
-        return $this->user->create($request->all());
-    }
-
-    /**
      * @param  User  $user
      * @param  Request  $request
      * @return Model
@@ -57,6 +48,15 @@ class UserService
         return $this->user
             ->with($request->relations ?? [])
             ->find($user->id);
+    }
+
+    /**
+     * @param  Request  $request
+     * @return Model
+     */
+    public function store(Request $request): Model
+    {
+        return $this->user->create($request->all());
     }
 
     /**

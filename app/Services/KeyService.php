@@ -64,7 +64,7 @@ class KeyService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByProject(Project $project, Request $request): Model
+    public function store(Project $project, Request $request): Model
     {
         return $project->keys()->create($request->all());
     }

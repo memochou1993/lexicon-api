@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class ProjectService
 {
@@ -102,7 +101,7 @@ class ProjectService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByTeam(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Model
     {
         return $team->projects()->create($request->all());
     }

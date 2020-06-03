@@ -42,7 +42,7 @@ class ValueController extends Controller
      */
     public function store(ValueStoreRequest $request, Key $key)
     {
-        $value = $this->valueService->storeByKey($key, $request);
+        $value = $this->valueService->store($key, $request);
 
         return new Resource($value);
     }

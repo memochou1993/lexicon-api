@@ -42,7 +42,7 @@ class FormService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByTeam(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Model
     {
         return $team->forms()->create($request->all());
     }

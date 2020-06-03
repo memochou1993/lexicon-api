@@ -42,7 +42,7 @@ class ValueService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByKey(Key $key, Request $request): Model
+    public function store(Key $key, Request $request): Model
     {
         $value = $key->values()->create($request->all());
 

@@ -69,7 +69,7 @@ class TeamService
      * @param  Request  $request
      * @return Model
      */
-    public function storeByUser(User $user, Request $request): Model
+    public function store(User $user, Request $request): Model
     {
         return $user->teams()->create($request->all());
     }

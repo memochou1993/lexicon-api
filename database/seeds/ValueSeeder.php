@@ -20,7 +20,7 @@ class ValueSeeder extends Seeder
 
         $values = $keys->reduce(function ($carry, $key) {
             $values = factory(Value::class, LanguageSeeder::DATA_AMOUNT * FormSeeder::DATA_AMOUNT)
-                ->withoutEvents()
+                ->disableEvents()
                 ->make();
 
             return $carry->merge($key->values()->saveMany($values));

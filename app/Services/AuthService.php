@@ -30,7 +30,7 @@ class AuthService
      * @param  string  $device
      * @return string|null
      */
-    public function getToken(string $email, string $password, string $device): ?string
+    public function createToken(string $email, string $password, string $device): ?string
     {
         $user = $this->user->firstWhere('email', $email);
 
@@ -54,6 +54,6 @@ class AuthService
      */
     public function destroyTokens(): int
     {
-        return Auth::guard()->user()->tokens()->delete();
+        return Auth::user()->tokens()->delete();
     }
 }

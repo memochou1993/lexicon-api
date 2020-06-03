@@ -8,7 +8,6 @@ use App\Http\Requests\User\TeamStoreRequest;
 use App\Http\Resources\TeamResource as Resource;
 use App\Services\TeamService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
@@ -36,7 +35,7 @@ class TeamController extends Controller
      */
     public function index(TeamIndexRequest $request)
     {
-        $teams = $this->teamService->paginateByUser(Auth::guard()->user(), $request);
+        $teams = $this->teamService->paginateByUser($request->user(), $request);
 
         return Resource::collection($teams);
     }
@@ -49,7 +48,7 @@ class TeamController extends Controller
      */
     public function store(TeamStoreRequest $request)
     {
-        $team = $this->teamService->storeByUser(Auth::guard()->user(), $request);
+        $team = $this->teamService->store($request->user(), $request);
 
         return new Resource($team);
     }

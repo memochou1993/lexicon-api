@@ -58,7 +58,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request, Team $team)
     {
-        $project = $this->projectService->storeByTeam($team, $request);
+        $project = $this->projectService->store($team, $request);
 
         return new Resource($project);
     }
