@@ -236,8 +236,6 @@ class TeamControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $this->flushEventListeners(Team::class);
-
         $response = $this->json('GET', 'api/teams')
             ->assertForbidden();
 

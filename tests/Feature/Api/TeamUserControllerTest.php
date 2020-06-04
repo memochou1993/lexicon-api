@@ -25,13 +25,13 @@ class TeamUserControllerTest extends TestCase
         /** @var Team $team */
         $team = factory(Team::class)->create();
 
-        /** @var User $member */
-        $member = factory(User::class)->create();
+        /** @var User $user */
+        $user = factory(User::class)->create();
 
         $this->assertCount(1, $team->users);
 
         $this->json('POST', 'api/teams/'.$team->id.'/users', [
-            'user_ids' => $member->id,
+            'user_ids' => $user->id,
         ])
             ->assertOk()
             ->assertJson([
@@ -51,12 +51,12 @@ class TeamUserControllerTest extends TestCase
         /** @var Team $team */
         $team = factory(Team::class)->create();
 
-        /** @var User $member */
-        $member = $team->users()->save(factory(User::class)->make());
+        /** @var User $user */
+        $user = $team->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $team->users);
 
-        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$member->id)
+        $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertOk()
             ->assertJson([
                 'success' => true,

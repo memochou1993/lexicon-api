@@ -119,7 +119,8 @@ class ProjectLanguageControllerTest extends TestCase
      * @return void
      */
     public function testGuestDetach()
-    {Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+    {
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
         $this->flushEventListeners(Project::class);
 

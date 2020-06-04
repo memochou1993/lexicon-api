@@ -29,13 +29,13 @@ class ProjectUserControllerTest extends TestCase
         /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        /** @var User $member */
-        $member = factory(User::class)->create();
+        /** @var User $user */
+        $user = factory(User::class)->create();
 
         $this->assertCount(1, $project->users);
 
         $this->json('POST', 'api/projects/'.$project->id.'/users', [
-            'user_ids' => $member->id,
+            'user_ids' => $user->id,
         ])
             ->assertOk()
             ->assertJson([
@@ -58,12 +58,12 @@ class ProjectUserControllerTest extends TestCase
         /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        /** @var User $member */
-        $member = $project->users()->save(factory(User::class)->make());
+        /** @var User $user */
+        $user = $project->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $project->users);
 
-        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$member->id)
+        $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
             ->assertOk()
             ->assertJson([
                 'success' => true,
