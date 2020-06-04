@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\User;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -17,9 +18,10 @@ class TeamControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $this->json('GET', 'api/user/teams', [
             'relations' => 'owner,users,projects,languages,forms',
@@ -48,6 +50,7 @@ class TeamControllerTest extends TestCase
      */
     public function testStore()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
         $data = factory(Team::class)->make()->toArray();
@@ -68,11 +71,12 @@ class TeamControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
-        $user->teams()->save(factory(Team::class)->make([
+        factory(Team::class)->create([
             'name' => 'Unique Team',
-        ]), ['is_owner' => true]);
+        ]);
 
         $data = factory(Team::class)->make([
             'name' => 'Unique Team',

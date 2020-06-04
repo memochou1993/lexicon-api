@@ -70,9 +70,7 @@ class TeamService
      */
     public function store(Request $request): Model
     {
-        $team = $this->team->create($request->all());
-
-        return $request->user()->teams()->save($team, ['is_owner' => true]);
+        return $this->team->create($request->all());
     }
 
     /**

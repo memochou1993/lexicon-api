@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property Collection $users
  * @property Collection $projects
  * @property Collection $languages
  * @property Collection $forms
