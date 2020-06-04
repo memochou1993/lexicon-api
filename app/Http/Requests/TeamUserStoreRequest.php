@@ -36,9 +36,6 @@ class TeamUserStoreRequest extends FormRequest
                 'required',
                 Rule::exists('users', 'id'),
             ],
-            'sync' => [
-                'bool',
-            ],
         ];
     }
 
@@ -50,9 +47,5 @@ class TeamUserStoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->explode('user_ids');
-
-        $this->merge([
-            'sync' => $this->input('sync', false),
-        ]);
     }
 }

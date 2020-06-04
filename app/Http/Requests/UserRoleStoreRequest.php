@@ -36,9 +36,6 @@ class UserRoleStoreRequest extends FormRequest
                 'required',
                 Rule::exists('roles', 'id'),
             ],
-            'sync' => [
-                'bool',
-            ],
         ];
     }
 
@@ -50,9 +47,5 @@ class UserRoleStoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->explode('role_ids');
-
-        $this->merge([
-            'sync' => $this->input('sync', false),
-        ]);
     }
 }
