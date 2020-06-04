@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property Collection $projects
+ * @property Collection $languages
  */
 class Team extends Model
 {

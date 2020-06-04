@@ -10,6 +10,7 @@ use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\Value;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -24,12 +25,13 @@ class LanguageControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::LANGUAGE_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
         $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
 
         $data = factory(Language::class)->make([
@@ -46,9 +48,12 @@ class LanguageControllerTest extends TestCase
 
         $this->assertCount(1, $team->refresh()->languages);
 
+        /** @var Language $language */
+        $language = Language::query()->find(json_decode($response->getContent())->data->id);
+
         $this->assertCount(
             count($form_ids),
-            Language::find(json_decode($response->getContent())->data->id)->forms
+            $language->forms
         );
     }
 
@@ -57,12 +62,13 @@ class LanguageControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::LANGUAGE_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
         $team->languages()->save(factory(Language::class)->make([
             'name' => 'Unique Language',
         ]));
@@ -84,9 +90,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->json('GET', 'api/languages/'.$language->id, [
@@ -108,9 +117,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $data = factory(Language::class)->make([
@@ -131,9 +143,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testAttachForm()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
@@ -156,15 +171,26 @@ class LanguageControllerTest extends TestCase
      */
     public function testDetachForm()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Collection $forms */
         $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
         $language->forms()->attach($forms);
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->languages()->attach($language);
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Collection $values */
         $values = $key->values()->saveMany(factory(Value::class, 2)->make());
         $values->first()->languages()->attach($language);
         $values->first()->forms()->attach($forms->first()->id);
@@ -192,9 +218,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Collection $languages */
         $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
 
         $data = factory(Language::class)->make([
@@ -212,15 +241,26 @@ class LanguageControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->languages()->attach($language);
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
@@ -249,6 +289,9 @@ class LanguageControllerTest extends TestCase
             PermissionType::LANGUAGE_CREATE,
         ]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
 
         $data = factory(Language::class)->make()->toArray();
@@ -269,7 +312,12 @@ class LanguageControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_VIEW]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('GET', 'api/languages/'.$language->id)
@@ -288,7 +336,12 @@ class LanguageControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_UPDATE]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('PATCH', 'api/languages/'.$language->id)
@@ -307,7 +360,12 @@ class LanguageControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::LANGUAGE_DELETE]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('DELETE', 'api/languages/'.$language->id)
@@ -324,9 +382,10 @@ class LanguageControllerTest extends TestCase
      */
     public function testCreateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $data = factory(Language::class)->make()->toArray();
 
@@ -344,9 +403,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testViewWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('GET', 'api/languages/'.$language->id)
@@ -363,9 +425,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testUpdateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('PATCH', 'api/languages/'.$language->id)
@@ -382,9 +447,12 @@ class LanguageControllerTest extends TestCase
      */
     public function testDeleteWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $response = $this->json('DELETE', 'api/languages/'.$language->id)

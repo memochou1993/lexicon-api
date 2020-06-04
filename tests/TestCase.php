@@ -23,4 +23,15 @@ abstract class TestCase extends BaseTestCase
 
         $this->user = factory(User::class)->create();
     }
+
+    /**
+     * @param  array  $models
+     * @return void
+     */
+    public function flushEventListeners(...$models): void
+    {
+        foreach ($models as $model) {
+            $model::flushEventListeners();
+        }
+    }
 }

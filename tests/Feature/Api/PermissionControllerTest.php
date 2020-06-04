@@ -38,6 +38,7 @@ class PermissionControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::PERMISSION_VIEW]);
 
+        /** @var Permission $permission */
         $permission = factory(Permission::class)->create();
 
         $this->json('GET', 'api/permissions/'.$permission->id, [

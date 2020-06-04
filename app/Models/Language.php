@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Models\Traits\HasForms;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * @property int $id
+ * @property Collection $forms
+ * @property Collection $values
  */
 class Language extends Model
 {
