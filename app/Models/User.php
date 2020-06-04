@@ -75,7 +75,11 @@ class User extends Authenticatable
      */
     public function teams()
     {
-        return $this->morphedByMany(Team::class, 'model', 'model_has_users');
+        return $this
+            ->morphedByMany(Team::class, 'model', 'model_has_users')
+            ->withPivot([
+                'is_owner',
+            ]);
     }
 
     /**
@@ -85,7 +89,11 @@ class User extends Authenticatable
      */
     public function projects()
     {
-        return $this->morphedByMany(Project::class, 'model', 'model_has_users');
+        return $this
+            ->morphedByMany(Project::class, 'model', 'model_has_users')
+            ->withPivot([
+                'is_owner',
+            ]);
     }
 
     /**

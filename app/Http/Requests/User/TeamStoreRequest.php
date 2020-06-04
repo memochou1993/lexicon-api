@@ -30,7 +30,7 @@ class TeamStoreRequest extends FormRequest
                 Rule::unique('teams', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
-                        $this->user()->teams()->pluck('id')->toArray()
+                        $this->user()->teams()->where('is_owner', true)->pluck('id')->toArray()
                     );
                 }),
             ],

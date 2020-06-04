@@ -16,6 +16,7 @@ class CreateModelHasUsersTable extends Migration
         Schema::create('model_has_users', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->morphs('model');
+            $table->boolean('is_owner')->default(false);
         });
     }
 

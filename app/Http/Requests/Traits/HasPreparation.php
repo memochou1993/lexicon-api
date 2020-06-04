@@ -11,7 +11,7 @@ trait HasPreparation
     private function explode(string $key)
     {
         $this->merge([
-            $key => $relations = collect($this->input($key))->explode(',')->toArray(),
+            $key => collect($this->input($key))->explode(',')->toArray(),
         ]);
     }
 }

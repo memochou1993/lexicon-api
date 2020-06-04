@@ -31,6 +31,7 @@ class TeamIndexRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
+                    'owners',
                     'users',
                     'projects',
                     'languages',
@@ -62,6 +63,14 @@ class TeamIndexRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->explode('relations');
+        $relations = collect($this->relations)->explode(',');
+
+        if ($relations->contains('owner')) {
+            $relations->forget($relations->search('owner'))->push('owners');
+        };
+
+        $this->merge([
+            'relations' => $relations->toArray(),
+        ]);
     }
 }

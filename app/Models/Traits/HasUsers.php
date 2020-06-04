@@ -16,4 +16,12 @@ trait HasUsers
     {
         return $this->morphToMany(User::class, 'model', 'model_has_users');
     }
+
+    /**
+     * @return MorphToMany
+     */
+    public function owners()
+    {
+        return $this->users()->where('is_owner', true);
+    }
 }

@@ -22,12 +22,13 @@ class TeamControllerTest extends TestCase
         $team = $user->teams()->save(factory(Team::class)->make());
 
         $this->json('GET', 'api/user/teams', [
-            'relations' => 'users,projects,languages,forms',
+            'relations' => 'owner,users,projects,languages,forms',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
+                        'owner',
                         'users',
                         'projects',
                         'languages',
@@ -71,7 +72,7 @@ class TeamControllerTest extends TestCase
 
         $user->teams()->save(factory(Team::class)->make([
             'name' => 'Unique Team',
-        ]));
+        ]), ['is_owner' => true]);
 
         $data = factory(Team::class)->make([
             'name' => 'Unique Team',
