@@ -21,10 +21,15 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var User $member */
         $member = factory(User::class)->create();
 
         $this->assertCount(1, $project->users);
@@ -45,10 +50,15 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var User $member */
         $member = $project->users()->save(factory(User::class)->make());
 
         $this->assertCount(2, $project->users);
@@ -67,10 +77,15 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/users')
             ->assertForbidden();
@@ -86,10 +101,16 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testGuestDetach()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
             ->assertForbidden();
@@ -105,9 +126,12 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testAttachWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/users')
@@ -124,9 +148,13 @@ class ProjectUserControllerTest extends TestCase
      */
     public function testDetachWithoutPermission()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)

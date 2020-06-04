@@ -20,9 +20,11 @@ use Laravel\Sanctum\NewAccessToken;
 /**
  * @property int $id
  * @property string $name
+ * @property Collection $tokens
  * @property Collection $users
  * @property Collection $languages
  * @property Collection $keys
+ * @property Collection $values
  */
 class Project extends Model implements AuthenticatableContract
 {
@@ -92,6 +94,7 @@ class Project extends Model implements AuthenticatableContract
      */
     public function createToken(string $name, array $abilities = ['*'])
     {
+        /** @var Token $token */
         $token = $this->tokens()->create([
             'name' => $name,
             'token' => hash('sha256', $plainTextToken = Str::random(40)),

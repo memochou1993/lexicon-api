@@ -6,6 +6,7 @@ use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Project;
 use App\Models\Team;
+use App\Models\Token;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -20,9 +21,12 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->assertCount(0, $project->tokens);
@@ -41,10 +45,15 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Token $token */
         $token = $project->createToken('')->accessToken;
 
         $this->assertCount(1, $project->refresh()->tokens);
@@ -63,10 +72,15 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testGuestStore()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/tokens')
             ->assertForbidden();
@@ -82,10 +96,17 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testGuestDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Token $token */
         $token = $project->createToken('')->accessToken;
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/tokens/'.$token->id)
@@ -102,9 +123,12 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testStoreWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/tokens')
@@ -121,10 +145,15 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testDestroyWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Token $token */
         $token = $project->createToken('')->accessToken;
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/tokens/'.$token->id)

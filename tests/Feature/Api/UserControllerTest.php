@@ -20,6 +20,7 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_VIEW_ANY]);
         $user->roles()->save(factory(Role::class)->make());
 
@@ -47,6 +48,7 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_VIEW]);
         $user->roles()->save(factory(Role::class)->make());
 
@@ -75,6 +77,7 @@ class UserControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $role_ids = factory(Role::class, 2)->create()->pluck('id')->toArray();
@@ -98,6 +101,7 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
         $data = factory(User::class)->create()->toArray();
@@ -115,6 +119,7 @@ class UserControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::USER_DELETE]);
 
+        /** @var User $user */
         $user = factory(User::class)->create();
 
         $this->json('DELETE', 'api/users/'.$user->id)
@@ -144,6 +149,7 @@ class UserControllerTest extends TestCase
      */
     public function testViewWithoutPermission()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
         $response = $this->json('GET', 'api/users/'.$user->id)
@@ -160,6 +166,7 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateWithoutPermission()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
         $response = $this->json('PATCH', 'api/users/'.$user->id)
@@ -178,6 +185,7 @@ class UserControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
+        /** @var User $user */
         $user = factory(User::class)->create();
 
         $response = $this->json('DELETE', 'api/users/'.$user->id)

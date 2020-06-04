@@ -6,6 +6,7 @@ use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -59,9 +60,12 @@ class RoleControllerTest extends TestCase
 
         $this->assertDatabaseHas('roles', $data->toArray());
 
+        /** @var Role $role */
+        $role = Role::query()->find(json_decode($response->getContent())->data->id);
+
         $this->assertCount(
             count($permission_ids),
-            Role::find(json_decode($response->getContent())->data->id)->permissions
+            $role->permissions
         );
     }
 
@@ -93,6 +97,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::ROLE_VIEW]);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $this->json('GET', 'api/roles/'.$role->id, [
@@ -119,6 +124,7 @@ class RoleControllerTest extends TestCase
 
         $permission_ids = factory(Permission::class, 2)->create()->pluck('id')->toArray();
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $data = factory(Role::class)->make([
@@ -144,6 +150,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::ROLE_UPDATE]);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $data = factory(Role::class)->create()->toArray();
@@ -159,8 +166,10 @@ class RoleControllerTest extends TestCase
      */
     public function testDestroy()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::ROLE_DELETE]);
 
+        /** @var Role $role */
         $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id)
@@ -216,6 +225,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $response = $this->json('GET', 'api/roles/'.$role->id)
@@ -234,6 +244,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $response = $this->json('PATCH', 'api/roles/'.$role->id)
@@ -252,6 +263,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $response = $this->json('DELETE', 'api/roles/'.$role->id)

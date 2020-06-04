@@ -24,10 +24,15 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testAttach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
         $this->assertCount(0, $project->languages);
@@ -48,15 +53,26 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testDetach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->languages()->attach($language);
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
@@ -80,10 +96,15 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
             ->assertForbidden();
@@ -98,11 +119,17 @@ class ProjectLanguageControllerTest extends TestCase
      * @return void
      */
     public function testGuestDetach()
-    {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+    {Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
         $project->languages()->attach($language);
 
@@ -120,9 +147,12 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testAttachWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
@@ -139,10 +169,15 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testDetachWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
         $project->languages()->attach($language);
 

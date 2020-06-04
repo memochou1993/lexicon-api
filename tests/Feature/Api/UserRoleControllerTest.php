@@ -5,6 +5,7 @@ namespace Tests\Feature\Api;
 use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -19,8 +20,10 @@ class UserRoleControllerTest extends TestCase
      */
     public function testAttach()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
+        /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $this->assertCount(0, $user->roles);
@@ -41,8 +44,10 @@ class UserRoleControllerTest extends TestCase
      */
     public function testDetach()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
 
+        /** @var Role $role */
         $role = $user->roles()->save(factory(Role::class)->make());
 
         $this->assertCount(1, $user->roles);
@@ -61,6 +66,7 @@ class UserRoleControllerTest extends TestCase
      */
     public function testAttachWithoutPermission()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
         $response = $this->json('POST', 'api/users/'.$user->id.'/roles')
@@ -77,8 +83,10 @@ class UserRoleControllerTest extends TestCase
      */
     public function testDetachWithoutPermission()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
+        /** @var Role $role */
         $role = $user->roles()->save(factory(Role::class)->make());
 
         $response = $this->json('DELETE', 'api/users/'.$user->id.'/roles/'.$role->id)
