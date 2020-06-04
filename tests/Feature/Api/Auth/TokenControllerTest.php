@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -16,6 +17,7 @@ class TokenControllerTest extends TestCase
      */
     public function testStore()
     {
+        /** @var User $user */
         $user = $this->user;
 
         $this->json('POST', 'api/auth/tokens', [
@@ -46,6 +48,7 @@ class TokenControllerTest extends TestCase
      */
     public function testStoreUnauthorized()
     {
+        /** @var User $user */
         $user = $this->user;
 
         $this->json('POST', 'api/auth/tokens', [

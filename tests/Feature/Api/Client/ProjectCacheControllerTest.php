@@ -19,9 +19,10 @@ class ProjectCacheControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = $this->user;
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         Sanctum::actingAs($project);

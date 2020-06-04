@@ -18,6 +18,7 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user);
         $user->roles()->save(factory(Role::class)->make());
 
