@@ -10,6 +10,7 @@ use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\Value;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -24,12 +25,13 @@ class FormControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::FORM_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $data = factory(Form::class)->make()->toArray();
 
@@ -49,12 +51,13 @@ class FormControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::FORM_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
         $team->forms()->save(factory(Form::class)->make([
             'name' => 'Unique Form',
         ]));
@@ -76,9 +79,12 @@ class FormControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $this->json('GET', 'api/forms/'.$form->id, [
@@ -98,9 +104,12 @@ class FormControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $data = factory(Form::class)->make([
@@ -121,9 +130,12 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Collection $forms */
         $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
 
         $data = factory(Form::class)->make([
@@ -141,15 +153,26 @@ class FormControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->languages()->attach($language);
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
@@ -172,6 +195,9 @@ class FormControllerTest extends TestCase
             PermissionType::FORM_CREATE,
         ]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
 
         $data = factory(Form::class)->make()->toArray();
@@ -192,7 +218,12 @@ class FormControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::FORM_VIEW]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('GET', 'api/forms/'.$form->id)
@@ -211,7 +242,12 @@ class FormControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::FORM_UPDATE]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('PATCH', 'api/forms/'.$form->id)
@@ -230,7 +266,12 @@ class FormControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user, [PermissionType::FORM_DELETE]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('DELETE', 'api/forms/'.$form->id)
@@ -247,9 +288,10 @@ class FormControllerTest extends TestCase
      */
     public function testCreateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $data = factory(Form::class)->make()->toArray();
 
@@ -267,9 +309,12 @@ class FormControllerTest extends TestCase
      */
     public function testViewWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('GET', 'api/forms/'.$form->id)
@@ -286,9 +331,12 @@ class FormControllerTest extends TestCase
      */
     public function testUpdateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('PATCH', 'api/forms/'.$form->id)
@@ -305,9 +353,12 @@ class FormControllerTest extends TestCase
      */
     public function testDeleteWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
 
         $response = $this->json('DELETE', 'api/forms/'.$form->id)
