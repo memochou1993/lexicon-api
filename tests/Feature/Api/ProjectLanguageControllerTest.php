@@ -24,7 +24,9 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testAttach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -53,7 +55,9 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testDetach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -96,7 +100,9 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testGuestAttach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -120,7 +126,9 @@ class ProjectLanguageControllerTest extends TestCase
      */
     public function testGuestDetach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 

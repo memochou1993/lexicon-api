@@ -21,7 +21,9 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testStore()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -45,7 +47,9 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -72,7 +76,9 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testGuestStore()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -96,7 +102,9 @@ class ProjectTokenControllerTest extends TestCase
      */
     public function testGuestDestroy()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 

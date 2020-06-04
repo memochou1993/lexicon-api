@@ -136,7 +136,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -162,7 +164,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -298,7 +302,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_UPDATE,
+        ]);
 
         $this->flushEventListeners(Team::class, Project::class);
 
