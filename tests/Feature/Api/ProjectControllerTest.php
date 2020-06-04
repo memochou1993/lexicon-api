@@ -7,6 +7,8 @@ use App\Enums\PermissionType;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -21,12 +23,13 @@ class ProjectControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::PROJECT_VIEW_ANY,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects', [
@@ -48,21 +51,20 @@ class ProjectControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::PROJECT_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $data = factory(Project::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertCreated()
             ->assertJson([
-                'data' => [
-                    'name' => $data['name'],
-                ],
+                'data' => $data,
             ]);
 
         $this->assertCount(1, $team->refresh()->projects);
@@ -73,12 +75,13 @@ class ProjectControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
             PermissionType::PROJECT_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
         $team->projects()->save(factory(Project::class)->make([
             'name' => 'Unique Project',
         ]));
@@ -100,9 +103,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
@@ -128,9 +134,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $data = factory(Project::class)->make([
@@ -140,9 +149,7 @@ class ProjectControllerTest extends TestCase
         $this->json('PATCH', 'api/projects/'.$project->id, $data)
             ->assertOk()
             ->assertJson([
-                'data' => [
-                    'name' => $data['name'],
-                ],
+                'data' => $data,
             ]);
 
         $this->assertDatabaseHas('projects', $data);
@@ -153,9 +160,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Collection $projects */
         $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
 
         $data = factory(Project::class)->make([
@@ -173,10 +183,16 @@ class ProjectControllerTest extends TestCase
      */
     public function testDestroy()
     {
+        /** @var User $user */
         $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Language $language */
         $language = $project->languages()->save(factory(Language::class)->make());
 
         $this->assertCount(1, $project->users);
@@ -210,8 +226,10 @@ class ProjectControllerTest extends TestCase
             PermissionType::PROJECT_VIEW_ANY,
         ]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
-        $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
@@ -232,6 +250,9 @@ class ProjectControllerTest extends TestCase
             PermissionType::PROJECT_CREATE,
         ]);
 
+        $this->flushEventListeners(Team::class);
+
+        /** @var Team $team */
         $team = factory(Team::class)->create();
 
         $data = factory(Project::class)->make()->toArray();
@@ -250,10 +271,15 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Team::class, Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -269,10 +295,15 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Team::class, Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -288,10 +319,15 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Team::class, Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -307,10 +343,10 @@ class ProjectControllerTest extends TestCase
      */
     public function testViewAllWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $team->projects()->save(factory(Project::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
@@ -326,9 +362,10 @@ class ProjectControllerTest extends TestCase
      */
     public function testCreateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
 
         $data = factory(Project::class)->make()->toArray();
 
@@ -346,9 +383,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testViewWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id)
@@ -365,9 +405,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testUpdateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('PATCH', 'api/projects/'.$project->id)
@@ -384,9 +427,12 @@ class ProjectControllerTest extends TestCase
      */
     public function testDeleteWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id)

@@ -5,9 +5,14 @@ namespace App\Models;
 use App\Models\Traits\HasForms;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasUsers;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property Collection $projects
+ */
 class Team extends Model
 {
     use HasUsers;

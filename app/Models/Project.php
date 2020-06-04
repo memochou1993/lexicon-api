@@ -8,6 +8,7 @@ use App\Models\Traits\HasTokens;
 use App\Models\Traits\HasUsers;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +17,12 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property Collection $users
+ * @property Collection $languages
+ */
 class Project extends Model implements AuthenticatableContract
 {
     use Authenticatable;
