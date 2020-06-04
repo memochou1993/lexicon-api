@@ -48,7 +48,7 @@ class TeamController extends Controller
      */
     public function store(TeamStoreRequest $request)
     {
-        $team = $this->teamService->store($request->user(), $request);
+        $team = $this->teamService->store($request);
 
         return new Resource($team);
     }

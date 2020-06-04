@@ -17,6 +17,9 @@ class ProjectResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'owner' => $this->whenLoaded('owners', function () {
+                return new UserResource($this->owners->first());
+            }),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'team' => new TeamResource($this->whenLoaded('team')),
             'languages' => LanguageResource::collection($this->whenLoaded('languages')),

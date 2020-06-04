@@ -65,15 +65,14 @@ class TeamService
     }
 
     /**
-     * @param  User  $user
      * @param  Request  $request
      * @return Model
      */
-    public function store(User $user, Request $request): Model
+    public function store(Request $request): Model
     {
         $team = $this->team->create($request->all());
 
-        return $user->teams()->save($team, ['is_owner' => true]);
+        return $request->user()->teams()->save($team, ['is_owner' => true]);
     }
 
     /**
