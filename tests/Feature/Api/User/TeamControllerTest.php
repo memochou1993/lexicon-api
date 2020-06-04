@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class TeamControllerTest extends TestCase
@@ -83,6 +84,7 @@ class TeamControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);

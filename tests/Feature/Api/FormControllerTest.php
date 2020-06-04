@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class FormControllerTest extends TestCase
@@ -67,6 +68,7 @@ class FormControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);
@@ -143,6 +145,7 @@ class FormControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/forms/'.$forms->first()->id, $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);

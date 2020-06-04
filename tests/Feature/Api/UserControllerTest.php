@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -107,6 +108,7 @@ class UserControllerTest extends TestCase
         $data = factory(User::class)->create()->toArray();
 
         $this->json('PATCH', 'api/users/'.$user->id, $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'email',
             ]);

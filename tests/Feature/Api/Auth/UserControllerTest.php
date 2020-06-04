@@ -5,6 +5,7 @@ namespace Tests\Feature\Api\Auth;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -41,6 +42,7 @@ class UserControllerTest extends TestCase
         ])->makeVisible('password');
 
         $this->json('POST', 'api/auth/users', $data->toArray())
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'email',
             ]);

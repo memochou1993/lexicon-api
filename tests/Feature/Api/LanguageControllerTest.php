@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LanguageControllerTest extends TestCase
@@ -78,6 +79,7 @@ class LanguageControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);
@@ -231,6 +233,7 @@ class LanguageControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/languages/'.$languages->first()->id, $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);

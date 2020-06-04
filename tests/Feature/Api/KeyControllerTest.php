@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class KeyControllerTest extends TestCase
@@ -103,6 +104,7 @@ class KeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);
@@ -191,6 +193,7 @@ class KeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/keys/'.$keys->first()->id, $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'name',
             ]);
