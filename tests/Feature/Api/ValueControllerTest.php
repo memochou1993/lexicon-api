@@ -24,15 +24,24 @@ class ValueControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::KEY_VIEW,
             PermissionType::VALUE_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $value = factory(Value::class)->make([
@@ -56,11 +65,18 @@ class ValueControllerTest extends TestCase
      */
     public function testShow()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $this->json('GET', 'api/values/'.$value->id)
@@ -81,11 +97,18 @@ class ValueControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $data = factory(Value::class)->make([
@@ -108,15 +131,26 @@ class ValueControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
         $project->languages()->attach($language);
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
@@ -147,15 +181,26 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestCreate()
     {
-        $user = Sanctum::actingAs($this->user, [
+        Sanctum::actingAs($this->user, [
             PermissionType::KEY_VIEW,
             PermissionType::VALUE_CREATE,
         ]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $value = factory(Value::class)->make([
@@ -177,11 +222,20 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('GET', 'api/values/'.$value->id)
@@ -198,11 +252,20 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('PATCH', 'api/values/'.$value->id)
@@ -219,11 +282,20 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        $user = Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
+        Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
-        $project = $team->projects()->save(factory(Project::class)->disableEvents()->make());
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('DELETE', 'api/values/'.$value->id)
@@ -240,12 +312,21 @@ class ValueControllerTest extends TestCase
      */
     public function testCreateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $value = factory(Value::class)->make([
@@ -267,11 +348,18 @@ class ValueControllerTest extends TestCase
      */
     public function testViewWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('GET', 'api/values/'.$value->id)
@@ -288,11 +376,18 @@ class ValueControllerTest extends TestCase
      */
     public function testUpdateWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('PATCH', 'api/values/'.$value->id)
@@ -309,11 +404,18 @@ class ValueControllerTest extends TestCase
      */
     public function testDeleteWithoutPermission()
     {
-        $user = Sanctum::actingAs($this->user);
+        Sanctum::actingAs($this->user);
 
-        $team = $user->teams()->save(factory(Team::class)->make());
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
         $response = $this->json('DELETE', 'api/values/'.$value->id)

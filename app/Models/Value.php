@@ -4,9 +4,15 @@ namespace App\Models;
 
 use App\Models\Traits\HasForms;
 use App\Models\Traits\HasLanguages;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property Collection $languages
+ * @property Collection $forms
+ */
 class Value extends Model
 {
     use HasLanguages;
