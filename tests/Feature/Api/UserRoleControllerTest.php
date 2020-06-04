@@ -21,7 +21,9 @@ class UserRoleControllerTest extends TestCase
     public function testAttach()
     {
         /** @var User $user */
-        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::USER_UPDATE,
+        ]);
 
         /** @var Role $role */
         $role = factory(Role::class)->create();
@@ -45,7 +47,9 @@ class UserRoleControllerTest extends TestCase
     public function testDetach()
     {
         /** @var User $user */
-        $user = Sanctum::actingAs($this->user, [PermissionType::USER_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::USER_UPDATE,
+        ]);
 
         /** @var Role $role */
         $role = $user->roles()->save(factory(Role::class)->make());

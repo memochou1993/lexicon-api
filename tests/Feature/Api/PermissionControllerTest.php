@@ -18,7 +18,9 @@ class PermissionControllerTest extends TestCase
      */
     public function testIndex()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PERMISSION_VIEW_ANY]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PERMISSION_VIEW_ANY,
+        ]);
 
         factory(Permission::class)->create();
 
@@ -36,7 +38,9 @@ class PermissionControllerTest extends TestCase
      */
     public function testShow()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PERMISSION_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PERMISSION_VIEW,
+        ]);
 
         /** @var Permission $permission */
         $permission = factory(Permission::class)->create();

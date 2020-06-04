@@ -65,7 +65,9 @@ class ValueControllerTest extends TestCase
      */
     public function testShow()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_VIEW,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -97,7 +99,9 @@ class ValueControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -131,7 +135,9 @@ class ValueControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_DELETE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -222,7 +228,9 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_VIEW,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -252,7 +260,9 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -282,7 +292,9 @@ class ValueControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, [PermissionType::VALUE_DELETE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::VALUE_DELETE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 

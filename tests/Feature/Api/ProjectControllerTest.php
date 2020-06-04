@@ -105,7 +105,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testShow()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -191,7 +193,9 @@ class ProjectControllerTest extends TestCase
     public function testDestroy()
     {
         /** @var User $user */
-        $user = Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_DELETE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -278,7 +282,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+        ]);
 
         $this->flushEventListeners(Team::class, Project::class);
 
@@ -328,7 +334,9 @@ class ProjectControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, [PermissionType::PROJECT_DELETE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_DELETE,
+        ]);
 
         $this->flushEventListeners(Team::class, Project::class);
 

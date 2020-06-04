@@ -117,7 +117,9 @@ class KeyControllerTest extends TestCase
      */
     public function testShow()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -148,7 +150,9 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -177,7 +181,9 @@ class KeyControllerTest extends TestCase
      */
     public function testUpdateDuplicate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -204,7 +210,9 @@ class KeyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_DELETE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -283,7 +291,9 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestView()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_VIEW]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_VIEW,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -310,7 +320,9 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestUpdate()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_UPDATE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 
@@ -337,7 +349,9 @@ class KeyControllerTest extends TestCase
      */
     public function testGuestDelete()
     {
-        Sanctum::actingAs($this->user, [PermissionType::KEY_DELETE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::KEY_DELETE,
+        ]);
 
         $this->flushEventListeners(Project::class);
 

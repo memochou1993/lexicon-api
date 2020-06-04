@@ -20,7 +20,9 @@ class TeamUserControllerTest extends TestCase
      */
     public function testAttach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -46,7 +48,9 @@ class TeamUserControllerTest extends TestCase
      */
     public function testDetach()
     {
-        Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_UPDATE,
+        ]);
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
@@ -71,7 +75,9 @@ class TeamUserControllerTest extends TestCase
     public function testGuestAttach()
     {
         /** @var User $user */
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_UPDATE,
+        ]);
 
         $this->flushEventListeners(Team::class);
 
@@ -95,7 +101,9 @@ class TeamUserControllerTest extends TestCase
     public function testGuestDetach()
     {
         /** @var User $user */
-        $user = Sanctum::actingAs($this->user, [PermissionType::TEAM_UPDATE]);
+        $user = Sanctum::actingAs($this->user, [
+            PermissionType::TEAM_UPDATE,
+        ]);
 
         $this->flushEventListeners(Team::class);
 
