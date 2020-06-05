@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * @property int $id
+ * @property string $name
+ * @property int $range_min
+ * @property int $range_max
  * @property Collection $teams
  */
 class Form extends Model

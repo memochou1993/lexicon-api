@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * @property int $id
+ * @property string $name
  * @property Collection $teams
  * @property Collection $forms
  * @property Collection $values

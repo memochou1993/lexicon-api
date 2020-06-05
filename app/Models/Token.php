@@ -7,6 +7,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 /**
  * @property int $id
+ * @property string $token
  */
 class Token extends PersonalAccessToken
 {

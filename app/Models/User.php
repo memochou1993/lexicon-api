@@ -9,13 +9,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
+ * @property string $name
  * @property string $email
+ * @property Carbon $email_verified_at
  * @property string $password
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Collection $tokens
  * @property Collection $roles
  * @property Collection $teams

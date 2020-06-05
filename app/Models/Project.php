@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -20,8 +21,11 @@ use Laravel\Sanctum\NewAccessToken;
 /**
  * @property int $id
  * @property string $name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Collection $tokens
  * @property Collection $users
+ * @property Collection $owners
  * @property Collection $languages
  * @property Collection $keys
  * @property Collection $values
