@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\Relations;
+use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ValueShowRequest extends FormRequest
@@ -49,10 +50,13 @@ class ValueShowRequest extends FormRequest
      */
     private function prepareRelations()
     {
-        $relations = collect($this->relations)->explode(',')->merge([
-            'languages',
-            'forms',
-        ]);
+        $relations = Collection::make($this->input('relations'))
+            ->explode(',')
+            ->trim()
+            ->merge([
+                'languages',
+                'forms',
+            ]);
 
         $this->merge([
             'relations' => $relations->toArray(),

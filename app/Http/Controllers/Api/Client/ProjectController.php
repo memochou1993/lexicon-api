@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Client\ProjectIndexRequest;
+use App\Http\Requests\Client\ProjectShowRequest;
 use App\Http\Resources\Client\ProjectResource as Resource;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Auth;
@@ -29,10 +29,10 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  ProjectIndexRequest  $request
+     * @param  ProjectShowRequest  $request
      * @return Resource
      */
-    public function show(ProjectIndexRequest $request)
+    public function show(ProjectShowRequest $request)
     {
         $project = $this->projectService->find(Auth::id());
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Traits;
 
+use App\Support\Facades\Collection;
+
 trait HasPreparation
 {
     /**
@@ -11,7 +13,7 @@ trait HasPreparation
     private function explode(string $key)
     {
         $this->merge([
-            $key => collect($this->input($key))->explode(',')->toArray(),
+            $key => Collection::make($this->input($key))->explode(',')->trim()->toArray(),
         ]);
     }
 }

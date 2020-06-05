@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\Relations;
+use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -69,7 +70,9 @@ class KeyIndexRequest extends FormRequest
      */
     private function prepareRelations()
     {
-        $relations = collect($this->relations)->explode(',');
+        $relations = Collection::make($this->input('relations'))
+            ->explode(',')
+            ->trim();
 
         if ($relations->contains('values')) {
             $relations = $relations->merge([

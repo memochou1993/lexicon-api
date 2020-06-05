@@ -3,9 +3,10 @@
 namespace App\Http\Requests\Client;
 
 use App\Rules\Relations;
+use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjectIndexRequest extends FormRequest
+class ProjectShowRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -53,14 +54,17 @@ class ProjectIndexRequest extends FormRequest
      */
     private function prepareRelations()
     {
-        $relations = collect($this->relations)->explode(',')->merge([
-            'languages',
-            'languages.forms',
-            'keys',
-            'keys.values',
-            'keys.values.languages',
-            'keys.values.forms',
-        ]);
+        $relations = Collection::make($this->input('relations'))
+            ->explode(',')
+            ->trim()
+            ->merge([
+                'languages',
+                'languages.forms',
+                'keys',
+                'keys.values',
+                'keys.values.languages',
+                'keys.values.forms',
+            ]);
 
         $this->merge([
             'relations' => $relations->toArray(),

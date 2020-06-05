@@ -178,6 +178,7 @@ return [
         App\Providers\MixinServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
         App\Providers\GateServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
 
     ],
 
@@ -230,6 +231,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Collection' => App\Support\Facades\Collection::class,
 
     ],
 

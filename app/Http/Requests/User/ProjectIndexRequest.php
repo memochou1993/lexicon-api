@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\Relations;
+use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -61,7 +62,9 @@ class ProjectIndexRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $relations = collect($this->relations)->explode(',');
+        $relations = Collection::make($this->input('relations'))
+            ->explode(',')
+            ->trim();
 
         if ($relations->contains('owner')) {
             $relations->forget($relations->search('owner'))->push('owners');

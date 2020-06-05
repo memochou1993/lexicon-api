@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use App\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
-class MixinServiceProvider extends ServiceProvider
+class HelperServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -13,6 +14,10 @@ class MixinServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind('collection', function() {
+            return new Collection();
+        });
+
         //
     }
 
