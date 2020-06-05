@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
             ->flatten()
             ->unique()
             ->each(function ($name) {
-                Permission::create([
+                Permission::query()->create([
                     'name' => $name,
                 ]);
             });

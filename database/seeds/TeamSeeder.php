@@ -17,7 +17,7 @@ class TeamSeeder extends Seeder
      */
     public function run()
     {
-        $teams = factory(Team::class, self::DATA_AMOUNT)->disableEvents()->create();
+        $teams = factory(Team::class, self::DATA_AMOUNT)->create();
 
         $this->set('teams', $teams);
     }

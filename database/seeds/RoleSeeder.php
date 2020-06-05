@@ -15,12 +15,13 @@ class RoleSeeder extends Seeder
     {
         collect(config('permission.roles'))
             ->each(function ($item) {
-                $role = Role::create([
+                /** @var Role $role */
+                $role = Role::query()->create([
                     'name' => $item['name']
                 ]);
 
                 $role->permissions()->sync(
-                    Permission::whereIn('name', $item['permissions'])->orderBy('id')->get()
+                    Permission::query()->whereIn('name', $item['permissions'])->orderBy('id')->get()
                 );
             });
     }

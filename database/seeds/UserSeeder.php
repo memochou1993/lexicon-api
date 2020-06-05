@@ -20,20 +20,21 @@ class UserSeeder extends Seeder
     {
         $users = collect(config('permission.roles'))
             ->map(function ($item, $index) {
-                $user = User::create([
+                /** @var User $user */
+                $user = User::query()->create([
                     'name' => $item['name'],
                     'email' => $index.'@email.com',
                     'password' => 'password',
                 ]);
 
                 $user->roles()->attach(
-                    Role::where('name', $item['name'])->first()
+                    Role::query()->where('name', $item['name'])->first()
                 );
 
                 return $user;
             })
             ->merge(
-                factory(User::class, self::DATA_AMOUNT)->disableEvents()->create()
+                factory(User::class, self::DATA_AMOUNT)->create()
             );
 
         $this->set('users', $users);

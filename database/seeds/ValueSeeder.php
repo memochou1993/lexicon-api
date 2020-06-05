@@ -19,9 +19,8 @@ class ValueSeeder extends Seeder
         $keys = app(KeySeeder::class)->keys;
 
         $values = $keys->reduce(function ($carry, $key) {
-            $values = factory(Value::class, LanguageSeeder::DATA_AMOUNT * FormSeeder::DATA_AMOUNT)
-                ->disableEvents()
-                ->make();
+            $amount =  LanguageSeeder::DATA_AMOUNT * FormSeeder::DATA_AMOUNT;
+            $values = factory(Value::class, $amount)->make();
 
             return $carry->merge($key->values()->saveMany($values));
         }, app(Collection::class));

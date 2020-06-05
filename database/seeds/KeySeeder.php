@@ -21,7 +21,7 @@ class KeySeeder extends Seeder
         $projects = app(ProjectSeeder::class)->projects;
 
         $keys = $projects->reduce(function ($carry, $project) {
-            $keys = factory(Key::class, self::DATA_AMOUNT)->disableEvents()->make();
+            $keys = factory(Key::class, self::DATA_AMOUNT)->make();
 
             return $carry->merge($project->keys()->saveMany($keys));
         }, app(Collection::class));

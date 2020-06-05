@@ -21,7 +21,7 @@ class ProjectSeeder extends Seeder
         $teams = app(TeamSeeder::class)->teams;
 
         $projects = $teams->reduce(function ($carry, $team) {
-            $projects = factory(Project::class, self::DATA_AMOUNT)->disableEvents()->make();
+            $projects = factory(Project::class, self::DATA_AMOUNT)->make();
 
             return $carry->merge($team->projects()->saveMany($projects));
         }, app(Collection::class));
