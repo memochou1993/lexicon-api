@@ -37,7 +37,7 @@ class ProjectLanguageController extends Controller
      */
     public function store(ProjectLanguageStoreRequest $request, Project $project)
     {
-        $changes = $this->projectService->attachLanguage($project, $request->language_ids);
+        $changes = $this->projectService->attachLanguage($project, $request->input('language_ids'));
 
         return response()->json([
             'success' => count($changes['attached']) > 0,

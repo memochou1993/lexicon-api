@@ -28,21 +28,21 @@ class FormService
     /**
      * @param  Form  $form
      * @param  Request  $request
-     * @return Model
+     * @return Model|Form
      */
-    public function get(Form $form, Request $request): Model
+    public function get(Form $form, Request $request): Form
     {
         return $this->form
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($form->id);
     }
 
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return Model
+     * @return Model|Form
      */
-    public function store(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Form
     {
         return $team->forms()->create($request->all());
     }
@@ -50,9 +50,9 @@ class FormService
     /**
      * @param  Form  $form
      * @param  Request  $request
-     * @return Model
+     * @return Model|Form
      */
-    public function update(Form $form, Request $request): Model
+    public function update(Form $form, Request $request): Form
     {
         $form->update($request->all());
 

@@ -33,20 +33,20 @@ class TeamService
     public function getAll(Request $request): LengthAwarePaginator
     {
         return $this->team
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return Model
+     * @return Model|Team
      */
-    public function get(Team $team, Request $request): Model
+    public function get(Team $team, Request $request): Team
     {
         return $this->team
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($team->id);
     }
 
@@ -59,26 +59,26 @@ class TeamService
     {
         return $user
             ->teams()
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Request  $request
-     * @return Model
+     * @return Model|Team
      */
-    public function store(Request $request): Model
+    public function store(Request $request): Team
     {
-        return $this->team->create($request->all());
+        return $this->team->query()->create($request->all());
     }
 
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return Model
+     * @return Model|Team
      */
-    public function update(Team $team, Request $request): Model
+    public function update(Team $team, Request $request): Team
     {
         $team->update($request->all());
 

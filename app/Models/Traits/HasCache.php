@@ -10,7 +10,7 @@ trait HasCache
     /**
      * @return string
      */
-    public function cacheKey()
+    public function cacheKey(): string
     {
         $indicators = [
             class_basename($this),
@@ -25,9 +25,9 @@ trait HasCache
     /**
      * @param  Closure  $callback
      * @param  mixed  $ttl
-     * @return mixed
+     * @return self
      */
-    public function remember(Closure $callback, $ttl = null)
+    public function remember(Closure $callback, $ttl = null): self
     {
         return Cache::remember($this->cacheKey(), $ttl, $callback);
     }
@@ -35,7 +35,7 @@ trait HasCache
     /**
      * @return bool
      */
-    public function forget()
+    public function forget(): bool
     {
         return Cache::forget($this->cacheKey());
     }

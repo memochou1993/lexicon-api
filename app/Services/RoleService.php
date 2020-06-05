@@ -32,33 +32,34 @@ class RoleService
     public function getAll(Request $request): LengthAwarePaginator
     {
         return $this->role
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Role  $role
      * @param  Request  $request
-     * @return Model
+     * @return Model|Role
      */
-    public function get(Role $role, Request $request): Model
+    public function get(Role $role, Request $request): Role
     {
         return $this->role
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($role->id);
     }
 
     /**
      * @param  Request  $request
-     * @return Model
+     * @return Model|Role
      */
-    public function store(Request $request): Model
+    public function store(Request $request): Role
     {
-        $role = $this->role->create($request->all());
+        /** @var Role $role */
+        $role = $this->role->query()->create($request->all());
 
-        if ($request->permission_ids) {
-            $role->permissions()->sync($request->permission_ids);
+        if ($request->has('permission_ids')) {
+            $role->permissions()->sync($request->get('permission_ids'));
         }
 
         return $role;
@@ -67,14 +68,14 @@ class RoleService
     /**
      * @param  Role  $role
      * @param  Request  $request
-     * @return Model
+     * @return Model|Role
      */
-    public function update(Role $role, Request $request): Model
+    public function update(Role $role, Request $request): Role
     {
         $role->update($request->all());
 
-        if ($request->permission_ids) {
-            $role->permissions()->sync($request->permission_ids);
+        if ($request->has('permission_ids')) {
+            $role->permissions()->sync($request->get('permission_ids'));
         }
 
         return $role;

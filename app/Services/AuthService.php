@@ -32,7 +32,8 @@ class AuthService
      */
     public function createToken(string $email, string $password, string $device): ?string
     {
-        $user = $this->user->firstWhere('email', $email);
+        /** @var User $user */
+        $user = $this->user->query()->firstWhere('email', $email);
 
         if (! $user || ! Hash::check($password, $user->password)) {
             return null;
@@ -54,6 +55,9 @@ class AuthService
      */
     public function destroyTokens(): int
     {
-        return Auth::user()->tokens()->delete();
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user->tokens()->delete();
     }
 }

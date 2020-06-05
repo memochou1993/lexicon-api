@@ -28,26 +28,27 @@ class LanguageService
     /**
      * @param  Language  $language
      * @param  Request  $request
-     * @return Model
+     * @return Model|Language
      */
-    public function get(Language $language, Request $request): Model
+    public function get(Language $language, Request $request): Language
     {
         return $this->language
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($language->id);
     }
 
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return Model
+     * @return Model|Language
      */
-    public function store(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Language
     {
+        /** @var Language $language */
         $language = $team->languages()->create($request->all());
 
-        if ($request->form_ids) {
-            $language->forms()->sync($request->form_ids);
+        if ($request->has('form_ids')) {
+            $language->forms()->sync($request->get('form_ids'));
         }
 
         return $language;
@@ -56,14 +57,14 @@ class LanguageService
     /**
      * @param  Language  $language
      * @param  Request  $request
-     * @return Model
+     * @return Model|Language
      */
-    public function update(Language $language, Request $request): Model
+    public function update(Language $language, Request $request): Language
     {
         $language->update($request->all());
 
-        if ($request->form_ids) {
-            $changed = $language->forms()->sync($request->form_ids);
+        if ($request->has('form_ids')) {
+            $changed = $language->forms()->sync($request->get('form_ids'));
 
             $this->destroyValuesByFormIds($language, $changed['detached']);
         }

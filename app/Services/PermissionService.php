@@ -32,20 +32,20 @@ class PermissionService
     public function getAll(Request $request): LengthAwarePaginator
     {
         return $this->permission
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Permission  $permission
      * @param  Request  $request
-     * @return Model
+     * @return Model|Permission
      */
-    public function get(Permission $permission, Request $request): Model
+    public function get(Permission $permission, Request $request): Permission
     {
         return $this->permission
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($permission->id);
     }
 }

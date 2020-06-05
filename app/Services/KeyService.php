@@ -29,12 +29,12 @@ class KeyService
     /**
      * @param  Key  $key
      * @param  Request  $request
-     * @return Model
+     * @return Model|Key
      */
-    public function get(Key $key, Request $request): Model
+    public function get(Key $key, Request $request): Key
     {
         return $this->key
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($key->id);
     }
 
@@ -47,24 +47,24 @@ class KeyService
     {
         return $project
             ->keys()
-            ->when($request->q, function ($query, $q) {
+            ->when($request->input('q'), function ($query, $q) {
                 $query
                     ->where('name', 'LIKE', '%'.$q.'%')
                     ->orWhereHas('values', function ($query) use ($q) {
                         $query->where('text', $q);
                     });
             })
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Project  $project
      * @param  Request  $request
-     * @return Model
+     * @return Model|Key
      */
-    public function store(Project $project, Request $request): Model
+    public function store(Project $project, Request $request): Key
     {
         return $project->keys()->create($request->all());
     }
@@ -72,9 +72,9 @@ class KeyService
     /**
      * @param  Key  $key
      * @param  Request  $request
-     * @return Model
+     * @return Model|Key
      */
-    public function update(Key $key, Request $request): Model
+    public function update(Key $key, Request $request): Key
     {
         $key->update($request->all());
 

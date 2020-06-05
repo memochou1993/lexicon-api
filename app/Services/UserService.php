@@ -33,43 +33,43 @@ class UserService
     public function getAll(Request $request): LengthAwarePaginator
     {
         return $this->user
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  User  $user
      * @param  Request  $request
-     * @return Model
+     * @return Model|User
      */
-    public function get(User $user, Request $request): Model
+    public function get(User $user, Request $request): User
     {
         return $this->user
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($user->id);
     }
 
     /**
      * @param  Request  $request
-     * @return Model
+     * @return Model|User
      */
-    public function store(Request $request): Model
+    public function store(Request $request): User
     {
-        return $this->user->create($request->all());
+        return $this->user->query()->create($request->all());
     }
 
     /**
      * @param  User  $user
      * @param  Request  $request
-     * @return Model
+     * @return Model|User
      */
-    public function update(User $user, Request $request): Model
+    public function update(User $user, Request $request): User
     {
         $user->update($request->all());
 
-        if ($request->role_ids) {
-            $user->roles()->sync($request->role_ids);
+        if ($request->has('role_ids')) {
+            $user->roles()->sync($request->get('role_ids'));
         }
 
         return $user;

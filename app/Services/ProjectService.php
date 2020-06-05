@@ -31,22 +31,22 @@ class ProjectService
 
     /**
      * @param  int  $id
-     * @return Project
+     * @return Model|Project
      */
     public function find(int $id): Project
     {
-        return $this->project->find($id);
+        return $this->project->query()->find($id);
     }
 
     /**
      * @param  Project  $project
      * @param  Request  $request
-     * @return Model
+     * @return Model|Project
      */
-    public function get(Project $project, Request $request): Model
+    public function get(Project $project, Request $request): Project
     {
         return $this->project
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($project->id);
     }
 
@@ -54,9 +54,9 @@ class ProjectService
      * @param  Project  $project
      * @param  Request  $request
      * @param  mixed  $ttl
-     * @return Model
+     * @return Model|Project
      */
-    public function getCached(Project $project, Request $request, $ttl = null): Model
+    public function getCached(Project $project, Request $request, $ttl = null): Project
     {
         $callback = function () use ($project, $request) {
             return $this->get($project, $request);
@@ -74,9 +74,9 @@ class ProjectService
     {
         return $user
             ->projects()
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
@@ -88,20 +88,20 @@ class ProjectService
     {
         return $team
             ->projects()
-            ->when($request->q, function ($query, $q) {
+            ->when($request->input('q'), function ($query, $q) {
                 $query->where('name', 'LIKE', '%'.$q.'%');
             })
-            ->with($request->relations ?? [])
-            ->orderBy($request->sort ?? 'id', $request->direction ?? 'asc')
-            ->paginate($request->per_page);
+            ->with($request->input('relations', []))
+            ->orderBy($request->input('sort', 'id'), $request->input('direction', 'asc'))
+            ->paginate($request->input('per_page'));
     }
 
     /**
      * @param  Team  $team
      * @param  Request  $request
-     * @return Model
+     * @return Model|Project
      */
-    public function store(Team $team, Request $request): Model
+    public function store(Team $team, Request $request): Project
     {
         return $team->projects()->create($request->all());
     }
@@ -109,9 +109,9 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  Request  $request
-     * @return Model
+     * @return Model|Project
      */
-    public function update(Project $project, Request $request): Model
+    public function update(Project $project, Request $request): Project
     {
         $project->update($request->all());
 

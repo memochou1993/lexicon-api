@@ -28,26 +28,27 @@ class ValueService
     /**
      * @param  Value  $value
      * @param  Request  $request
-     * @return Model
+     * @return Model|Value
      */
-    public function get(Value $value, Request $request): Model
+    public function get(Value $value, Request $request): Value
     {
         return $this->value
-            ->with($request->relations ?? [])
+            ->with($request->input('relations', []))
             ->find($value->id);
     }
 
     /**
      * @param  Key  $key
      * @param  Request  $request
-     * @return Model
+     * @return Model|Value
      */
-    public function store(Key $key, Request $request): Model
+    public function store(Key $key, Request $request): Value
     {
+        /** @var Value $value */
         $value = $key->values()->create($request->all());
 
-        $value->languages()->attach($request->language_id);
-        $value->forms()->attach($request->form_id);
+        $value->languages()->attach($request->input('language_id'));
+        $value->forms()->attach($request->input('form_id'));
 
         return $value;
     }
@@ -55,9 +56,9 @@ class ValueService
     /**
      * @param  Value  $value
      * @param  Request  $request
-     * @return Model
+     * @return Model|Value
      */
-    public function update(Value $value, Request $request): Model
+    public function update(Value $value, Request $request): Value
     {
         $value->update($request->all());
 
