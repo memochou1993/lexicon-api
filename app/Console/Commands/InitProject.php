@@ -51,9 +51,7 @@ class InitProject extends Command
      */
     private function migrate()
     {
-        $this->call('migrate', [
-            '--force' => true,
-        ]);
+        $this->call('migrate');
     }
 
     /**
@@ -61,11 +59,11 @@ class InitProject extends Command
      */
     private function seedPermission()
     {
-        if (Permission::count()) {
+        if (Permission::query()->count()) {
             return;
         }
 
-        $this->call('db:seed', [
+        $this->callSilent('db:seed', [
             '--force' => true,
             '--class' => 'PermissionSeeder',
         ]);
@@ -76,11 +74,11 @@ class InitProject extends Command
      */
     private function seedRole()
     {
-        if (Role::count()) {
+        if (Role::query()->count()) {
             return;
         }
 
-        $this->call('db:seed', [
+        $this->callSilent('db:seed', [
             '--force' => true,
             '--class' => 'RoleSeeder',
         ]);
@@ -91,22 +89,23 @@ class InitProject extends Command
      */
     private function setupAdmin()
     {
-        $admin = Role::where('name', config('permission.roles.admin.name'))->first();
+        /** @var Role $admin */
+        $admin = Role::query()->where('name', config('permission.roles.admin.name'))->first();
 
         if ($admin->users->count()) {
             return;
         }
 
-        $name = $this->ask('Enter the admin name', 'Admin');
-        $email = $this->ask('Enter the admin email address', 'admin@email.com');
+        $name = $this->ask('Enter admin name', 'Admin');
+        $email = $this->ask('Enter admin email address', 'admin@localize.com');
         $password = $this->askForPassword();
 
-        $user = User::create([
+        /** @var User $user */
+        $user = User::query()->create([
             'name' => $name,
             'email' => $email,
             'password' => $password,
         ]);
-
         $user->roles()->attach($admin);
 
         $this->info('Admin account created successfully.');
@@ -117,7 +116,7 @@ class InitProject extends Command
      */
     private function askForPassword()
     {
-        $password = $this->secret('Enter the admin password');
+        $password = $this->secret('Enter admin password');
 
         if (! $password) {
             $this->error('Password cannot be empty.');
@@ -125,7 +124,7 @@ class InitProject extends Command
             return $this->askForPassword();
         }
 
-        if ($password !== $this->secret('Confirm the admin password')) {
+        if ($password !== $this->secret('Enter admin password again')) {
             $this->error('Passwords do not match.');
 
             return $this->askForPassword();
