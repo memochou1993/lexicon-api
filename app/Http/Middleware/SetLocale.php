@@ -20,6 +20,7 @@ class SetLocale
         $locale = $request->header('Accept-Language');
 
         App::setLocale($locale);
+
         Carbon::setLocale($locale);
 
         return $next($request);

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
+ * @property Key $key
  * @property Collection $languages
  * @property Collection $forms
  */

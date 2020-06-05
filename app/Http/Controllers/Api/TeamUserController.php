@@ -37,7 +37,7 @@ class TeamUserController extends Controller
      */
     public function store(TeamUserStoreRequest $request, Team $team)
     {
-        $changes = $this->teamService->attachUser($team, $request->user_ids);
+        $changes = $this->teamService->attachUser($team, $request->input('user_ids'));
 
         return response()->json([
             'success' => count($changes['attached']) > 0,

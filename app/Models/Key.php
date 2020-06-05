@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property Project $project
  * @property Collection $values
  */
 class Key extends Model

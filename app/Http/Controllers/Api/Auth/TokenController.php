@@ -35,9 +35,9 @@ class TokenController extends Controller
     public function store(TokenStoreRequest $request)
     {
         $token = $this->authService->createToken(
-            $request->email,
-            $request->password,
-            $request->device
+            $request->input('email'),
+            $request->input('password'),
+            $request->input('device')
         );
 
         if (! $token) {

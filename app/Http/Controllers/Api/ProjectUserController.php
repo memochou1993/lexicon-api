@@ -37,7 +37,7 @@ class ProjectUserController extends Controller
      */
     public function store(ProjectUserStoreRequest $request, Project $project)
     {
-        $changes = $this->projectService->attachUser($project, $request->user_ids);
+        $changes = $this->projectService->attachUser($project, $request->input('user_ids'));
 
         return response()->json([
             'success' => count($changes['attached']) > 0,

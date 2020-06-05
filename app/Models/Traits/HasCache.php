@@ -17,7 +17,7 @@ trait HasCache
             $this->getKey()
         ];
 
-        $cacheKey = collect($indicators)->filter()->implode(':');
+        $cacheKey = collect($indicators)->filter()->implode(PATH_SEPARATOR);
 
         return strtolower($cacheKey);
     }

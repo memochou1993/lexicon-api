@@ -37,7 +37,7 @@ class UserRoleController extends Controller
      */
     public function store(UserRoleStoreRequest $request, User $user)
     {
-        $changes = $this->userService->attachRole($user, $request->role_ids);
+        $changes = $this->userService->attachRole($user, $request->input('role_ids'));
 
         return response()->json([
             'success' => count($changes['attached']) > 0,

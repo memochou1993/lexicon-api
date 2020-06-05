@@ -15,9 +15,11 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property int $id
  * @property string $email
+ * @property string $password
  * @property Collection $tokens
  * @property Collection $roles
  * @property Collection $teams
+ * @property Collection $projects
  */
 class User extends Authenticatable
 {
@@ -114,7 +116,7 @@ class User extends Authenticatable
             ->flatten()
             ->some(function ($role) {
                 $role = is_string($role)
-                    ? Role::firstWhere('name', $role)
+                    ? Role::query()->firstWhere('name', $role)
                     : $role;
 
                 return $this->roles->contains($role);
@@ -132,8 +134,9 @@ class User extends Authenticatable
         return collect($permissions)
             ->flatten()
             ->some(function ($permission) {
+                /** @var Permission $permission */
                 $permission = is_string($permission)
-                    ? Permission::where('name', $permission)->firstOrNew()
+                    ? Permission::query()->where('name', $permission)->firstOrNew()
                     : $permission;
 
                 return $this->hasRole($permission->roles);
