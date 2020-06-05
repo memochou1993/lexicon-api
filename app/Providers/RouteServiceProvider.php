@@ -61,9 +61,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAuthRoutes()
     {
         Route::prefix('api/auth')
-            ->middleware([
-                'api',
-            ])
+            ->middleware('api')
             ->namespace($this->namespace.'\Api\Auth')
             ->group(base_path('routes/api/auth.php'));
     }
@@ -78,11 +76,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapUserRoutes()
     {
         Route::prefix('api/user')
-            ->middleware([
-                'api',
-                'token:user',
-                'auth:sanctum',
-            ])
+            ->middleware('api')
             ->namespace($this->namespace.'\Api\User')
             ->group(base_path('routes/api/user.php'));
     }
@@ -97,11 +91,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapClientRoutes()
     {
         Route::prefix('api/client')
-            ->middleware([
-                'api',
-                'token:project',
-                'auth:sanctum',
-            ])
+            ->middleware('api')
             ->namespace($this->namespace.'\Api\Client')
             ->group(base_path('routes/api/client.php'));
     }
@@ -116,11 +106,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAppRoutes()
     {
         Route::prefix('api')
-            ->middleware([
-                'api',
-                'token:user',
-                'auth:sanctum',
-            ])
+            ->middleware('api')
             ->namespace($this->namespace.'\Api')
             ->group(base_path('routes/api/app.php'));
     }
