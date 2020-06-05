@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static \App\Support\Collection make($items = [])
- * @method static \App\Support\Collection explode(string $delimiter)
- * @method static \App\Support\Collection trim()
  *
  * @see \App\Support\Collection
  */

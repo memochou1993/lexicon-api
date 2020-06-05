@@ -69,7 +69,9 @@ class TeamIndexRequest extends FormRequest
             ->trim();
 
         if ($relations->contains('owner')) {
-            $relations->forget($relations->search('owner'))->push('owners');
+            $relations = $relations->map(function ($item) {
+                return $item === 'owner' ? 'owners' : $item;
+            });
         };
 
         $this->merge([
