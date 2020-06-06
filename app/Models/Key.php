@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -54,5 +55,15 @@ class Key extends Model
     public function values()
     {
         return $this->hasMany(Value::class);
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject(): Project
+    {
+        $cacheKey = sprintf('keys:%d:project', $this->id);
+
+        return Cache::sear($cacheKey, fn() => $this->project);
     }
 }
