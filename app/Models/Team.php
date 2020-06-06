@@ -48,18 +48,7 @@ class Team extends Model
     }
 
     /**
-     * Determine if the project has the given user.
-     *
-     * @param  User  $user
-     * @return bool
-     */
-    public function hasUser(User $user)
-    {
-        return $this->getCachedUsers()->contains($user);
-    }
-
-    /**
-     * Determine if the user has the given team.
+     * Get all of the cached users for the team.
      *
      * @return Collection
      */
@@ -71,7 +60,7 @@ class Team extends Model
     }
 
     /**
-     * Determine if the user has the given team.
+     * Forget all of the cached users for the team.
      *
      * @return bool
      */

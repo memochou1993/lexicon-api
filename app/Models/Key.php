@@ -60,7 +60,7 @@ class Key extends Model
     /**
      * @return Project
      */
-    public function getProject(): Project
+    public function getCachedProject(): Project
     {
         $cacheKey = sprintf('keys:%d:project', $this->id);
 

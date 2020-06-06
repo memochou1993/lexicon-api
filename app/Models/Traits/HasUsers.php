@@ -24,4 +24,15 @@ trait HasUsers
     {
         return $this->users()->where('is_owner', true);
     }
+
+    /**
+     * Determine if the model has the given user.
+     *
+     * @param  User  $user
+     * @return bool
+     */
+    public function hasCachedUser(User $user)
+    {
+        return $this->getCachedUsers()->contains($user);
+    }
 }

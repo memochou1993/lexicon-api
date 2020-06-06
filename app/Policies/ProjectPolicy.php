@@ -44,7 +44,7 @@ class ProjectPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($project)) {
+        if (! $project->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 
@@ -82,7 +82,7 @@ class ProjectPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($project)) {
+        if (! $project->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 
@@ -104,7 +104,7 @@ class ProjectPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($project)) {
+        if (! $project->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 

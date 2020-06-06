@@ -44,7 +44,7 @@ class KeyPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($key->getProject())) {
+        if (! $user->hasProject($key->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -82,7 +82,7 @@ class KeyPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($key->getProject())) {
+        if (! $user->hasProject($key->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -104,7 +104,7 @@ class KeyPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($key->getProject())) {
+        if (! $user->hasProject($key->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 

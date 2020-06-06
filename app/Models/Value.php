@@ -53,7 +53,7 @@ class Value extends Model
     /**
      * @return Project
      */
-    public function getProject(): Project
+    public function getCachedProject(): Project
     {
         $cacheKey = sprintf('values:%d:project', $this->id);
 
