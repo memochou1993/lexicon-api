@@ -26,7 +26,7 @@ Route::middleware([
     Route::apiResource('projects.keys', 'KeyController')
         ->shallow();
     Route::apiResource('projects.hooks', 'HookController')
-        ->shallow();
+        ->shallow()->except('index');
 
     Route::apiResource('keys.values', 'ValueController')
         ->shallow()->except('index');

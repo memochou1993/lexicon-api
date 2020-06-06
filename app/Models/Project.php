@@ -29,6 +29,7 @@ use Laravel\Sanctum\NewAccessToken;
  * @property Collection $languages
  * @property Collection $keys
  * @property Collection $values
+ * @property Collection $hooks
  */
 class Project extends Model implements AuthenticatableContract
 {

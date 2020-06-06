@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
+use App\Rules\Relations;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
 
-class KeyStoreRequest extends FormRequest
+class HookShowRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -15,9 +17,6 @@ class KeyStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: need to check
-        Gate::authorize('view', $this->route('project'));
-
         return true;
     }
 
@@ -29,12 +28,19 @@ class KeyStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                Rule::unique('keys', 'name')->where(function ($query) {
-                    $query->where('project_id', $this->route('project')->id);
-                }),
+            'relations' => [
+                new Relations([]),
             ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->explode('relations');
     }
 }

@@ -3,63 +3,88 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\HookStoreRequest;
+use App\Http\Requests\HookShowRequest;
+use App\Http\Requests\HookUpdateRequest;
+use App\Http\Resources\HookResource;
 use App\Models\Hook;
-use Illuminate\Http\Request;
+use App\Models\Project;
+use App\Services\HookService;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class HookController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var HookService
      */
-    public function index()
-    {
-        //
+    private HookService $hookService;
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @param  HookService  $hookService
+     */
+    public function __construct(
+        HookService $hookService
+    ) {
+        $this->hookService = $hookService;
+
+        // TODO: use policy
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  HookStoreRequest  $request
+     * @param  Project  $project
+     * @return HookResource
      */
-    public function store(Request $request)
+    public function store(HookStoreRequest $request, Project $project)
     {
-        //
+        $hook = $this->hookService->storeByProject($project, $request);
+
+        return new HookResource($hook);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Hook  $hook
-     * @return \Illuminate\Http\Response
+     * @param  HookShowRequest  $request
+     * @param  Hook  $hook
+     * @return HookResource
      */
-    public function show(Hook $hook)
+    public function show(HookShowRequest $request, Hook $hook)
     {
-        //
+        $hook = $this->hookService->get($hook, $request);
+
+        return new HookResource($hook);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Hook  $hook
-     * @return \Illuminate\Http\Response
+     * @param  HookUpdateRequest  $request
+     * @param  Hook  $hook
+     * @return HookResource
      */
-    public function update(Request $request, Hook $hook)
+    public function update(HookUpdateRequest $request, Hook $hook)
     {
-        //
+        $hook = $this->hookService->update($hook, $request);
+
+        return new HookResource($hook);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Hook  $hook
-     * @return \Illuminate\Http\Response
+     * @param  Hook  $hook
+     * @return JsonResponse
      */
     public function destroy(Hook $hook)
     {
-        //
+        $this->hookService->destroy($hook);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

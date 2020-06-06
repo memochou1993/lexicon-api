@@ -53,6 +53,11 @@ return [
                 Permission::VALUE_CREATE,
                 Permission::VALUE_UPDATE,
                 Permission::VALUE_DELETE,
+                Permission::HOOK_VIEW_ANY,
+                Permission::HOOK_VIEW,
+                Permission::HOOK_CREATE,
+                Permission::HOOK_UPDATE,
+                Permission::HOOK_DELETE,
             ],
 
         ],
@@ -78,6 +83,11 @@ return [
                 Permission::VALUE_CREATE,
                 Permission::VALUE_UPDATE,
                 Permission::VALUE_DELETE,
+                Permission::HOOK_VIEW_ANY,
+                Permission::HOOK_VIEW,
+                Permission::HOOK_CREATE,
+                Permission::HOOK_UPDATE,
+                Permission::HOOK_DELETE,
             ],
 
         ],

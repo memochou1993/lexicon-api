@@ -69,4 +69,11 @@ final class PermissionType extends AbstractEnum implements EnumContract
     const VALUE_DELETE = 'delete-values';
     const VALUE_RESTORE = 'restore-values';
     const VALUE_FORCE_DELETE = 'force-delete-values';
+    const HOOK_VIEW_ANY = 'view-any-hooks';
+    const HOOK_VIEW = 'view-hooks';
+    const HOOK_CREATE = 'create-hooks';
+    const HOOK_DELETE = 'delete-hooks';
+    const HOOK_UPDATE = 'update-hooks';
+    const HOOK_RESTORE = 'restore-hooks';
+    const HOOK_FORCE_DELETE = 'force-delete-hooks';
 }
