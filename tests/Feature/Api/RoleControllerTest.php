@@ -51,10 +51,11 @@ class RoleControllerTest extends TestCase
             PermissionType::ROLE_CREATE,
         ]);
 
-        $permission_ids = factory(Permission::class, 2)->create()->pluck('id')->toArray();
+        /** @var Permission $permission */
+        $permission = factory(Permission::class)->create();
 
         $data = factory(Role::class)->make([
-            'permission_ids' => $permission_ids,
+            'permission_ids' => $permission->id,
         ]);
 
         $response = $this->json('POST', 'api/roles', $data->toArray())
@@ -68,10 +69,7 @@ class RoleControllerTest extends TestCase
         /** @var Role $role */
         $role = Role::query()->find(json_decode($response->getContent())->data->id);
 
-        $this->assertCount(
-            count($permission_ids),
-            $role->permissions
-        );
+        $this->assertCount(1, $role->refresh()->permissions);
     }
 
     /**
@@ -134,14 +132,15 @@ class RoleControllerTest extends TestCase
             PermissionType::ROLE_UPDATE,
         ]);
 
-        $permission_ids = factory(Permission::class, 2)->create()->pluck('id')->toArray();
+        /** @var Permission $permission */
+        $permission = factory(Permission::class)->create();
 
         /** @var Role $role */
         $role = factory(Role::class)->create();
 
         $data = factory(Role::class)->make([
             'name' => 'New Role',
-            'permission_ids' => $permission_ids,
+            'permission_ids' => $permission->id,
         ]);
 
         $this->json('PATCH', 'api/roles/'.$role->id, $data->toArray())
@@ -152,7 +151,7 @@ class RoleControllerTest extends TestCase
 
         $this->assertDatabaseHas('roles', $data->toArray());
 
-        $this->assertCount(count($permission_ids), $role->refresh()->permissions);
+        $this->assertCount(1, $role->refresh()->permissions);
     }
 
     /**

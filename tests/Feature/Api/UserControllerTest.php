@@ -87,11 +87,12 @@ class UserControllerTest extends TestCase
             PermissionType::USER_UPDATE,
         ]);
 
-        $role_ids = factory(Role::class, 2)->create()->pluck('id')->toArray();
+        /** @var Role $role */
+        $role = factory(Role::class)->create();
 
         $data = factory(User::class)->make([
             'name' => 'New User',
-            'role_ids' => $role_ids,
+            'role_ids' => $role->id,
         ]);
 
         $this->json('PATCH', 'api/users/'.$user->id, $data->toArray())
@@ -100,7 +101,7 @@ class UserControllerTest extends TestCase
                 'data' => $data->makeHidden('role_ids')->toArray(),
             ]);
 
-        $this->assertCount(count($role_ids), $user->refresh()->roles);
+        $this->assertCount(1, $user->refresh()->roles);
     }
 
     /**

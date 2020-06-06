@@ -33,10 +33,12 @@ class LanguageControllerTest extends TestCase
 
         /** @var Team $team */
         $team = factory(Team::class)->create();
-        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
+
+        /** @var Form $form */
+        $form = $team->forms()->save(factory(Form::class)->make());
 
         $data = factory(Language::class)->make([
-            'form_ids' => $form_ids,
+            'form_ids' => $form->id,
         ]);
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data->toArray())
@@ -52,10 +54,7 @@ class LanguageControllerTest extends TestCase
         /** @var Language $language */
         $language = Language::query()->find(json_decode($response->getContent())->data->id);
 
-        $this->assertCount(
-            count($form_ids),
-            $language->forms
-        );
+        $this->assertCount(1, $language->refresh()->forms);
     }
 
     /**
@@ -131,8 +130,12 @@ class LanguageControllerTest extends TestCase
         /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
 
+        /** @var Form $form */
+        $form = $team->forms()->save(factory(Form::class)->make());
+
         $data = factory(Language::class)->make([
             'name' => 'New Language',
+            'form_ids' => $form->id,
         ]);
 
         $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
@@ -142,85 +145,8 @@ class LanguageControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('languages', $data->toArray());
-    }
-
-    /**
-     * @return void
-     */
-    public function testAttachForm()
-    {
-        Sanctum::actingAs($this->user, [
-            PermissionType::LANGUAGE_UPDATE,
-        ]);
-
-        /** @var Team $team */
-        $team = factory(Team::class)->create();
-
-        /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
-
-        $form_ids = factory(Form::class, 2)->create()->pluck('id')->toArray();
-
-        $data = factory(Language::class)->make([
-            'form_ids' => $form_ids,
-        ]);
-
-        $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
-            ->assertOk()
-            ->assertJson([
-                'data' => $data->makeHidden('form_ids')->toArray(),
-            ]);
-
-        $this->assertCount(count($form_ids), $language->refresh()->forms);
-    }
-
-    /**
-     * @return void
-     */
-    public function testDetachForm()
-    {
-        Sanctum::actingAs($this->user, [
-            PermissionType::LANGUAGE_UPDATE,
-        ]);
-
-        /** @var Team $team */
-        $team = factory(Team::class)->create();
-
-        /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
-
-        /** @var Collection $forms */
-        $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
-        $language->forms()->attach($forms);
-
-        /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->languages()->attach($language);
-
-        /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
-
-        /** @var Collection $values */
-        $values = $key->values()->saveMany(factory(Value::class, 2)->make());
-        $values->first()->languages()->attach($language);
-        $values->first()->forms()->attach($forms->first()->id);
-        $values->last()->languages()->attach($language);
-        $values->last()->forms()->attach($forms->last()->id);
-
-        $data = factory(Language::class)->make([
-            'form_ids' => $forms->first()->id,
-        ]);
-
-        $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
-            ->assertOk()
-            ->assertJson([
-                'data' => $data->makeHidden('form_ids')->toArray(),
-            ]);
-
-        $this->assertDeleted($values->last());
 
         $this->assertCount(1, $language->refresh()->forms);
-        $this->assertCount(1, $language->refresh()->values);
     }
 
     /**
