@@ -28,9 +28,9 @@ class HookController extends Controller
     public function __construct(
         HookService $hookService
     ) {
-        $this->hookService = $hookService;
+        $this->authorizeResource(Hook::class);
 
-        // TODO: use policy
+        $this->hookService = $hookService;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Enums\ErrorType;
 use App\Enums\PermissionType;
 use App\Models\Hook;
 use App\Models\Project;
@@ -23,7 +24,8 @@ class HookControllerTest extends TestCase
     public function testStore()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_CREATE,
         ]);
 
         /** @var Team $team */
@@ -51,7 +53,8 @@ class HookControllerTest extends TestCase
     public function testStoreDuplicate()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_CREATE,
         ]);
 
         /** @var Team $team */
@@ -82,7 +85,8 @@ class HookControllerTest extends TestCase
     public function testShow()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_VIEW,
         ]);
 
         /** @var Team $team */
@@ -109,7 +113,8 @@ class HookControllerTest extends TestCase
     public function testUpdate()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_UPDATE,
         ]);
 
         /** @var Team $team */
@@ -140,7 +145,8 @@ class HookControllerTest extends TestCase
     public function testUpdateDuplicate()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_UPDATE,
         ]);
 
         /** @var Team $team */
@@ -150,7 +156,7 @@ class HookControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         /** @var Collection $hooks */
-        $hooks = $project->keys()->saveMany(factory(Hook::class, 2)->make());
+        $hooks = $project->hooks()->saveMany(factory(Hook::class, 2)->make());
 
         $data = factory(Hook::class)->make([
             'url' => $hooks->last()->url,
@@ -169,7 +175,8 @@ class HookControllerTest extends TestCase
     public function testDestroy()
     {
         Sanctum::actingAs($this->user, [
-            // TODO
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_DELETE,
         ]);
 
         /** @var Team $team */
@@ -185,5 +192,121 @@ class HookControllerTest extends TestCase
             ->assertNoContent();
 
         $this->assertDeleted($hook);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestCreate()
+    {
+        Sanctum::actingAs($this->user, [
+            PermissionType::PROJECT_VIEW,
+            PermissionType::HOOK_CREATE,
+        ]);
+
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $data = factory(Hook::class)->make()->toArray();
+
+        $response = $this->json('POST', 'api/projects/'.$project->id.'/hooks', $data)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestView()
+    {
+        Sanctum::actingAs($this->user, [
+            PermissionType::HOOK_VIEW,
+        ]);
+
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Hook $hook */
+        $hook = $project->hooks()->save(factory(Hook::class)->make());
+
+        $response = $this->json('GET', 'api/hooks/'.$hook->id)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestUpdate()
+    {
+        Sanctum::actingAs($this->user, [
+            PermissionType::HOOK_UPDATE,
+        ]);
+
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Hook $hook */
+        $hook = $project->hooks()->save(factory(Hook::class)->make());
+
+        $response = $this->json('PATCH', 'api/hooks/'.$hook->id)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestDelete()
+    {
+        Sanctum::actingAs($this->user, [
+            PermissionType::HOOK_DELETE,
+        ]);
+
+        $this->flushEventListeners(Project::class);
+
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        /** @var Hook $hook */
+        $hook = $project->hooks()->save(factory(Hook::class)->make());
+
+        $response = $this->json('DELETE', 'api/hooks/'.$hook->id)
+            ->assertForbidden();
+
+        $this->assertEquals(
+            ErrorType::USER_NOT_IN_PROJECT,
+            $response->exception->getCode()
+        );
     }
 }

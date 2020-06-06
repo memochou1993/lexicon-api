@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
  * @property string $url
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Project $project
  */
 class Hook extends Model
 {

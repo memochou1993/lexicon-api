@@ -15,7 +15,6 @@ class KeyStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: need to check
         Gate::authorize('view', $this->route('project'));
 
         return true;

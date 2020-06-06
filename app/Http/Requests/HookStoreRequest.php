@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class HookStoreRequest extends FormRequest
@@ -14,8 +15,7 @@ class HookStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: need to check
-        // Gate::authorize('view', $this->route('project'));
+        Gate::authorize('view', $this->route('project'));
 
         return true;
     }
