@@ -115,13 +115,13 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
-            'relations' => 'users,team,languages,tokens,hooks',
+            'relations' => 'team,users,languages,tokens,hooks',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    'users',
                     'team',
+                    'users',
                     'languages',
                     'tokens',
                     'hooks',

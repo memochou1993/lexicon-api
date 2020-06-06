@@ -30,8 +30,8 @@ class ProjectShowRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
-                    'users',
                     'team',
+                    'users',
                     'languages',
                     'tokens',
                     'hooks',
