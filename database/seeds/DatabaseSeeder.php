@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
             FormSeeder::class,
             KeySeeder::class,
             ValueSeeder::class,
+            HookSeeder::class,
             ModelHasUserSeeder::class,
             ModelHasLanguageSeeder::class,
             ModelHasFormSeeder::class,
-            ModelHasHookSeeder::class,
         ]);
     }
 }

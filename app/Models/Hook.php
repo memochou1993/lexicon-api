@@ -3,13 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $url
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class Hook extends Model
 {
     /**
-     * The table associated with the model.
+     * The attributes that are mass assignable.
      *
-     * @var string
+     * @var array
      */
-    protected $table = 'model_has_hooks';
+    protected $fillable = [
+        'url',
+    ];
 }

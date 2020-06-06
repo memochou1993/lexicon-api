@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModelHasHooksTable extends Migration
+class CreateHooksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateModelHasHooksTable extends Migration
      */
     public function up()
     {
-        Schema::create('model_has_hooks', function (Blueprint $table) {
+        Schema::create('hooks', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model');
             $table->string('url');
             // $table->text('events')->nullable(); // TODO
+            $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateModelHasHooksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('model_has_hooks');
+        Schema::dropIfExists('hooks');
     }
 }
