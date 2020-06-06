@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -41,5 +42,15 @@ class Hook extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject(): Project
+    {
+        $cacheKey = sprintf('hooks:%d:project', $this->id);
+
+        return Cache::sear($cacheKey, fn() => $this->project);
     }
 }
