@@ -8,7 +8,7 @@ class LanguageSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 3;
+    public const AMOUNT = 3;
 
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class LanguageSeeder extends Seeder
      */
     public function run()
     {
-        $languages = factory(Language::class, self::DATA_AMOUNT)->create();
+        $languages = factory(Language::class, self::AMOUNT)->create();
 
         $this->set('languages', $languages);
     }

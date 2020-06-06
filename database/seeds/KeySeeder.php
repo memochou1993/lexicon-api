@@ -9,7 +9,7 @@ class KeySeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 5;
+    public const AMOUNT = 5;
 
     /**
      * Run the database seeds.
@@ -21,7 +21,7 @@ class KeySeeder extends Seeder
         $projects = app(ProjectSeeder::class)->projects;
 
         $keys = $projects->reduce(function ($carry, $project) {
-            $keys = factory(Key::class, self::DATA_AMOUNT)->make();
+            $keys = factory(Key::class, self::AMOUNT)->make();
 
             return $carry->merge($project->keys()->saveMany($keys));
         }, app(Collection::class));

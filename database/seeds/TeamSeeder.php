@@ -8,7 +8,7 @@ class TeamSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 2;
+    public const AMOUNT = 2;
 
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class TeamSeeder extends Seeder
      */
     public function run()
     {
-        $teams = factory(Team::class, self::DATA_AMOUNT)->create();
+        $teams = factory(Team::class, self::AMOUNT)->create();
 
         $this->set('teams', $teams);
     }

@@ -8,7 +8,7 @@ class FormSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 2;
+    public const AMOUNT = 2;
 
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class FormSeeder extends Seeder
      */
     public function run()
     {
-        $forms = factory(Form::class, self::DATA_AMOUNT)->create();
+        $forms = factory(Form::class, self::AMOUNT)->create();
 
         $this->set('forms', $forms);
     }

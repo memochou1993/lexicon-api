@@ -9,7 +9,7 @@ class UserSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 5;
+    public const AMOUNT = 5;
 
     /**
      * Run the database seeds.
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 return $user;
             })
             ->merge(
-                factory(User::class, self::DATA_AMOUNT)->create()
+                factory(User::class, self::AMOUNT)->create()
             );
 
         $this->set('users', $users);

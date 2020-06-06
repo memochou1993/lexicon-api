@@ -9,7 +9,7 @@ class HookSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const DATA_AMOUNT = 2;
+    public const AMOUNT = 2;
 
     /**
      * Run the database seeds.
@@ -21,7 +21,7 @@ class HookSeeder extends Seeder
         $projects = app(ProjectSeeder::class)->projects;
 
         $hooks = $projects->reduce(function ($carry, $project) {
-            $hooks = factory(Hook::class, self::DATA_AMOUNT)->make();
+            $hooks = factory(Hook::class, self::AMOUNT)->make();
 
             return $carry->merge($project->hooks()->saveMany($hooks));
         }, app(Collection::class));
