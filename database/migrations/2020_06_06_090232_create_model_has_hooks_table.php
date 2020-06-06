@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModelHasTokensTable extends Migration
+class CreateModelHasHooksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateModelHasTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('model_has_tokens', function (Blueprint $table) {
+        Schema::create('model_has_hooks', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
-            $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
-            $table->timestamp('last_used_at')->nullable();
+            $table->string('url');
+            // $table->text('events')->nullable(); // TODO
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateModelHasTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('model_has_tokens');
+        Schema::dropIfExists('model_has_hooks');
     }
 }

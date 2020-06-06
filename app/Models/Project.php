@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasCache;
+use App\Models\Traits\HasHooks;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasTokens;
 use App\Models\Traits\HasUsers;
@@ -39,6 +40,7 @@ class Project extends Model implements AuthenticatableContract
     use HasCache;
     use HasUsers;
     use HasLanguages;
+    use HasHooks;
 
     /**
      * The attributes that are mass assignable.
