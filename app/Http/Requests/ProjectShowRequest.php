@@ -34,6 +34,7 @@ class ProjectShowRequest extends FormRequest
                     'team',
                     'languages',
                     'tokens',
+                    'hooks',
                 ]),
             ],
         ];

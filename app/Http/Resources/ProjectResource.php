@@ -31,6 +31,7 @@ class ProjectResource extends JsonResource
             'keys' => KeyResource::collection($this->whenLoaded('keys')),
             'values' => ValueResource::collection($this->whenLoaded('values')),
             'tokens' => TokenResource::collection($this->whenLoaded('tokens')),
+            'hooks' => HookResource::collection($this->whenLoaded('hooks')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -34,7 +34,6 @@ class ProjectIndexRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
-                    'users',
                     'languages',
                 ]),
             ],

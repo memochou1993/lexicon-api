@@ -34,13 +34,12 @@ class ProjectControllerTest extends TestCase
         $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects', [
-            'relations' => 'users,languages',
+            'relations' => 'languages',
         ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     [
-                        'users',
                         'languages',
                     ],
                 ],
@@ -116,7 +115,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
-            'relations' => 'users,team,languages',
+            'relations' => 'users,team,languages,tokens,hooks',
         ])
             ->assertOk()
             ->assertJsonStructure([
@@ -124,6 +123,8 @@ class ProjectControllerTest extends TestCase
                     'users',
                     'team',
                     'languages',
+                    'tokens',
+                    'hooks',
                 ],
             ])
             ->assertJson([
