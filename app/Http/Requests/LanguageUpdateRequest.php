@@ -17,8 +17,6 @@ class LanguageUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: check form_ids belongs to language's team
-
         return true;
     }
 
@@ -34,13 +32,18 @@ class LanguageUpdateRequest extends FormRequest
                 Rule::unique('languages', 'name')->where(function ($query) {
                     $query->whereIn(
                         'id',
-                        $this->route('language')->teams()->first()->languages()->pluck('id')->toArray()
+                        $this->route('language')->teams()->first()->languages()->pluck('id')->toArray() // TODO: should cache
                     );
                 })->ignore($this->route('language')->id),
             ],
             'form_ids' => [
                 'array',
-                Rule::exists('forms', 'id'),
+                Rule::exists('forms', 'id')->where(function ($query) {
+                    $query->whereIn(
+                        'id',
+                        $this->route('language')->teams()->first()->forms()->pluck('id')->toArray() // TODO: should cache
+                    );
+                }),
             ],
         ];
     }

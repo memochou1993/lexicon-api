@@ -69,7 +69,7 @@ class UserService
         $user->update($request->all());
 
         if ($request->has('role_ids')) {
-            $user->roles()->sync($request->get('role_ids'));
+            $user->roles()->sync($request->input('role_ids'));
         }
 
         return $user;

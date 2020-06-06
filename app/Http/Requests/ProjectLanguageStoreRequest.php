@@ -20,8 +20,6 @@ class ProjectLanguageStoreRequest extends FormRequest
     {
         Gate::authorize('update', $this->route('project'));
 
-        // TODO: check language_ids belongs to project's team
-
         return true;
     }
 
@@ -36,7 +34,12 @@ class ProjectLanguageStoreRequest extends FormRequest
             'language_ids' => [
                 'array',
                 'required',
-                Rule::exists('languages', 'id'),
+                Rule::exists('languages', 'id')->where(function ($query) {
+                    $query->whereIn(
+                        'id',
+                        $this->route('project')->team->languages()->pluck('id')->toArray() // TODO: should cache
+                    );
+                }),
             ],
         ];
     }

@@ -48,7 +48,7 @@ class LanguageService
         $language = $team->languages()->create($request->all());
 
         if ($request->has('form_ids')) {
-            $language->forms()->sync($request->get('form_ids'));
+            $language->forms()->sync($request->input('form_ids'));
         }
 
         return $language;
@@ -64,7 +64,7 @@ class LanguageService
         $language->update($request->all());
 
         if ($request->has('form_ids')) {
-            $changed = $language->forms()->sync($request->get('form_ids'));
+            $changed = $language->forms()->sync($request->input('form_ids'));
 
             $this->destroyValuesByFormIds($language, $changed['detached']);
         }

@@ -59,7 +59,7 @@ class RoleService
         $role = $this->role->query()->create($request->all());
 
         if ($request->has('permission_ids')) {
-            $role->permissions()->sync($request->get('permission_ids'));
+            $role->permissions()->sync($request->input('permission_ids'));
         }
 
         return $role;
@@ -75,7 +75,7 @@ class RoleService
         $role->update($request->all());
 
         if ($request->has('permission_ids')) {
-            $role->permissions()->sync($request->get('permission_ids'));
+            $role->permissions()->sync($request->input('permission_ids'));
         }
 
         return $role;

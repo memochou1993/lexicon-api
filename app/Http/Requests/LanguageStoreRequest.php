@@ -42,7 +42,12 @@ class LanguageStoreRequest extends FormRequest
             ],
             'form_ids' => [
                 'array',
-                Rule::exists('forms', 'id'),
+                Rule::exists('forms', 'id')->where(function ($query) {
+                    $query->whereIn(
+                        'id',
+                        $this->route('team')->forms()->pluck('id')->toArray()
+                    );
+                }),
             ],
         ];
     }
