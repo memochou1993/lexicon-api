@@ -7,6 +7,7 @@ use App\Models\Traits\HasLanguages;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -47,5 +48,15 @@ class Value extends Model
     public function key()
     {
         return $this->belongsTo(Key::class);
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject(): Project
+    {
+        $cacheKey = sprintf('values:%d:project', $this->id);
+
+        return Cache::sear($cacheKey, fn() => $this->key->project);
     }
 }

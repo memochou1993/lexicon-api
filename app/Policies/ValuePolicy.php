@@ -44,7 +44,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->key->project)) {
+        if (! $user->hasProject($value->getProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -82,7 +82,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->key->project)) {
+        if (! $user->hasProject($value->getProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -104,7 +104,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->key->project)) {
+        if (! $user->hasProject($value->getProject())) {
             throw new UserNotInProjectException();
         }
 
