@@ -101,6 +101,8 @@ class TeamService
      */
     public function attachUser(Team $team, array $user_ids): array
     {
+        $team->forgetCachedUsers();
+
         return $team->users()->syncWithoutDetaching($user_ids);
     }
 
@@ -111,6 +113,8 @@ class TeamService
      */
     public function detachUser(Team $team, User $user): int
     {
+        $team->forgetCachedUsers();
+
         return $team->users()->detach($user);
     }
 }

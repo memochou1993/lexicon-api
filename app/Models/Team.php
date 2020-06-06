@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -44,5 +45,40 @@ class Team extends Model
     public function projects()
     {
         return $this->hasMany(Project::class);
+    }
+
+    /**
+     * Determine if the project has the given user.
+     *
+     * @param  User  $user
+     * @return bool
+     */
+    public function hasUser(User $user)
+    {
+        return $this->getCachedUsers()->contains($user);
+    }
+
+    /**
+     * Determine if the user has the given team.
+     *
+     * @return Collection
+     */
+    public function getCachedUsers(): Collection
+    {
+        $cacheKey = sprintf('teams:%d:users', $this->id);
+
+        return Cache::sear($cacheKey, fn() => $this->users);
+    }
+
+    /**
+     * Determine if the user has the given team.
+     *
+     * @return bool
+     */
+    public function forgetCachedUsers(): bool
+    {
+        $cacheKey = sprintf('teams:%d:users', $this->id);
+
+        return Cache::forget($cacheKey);
     }
 }
