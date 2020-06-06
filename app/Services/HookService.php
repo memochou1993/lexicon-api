@@ -42,7 +42,7 @@ class HookService
      * @param  Request  $request
      * @return Model|Hook
      */
-    public function storeByProject(Project $project, Request $request): Hook
+    public function store(Project $project, Request $request): Hook
     {
         return $project->hooks()->create($request->all());
     }

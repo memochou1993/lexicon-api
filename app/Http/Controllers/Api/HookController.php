@@ -42,7 +42,7 @@ class HookController extends Controller
      */
     public function store(HookStoreRequest $request, Project $project)
     {
-        $hook = $this->hookService->storeByProject($project, $request);
+        $hook = $this->hookService->store($project, $request);
 
         return new HookResource($hook);
     }
