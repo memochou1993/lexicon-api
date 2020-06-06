@@ -81,10 +81,13 @@ class ValueControllerTest extends TestCase
         /** @var Value $value */
         $value = $key->values()->save(factory(Value::class)->make());
 
-        $this->json('GET', 'api/values/'.$value->id)
+        $this->json('GET', 'api/values/'.$value->id, [
+            'relations' => 'key',
+        ])
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
+                    'key',
                     'language',
                     'form',
                 ],

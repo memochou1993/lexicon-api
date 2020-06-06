@@ -28,6 +28,7 @@ class ValueShowRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
+                    'key',
                     'languages',
                     'forms',
                 ]),
