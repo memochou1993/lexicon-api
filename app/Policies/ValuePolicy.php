@@ -44,7 +44,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->getCachedProject())) {
+        if (! $value->getCachedProject()->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 
@@ -82,7 +82,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->getCachedProject())) {
+        if (! $value->getCachedProject()->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 
@@ -104,7 +104,7 @@ class ValuePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($value->getCachedProject())) {
+        if (! $value->getCachedProject()->hasCachedUser($user)) {
             throw new UserNotInProjectException();
         }
 
