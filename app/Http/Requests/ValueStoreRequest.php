@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Key;
+use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -27,6 +29,12 @@ class ValueStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Key $key */
+        $key = $this->route('key');
+
+        /** @var Language $language */
+        $language = Language::query()->findOrFail($this->input('language_id'));
+
         return [
             'text' => [
                 'required',
@@ -34,12 +42,12 @@ class ValueStoreRequest extends FormRequest
             'language_id' => [
                 'numeric',
                 'required',
-                Rule::exists('languages', 'id'),
+                Rule::in($key->getCachedProject()->getCachedLanguages()->pluck('id')->toArray()),
             ],
             'form_id' => [
                 'numeric',
                 'required',
-                Rule::exists('forms', 'id'),
+                Rule::in($language->getCachedForms()->pluck('id')->toArray()),
             ],
         ];
     }
