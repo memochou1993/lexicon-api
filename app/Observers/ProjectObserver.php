@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class ProjectObserver
 {
     /**
-     * Handle the team "created" event.
+     * Handle the project "created" event.
      *
      * @param  Project  $project
      * @return void

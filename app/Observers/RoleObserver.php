@@ -7,7 +7,7 @@ use App\Models\Role;
 class RoleObserver
 {
     /**
-     * Handle the project "deleted" event.
+     * Handle the role "deleted" event.
      *
      * @param  Role  $role
      * @return void

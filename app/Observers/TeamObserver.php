@@ -19,7 +19,7 @@ class TeamObserver
     }
 
     /**
-     * Handle the project "deleted" event.
+     * Handle the team "deleted" event.
      *
      * @param  Team  $team
      * @return void
