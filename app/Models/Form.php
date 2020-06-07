@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -51,5 +52,15 @@ class Form extends Model
     public function values()
     {
         return $this->morphedByMany(Value::class, 'model', 'model_has_forms');
+    }
+
+    /**
+     * @return Team
+     */
+    public function getCachedTeam(): Team
+    {
+        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->id);
+
+        return Cache::sear($cacheKey, fn() => $this->teams()->first());
     }
 }
