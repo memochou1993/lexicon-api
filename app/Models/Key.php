@@ -62,7 +62,7 @@ class Key extends Model
      */
     public function getCachedProject(): Project
     {
-        $cacheKey = sprintf('keys:%d:project', $this->id);
+        $cacheKey = sprintf('%s:%d:project', $this->getTable(), $this->id);
 
         return Cache::sear($cacheKey, fn() => $this->project);
     }

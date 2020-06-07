@@ -48,25 +48,21 @@ class Team extends Model
     }
 
     /**
-     * Get all of the cached users for the team.
-     *
      * @return Collection
      */
     public function getCachedUsers(): Collection
     {
-        $cacheKey = sprintf('teams:%d:users', $this->id);
+        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
 
         return Cache::sear($cacheKey, fn() => $this->users);
     }
 
     /**
-     * Forget all of the cached users for the team.
-     *
      * @return bool
      */
     public function forgetCachedUsers(): bool
     {
-        $cacheKey = sprintf('teams:%d:users', $this->id);
+        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
 
         return Cache::forget($cacheKey);
     }

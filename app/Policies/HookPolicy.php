@@ -44,7 +44,7 @@ class HookPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($hook->getProject())) {
+        if (! $user->hasProject($hook->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -82,7 +82,7 @@ class HookPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($hook->getProject())) {
+        if (! $user->hasProject($hook->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 
@@ -104,7 +104,7 @@ class HookPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasProject($hook->getProject())) {
+        if (! $user->hasProject($hook->getCachedProject())) {
             throw new UserNotInProjectException();
         }
 
