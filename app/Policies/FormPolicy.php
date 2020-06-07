@@ -44,7 +44,7 @@ class FormPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasTeam($form->getCachedTeam())) {
+        if (! $form->getCachedTeam()->hasCachedUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -82,7 +82,7 @@ class FormPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasTeam($form->getCachedTeam())) {
+        if (! $form->getCachedTeam()->hasCachedUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -104,7 +104,7 @@ class FormPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $user->hasTeam($form->getCachedTeam())) {
+        if (! $form->getCachedTeam()->hasCachedUser($user)) {
             throw new UserNotInTeamException();
         }
 

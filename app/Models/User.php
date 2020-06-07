@@ -149,17 +149,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Determine if the user has the given team.
-     *
-     * @param  Team  $team
-     * @return bool
-     */
-    public function hasTeam(Team $team)
-    {
-        return $this->teams->contains($team);
-    }
-
-    /**
      * Determine if the user has the given project.
      *
      * @param  Project  $project
