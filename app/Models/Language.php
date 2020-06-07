@@ -60,7 +60,7 @@ class Language extends Model
      */
     public function getCachedTeam(): Team
     {
-        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->id);
+        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->getKey());
 
         return Cache::sear($cacheKey, fn() => $this->teams()->first());
     }

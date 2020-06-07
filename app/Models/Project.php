@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -118,25 +117,5 @@ class Project extends Model implements AuthenticatableContract
         ]);
 
         return new NewAccessToken($token, $plainTextToken);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getCachedUsers(): Collection
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
-
-        return Cache::sear($cacheKey, fn() => $this->users);
-    }
-
-    /**
-     * @return bool
-     */
-    public function forgetCachedUsers(): bool
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
-
-        return Cache::forget($cacheKey);
     }
 }

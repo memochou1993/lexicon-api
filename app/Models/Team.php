@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -45,25 +44,5 @@ class Team extends Model
     public function projects()
     {
         return $this->hasMany(Project::class);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getCachedUsers(): Collection
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
-
-        return Cache::sear($cacheKey, fn() => $this->users);
-    }
-
-    /**
-     * @return bool
-     */
-    public function forgetCachedUsers(): bool
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->id);
-
-        return Cache::forget($cacheKey);
     }
 }

@@ -12,14 +12,7 @@ trait HasCache
      */
     public function cacheKey(): string
     {
-        $indicators = [
-            class_basename($this),
-            $this->getKey()
-        ];
-
-        $cacheKey = collect($indicators)->filter()->implode(PATH_SEPARATOR);
-
-        return strtolower($cacheKey);
+        return sprintf('%s:%d', $this->getTable(), $this->getKey());
     }
 
     /**
