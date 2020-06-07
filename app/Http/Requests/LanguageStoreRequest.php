@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
+use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -30,22 +31,26 @@ class LanguageStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Team $team */
+        $team = $this->route('team');
+
+        // TODO: optimizable
         return [
             'name' => [
                 'required',
-                Rule::unique('languages', 'name')->where(function ($query) {
+                Rule::unique('languages', 'name')->where(function ($query) use ($team) {
                     $query->whereIn(
                         'id',
-                        $this->route('team')->languages()->pluck('id')->toArray()
+                        $team->getCachedLanguages()->pluck('id')->toArray()
                     );
                 }),
             ],
             'form_ids' => [
                 'array',
-                Rule::exists('forms', 'id')->where(function ($query) {
+                Rule::exists('forms', 'id')->where(function ($query) use ($team) {
                     $query->whereIn(
                         'id',
-                        $this->route('team')->forms()->pluck('id')->toArray()
+                        $team->getCachedForms()->pluck('id')->toArray()
                     );
                 }),
             ],

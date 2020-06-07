@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -27,11 +28,14 @@ class KeyStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Project $project */
+        $project = $this->route('project');
+
         return [
             'name' => [
                 'required',
-                Rule::unique('keys', 'name')->where(function ($query) {
-                    $query->where('project_id', $this->route('project')->id);
+                Rule::unique('keys', 'name')->where(function ($query) use ($project) {
+                    $query->where('project_id', $project->id);
                 }),
             ],
         ];

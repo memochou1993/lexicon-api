@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Project;
+use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -28,11 +28,14 @@ class ProjectStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Team $team */
+        $team = $this->route('team');
+
         return [
             'name' => [
                 'required',
-                Rule::unique('projects', 'name')->where(function ($query) {
-                    $query->where('team_id', $this->route('team')->id);
+                Rule::unique('projects', 'name')->where(function ($query) use ($team) {
+                    $query->where('team_id', $team->id);
                 }),
             ],
         ];

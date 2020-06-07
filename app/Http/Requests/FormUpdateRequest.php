@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Form;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,14 +25,18 @@ class FormUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Form $form */
+        $form = $this->route('form');
+
+        // TODO: optimizable
         return [
             'name' => [
-                Rule::unique('forms', 'name')->where(function ($query) {
+                Rule::unique('forms', 'name')->where(function ($query) use ($form) {
                     $query->whereIn(
                         'id',
-                        $this->route('form')->teams()->first()->forms()->pluck('id')->toArray()
+                        $form->getCachedTeam()->getCachedForms()->pluck('id')->toArray()
                     );
-                })->ignore($this->route('form')->id),
+                })->ignore($form->id),
             ],
         ];
     }

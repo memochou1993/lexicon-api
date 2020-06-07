@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Key;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,11 +25,14 @@ class KeyUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Key $key */
+        $key = $this->route('key');
+
         return [
             'name' => [
-                Rule::unique('keys', 'name')->where(function ($query) {
-                    $query->where('project_id', $this->route('key')->project->id);
-                })->ignore($this->route('key')->id),
+                Rule::unique('keys', 'name')->where(function ($query) use ($key) {
+                    $query->where('project_id', $key->getCachedProject()->id);
+                })->ignore($key->id),
             ],
         ];
     }

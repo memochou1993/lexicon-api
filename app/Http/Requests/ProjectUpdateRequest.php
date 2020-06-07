@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,11 +25,14 @@ class ProjectUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Project $project */
+        $project = $this->route('project');
+
         return [
             'name' => [
-                Rule::unique('projects', 'name')->where(function ($query) {
-                    $query->where('team_id', $this->route('project')->team_id);
-                })->ignore($this->route('project')->id),
+                Rule::unique('projects', 'name')->where(function ($query) use ($project) {
+                    $query->where('team_id', $project->getCachedTeam()->id);
+                })->ignore($project->id),
             ],
         ];
     }

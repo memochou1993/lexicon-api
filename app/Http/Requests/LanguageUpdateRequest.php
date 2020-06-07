@@ -31,6 +31,7 @@ class LanguageUpdateRequest extends FormRequest
         /** @var Language $language */
         $language = $this->route('language');
 
+        // TODO: optimizable
         return [
             'name' => [
                 Rule::unique('languages', 'name')->where(function ($query) use ($language) {
