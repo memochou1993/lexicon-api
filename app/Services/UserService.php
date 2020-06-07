@@ -72,7 +72,7 @@ class UserService
             $user->roles()->sync($request->input('role_ids'));
         }
 
-        return $user;
+        return $user->withoutRelations();
     }
 
     /**

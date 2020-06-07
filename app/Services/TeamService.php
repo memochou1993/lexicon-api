@@ -82,7 +82,7 @@ class TeamService
     {
         $team->update($request->all());
 
-        return $team;
+        return $team->withoutRelations();
     }
 
     /**

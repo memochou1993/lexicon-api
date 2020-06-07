@@ -71,7 +71,7 @@ class LanguageService
             $this->destroyValuesByFormIds($language, $changed['detached']);
         }
 
-        return $language;
+        return $language->withoutRelations();
     }
 
     /**

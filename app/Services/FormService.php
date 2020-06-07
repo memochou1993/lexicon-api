@@ -58,7 +58,7 @@ class FormService
     {
         $form->update($request->all());
 
-        return $form;
+        return $form->withoutRelations();
     }
 
     /**

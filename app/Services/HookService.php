@@ -56,7 +56,7 @@ class HookService
     {
         $hook->update($request->all());
 
-        return $hook;
+        return $hook->withoutRelations();
     }
 
     /**

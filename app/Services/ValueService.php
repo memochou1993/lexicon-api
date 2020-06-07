@@ -62,7 +62,7 @@ class ValueService
     {
         $value->update($request->all());
 
-        return $value;
+        return $value->withoutRelations();
     }
 
     /**

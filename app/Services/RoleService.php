@@ -78,7 +78,7 @@ class RoleService
             $role->permissions()->sync($request->input('permission_ids'));
         }
 
-        return $role;
+        return $role->withoutRelations();
     }
 
     /**

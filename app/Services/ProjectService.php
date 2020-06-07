@@ -115,7 +115,7 @@ class ProjectService
     {
         $project->update($request->all());
 
-        return $project;
+        return $project->withoutRelations();
     }
 
     /**

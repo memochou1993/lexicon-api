@@ -78,7 +78,7 @@ class KeyService
     {
         $key->update($request->all());
 
-        return $key;
+        return $key->withoutRelations();
     }
 
     /**
