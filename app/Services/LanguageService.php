@@ -51,6 +51,8 @@ class LanguageService
             $language->forms()->sync($request->input('form_ids'));
         }
 
+        $team->forgetCachedLanguages();
+
         return $language;
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
+use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,21 +28,24 @@ class LanguageUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Language $language */
+        $language = $this->route('language');
+
         return [
             'name' => [
-                Rule::unique('languages', 'name')->where(function ($query) {
+                Rule::unique('languages', 'name')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $this->route('language')->teams()->first()->languages()->pluck('id')->toArray() // TODO: should cache
+                        $language->getCachedTeam()->getCachedLanguages()->pluck('id')->toArray()
                     );
-                })->ignore($this->route('language')->id),
+                })->ignore($language->id),
             ],
             'form_ids' => [
                 'array',
-                Rule::exists('forms', 'id')->where(function ($query) {
+                Rule::exists('forms', 'id')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $this->route('language')->teams()->first()->forms()->pluck('id')->toArray() // TODO: should cache
+                        $language->getCachedTeam()->getCachedForms()->pluck('id')->toArray()
                     );
                 }),
             ],

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
+use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -30,14 +31,17 @@ class ProjectLanguageStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Project $project */
+        $project = $this->route('project');
+
         return [
             'language_ids' => [
                 'array',
                 'required',
-                Rule::exists('languages', 'id')->where(function ($query) {
+                Rule::exists('languages', 'id')->where(function ($query) use ($project) {
                     $query->whereIn(
                         'id',
-                        $this->route('project')->team->languages()->pluck('id')->toArray() // TODO: should cache
+                        $project->getCachedTeam()->getCachedLanguages()->pluck('id')->toArray()
                     );
                 }),
             ],

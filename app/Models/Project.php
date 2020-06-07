@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -23,6 +24,7 @@ use Laravel\Sanctum\NewAccessToken;
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Team $team
  * @property Collection $tokens
  * @property Collection $users
  * @property Collection $owners
@@ -117,5 +119,15 @@ class Project extends Model implements AuthenticatableContract
         ]);
 
         return new NewAccessToken($token, $plainTextToken);
+    }
+
+    /**
+     * @return Team
+     */
+    public function getCachedTeam(): Team
+    {
+        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->getKey());
+
+        return Cache::sear($cacheKey, fn() => $this->team);
     }
 }
