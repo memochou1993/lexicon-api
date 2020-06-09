@@ -44,8 +44,6 @@ class FormService
      */
     public function store(Team $team, Request $request): Form
     {
-        $team->forgetCachedForms();
-
         return $team->forms()->create($request->all());
     }
 

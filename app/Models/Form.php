@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
@@ -12,7 +11,6 @@ use Illuminate\Support\Facades\Cache;
  * @property string $name
  * @property int $range_min
  * @property int $range_max
- * @property Collection $teams
  */
 class Form extends Model
 {
@@ -57,10 +55,10 @@ class Form extends Model
     /**
      * @return Team
      */
-    public function getCachedTeam(): Team
+    public function getTeam(): Team
     {
-        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->getKey());
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 
-        return Cache::sear($cacheKey, fn() => $this->teams()->first());
+        return Cache::tags($tag)->sear('team', fn() => $this->teams()->first());
     }
 }

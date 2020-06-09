@@ -31,14 +31,13 @@ class FormStoreRequest extends FormRequest
         /** @var Team $team */
         $team = $this->route('team');
 
-        // TODO: optimizable
         return [
             'name' => [
                 'required',
                 Rule::unique('forms', 'name')->where(function ($query) use ($team) {
                     $query->whereIn(
                         'id',
-                        $team->getCachedForms()->pluck('id')->toArray()
+                        $team->forms->pluck('id')->toArray()
                     );
                 }),
             ],
