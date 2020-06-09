@@ -49,6 +49,6 @@ trait HasUsers
     {
         $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 
-        return Cache::tags($tag)->sear('owner', fn() => $this->owners()->first());
+        return Cache::tags($tag)->sear('owner', fn() => $this->owners->first());
     }
 }

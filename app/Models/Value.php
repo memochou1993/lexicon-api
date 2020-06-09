@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Cache;
 /**
  * @property int $id
  * @property string $text
- * @property Key $key
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Key $key
  */
 class Value extends Model
 {

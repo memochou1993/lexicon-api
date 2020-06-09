@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasForms;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 /**
  * @property int $id
  * @property string $name
+ * @property Collection $teams
  */
 class Language extends Model
 {
@@ -58,6 +60,6 @@ class Language extends Model
     {
         $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 
-        return Cache::tags($tag)->sear('team', fn() => $this->teams()->first());
+        return Cache::tags($tag)->sear('team', fn() => $this->teams->first());
     }
 }
