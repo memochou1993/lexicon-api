@@ -34,14 +34,13 @@ class LanguageStoreRequest extends FormRequest
         /** @var Team $team */
         $team = $this->route('team');
 
-        // TODO: optimizable
         return [
             'name' => [
                 'required',
                 Rule::unique('languages', 'name')->where(function ($query) use ($team) {
                     $query->whereIn(
                         'id',
-                        $team->getCachedLanguages()->pluck('id')->toArray()
+                        $team->languages->pluck('id')->toArray()
                     );
                 }),
             ],
@@ -50,7 +49,7 @@ class LanguageStoreRequest extends FormRequest
                 Rule::exists('forms', 'id')->where(function ($query) use ($team) {
                     $query->whereIn(
                         'id',
-                        $team->getCachedForms()->pluck('id')->toArray()
+                        $team->forms->pluck('id')->toArray()
                     );
                 }),
             ],

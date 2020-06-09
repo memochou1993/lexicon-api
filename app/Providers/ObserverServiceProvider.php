@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Form;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\Value;
-use App\Observers\FormObserver;
 use App\Observers\LanguageObserver;
 use App\Observers\ProjectObserver;
 use App\Observers\RoleObserver;
@@ -39,7 +37,6 @@ class ObserverServiceProvider extends ServiceProvider
         Team::observe(TeamObserver::class);
         Project::observe(ProjectObserver::class);
         Language::observe(LanguageObserver::class);
-        Form::observe(FormObserver::class);
         Value::observe(ValueObserver::class);
     }
 }

@@ -44,7 +44,7 @@ class LanguagePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $language->getCachedTeam()->hasCachedUser($user)) {
+        if (! $language->getTeam()->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -82,7 +82,7 @@ class LanguagePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $language->getCachedTeam()->hasCachedUser($user)) {
+        if (! $language->getTeam()->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -104,7 +104,7 @@ class LanguagePolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $language->getCachedTeam()->hasCachedUser($user)) {
+        if (! $language->getTeam()->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 

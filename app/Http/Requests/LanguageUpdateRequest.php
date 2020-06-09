@@ -31,13 +31,12 @@ class LanguageUpdateRequest extends FormRequest
         /** @var Language $language */
         $language = $this->route('language');
 
-        // TODO: optimizable
         return [
             'name' => [
                 Rule::unique('languages', 'name')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $language->getCachedTeam()->getCachedLanguages()->pluck('id')->toArray()
+                        $language->getTeam()->languages->pluck('id')->toArray()
                     );
                 })->ignore($language->id),
             ],
@@ -46,7 +45,7 @@ class LanguageUpdateRequest extends FormRequest
                 Rule::exists('forms', 'id')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $language->getCachedTeam()->getCachedForms()->pluck('id')->toArray()
+                        $language->getTeam()->forms->pluck('id')->toArray()
                     );
                 }),
             ],

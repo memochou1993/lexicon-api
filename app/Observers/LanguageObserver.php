@@ -15,7 +15,5 @@ class LanguageObserver
     public function deleted(Language $language)
     {
         $language->forms()->detach();
-
-        $language->getCachedTeam()->forgetCachedLanguages();
     }
 }
