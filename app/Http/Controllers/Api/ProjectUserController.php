@@ -56,6 +56,10 @@ class ProjectUserController extends Controller
     {
         $this->authorize('update', $project);
 
+        if ($project->users->count() === 1) {
+            abort(422, __('validation.in', ['attribute' => 'user']));
+        }
+
         $count = $this->projectService->detachUser($project, $user);
 
         return response()->json([

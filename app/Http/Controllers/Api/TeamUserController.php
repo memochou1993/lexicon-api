@@ -56,6 +56,10 @@ class TeamUserController extends Controller
     {
         $this->authorize('update', $team);
 
+        if ($team->users->count() === 1) {
+            abort(422, __('validation.in', ['attribute' => 'user']));
+        }
+
         $count = $this->teamService->detachUser($team, $user);
 
         return response()->json([
