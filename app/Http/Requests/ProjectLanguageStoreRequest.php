@@ -41,7 +41,7 @@ class ProjectLanguageStoreRequest extends FormRequest
                 Rule::exists('languages', 'id')->where(function ($query) use ($project) {
                     $query->whereIn(
                         'id',
-                        $project->getCachedTeam()->getCachedLanguages()->pluck('id')->toArray()
+                        $project->getTeam()->languages->pluck('id')->toArray()
                     );
                 }),
             ],

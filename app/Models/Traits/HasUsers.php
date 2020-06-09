@@ -5,8 +5,10 @@ namespace App\Models\Traits;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property Collection $users
+ */
 trait HasUsers
 {
     /**
@@ -33,28 +35,8 @@ trait HasUsers
      * @param  User  $user
      * @return bool
      */
-    public function hasCachedUser(User $user)
+    public function hasUser(User $user)
     {
-        return $this->getCachedUsers()->contains($user);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getCachedUsers(): Collection
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->getKey());
-
-        return Cache::sear($cacheKey, fn() => $this->users);
-    }
-
-    /**
-     * @return bool
-     */
-    public function forgetCachedUsers(): bool
-    {
-        $cacheKey = sprintf('%s:%d:users', $this->getTable(), $this->getKey());
-
-        return Cache::forget($cacheKey);
+        return $this->users->contains($user);
     }
 }

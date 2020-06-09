@@ -28,7 +28,6 @@ class FormUpdateRequest extends FormRequest
         /** @var Form $form */
         $form = $this->route('form');
 
-        // TODO: optimizable
         return [
             'name' => [
                 Rule::unique('forms', 'name')->where(function ($query) use ($form) {

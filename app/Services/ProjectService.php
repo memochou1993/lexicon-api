@@ -143,8 +143,6 @@ class ProjectService
      */
     public function attachUser(Project $project, array $user_ids): array
     {
-        $project->forgetCachedUsers();
-
         return $project->users()->syncWithoutDetaching($user_ids);
     }
 
@@ -155,8 +153,6 @@ class ProjectService
      */
     public function detachUser(Project $project, User $user): int
     {
-        $project->forgetCachedUsers();
-
         return $project->users()->detach($user);
     }
 

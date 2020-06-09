@@ -42,12 +42,12 @@ class ValueStoreRequest extends FormRequest
             'language_id' => [
                 'numeric',
                 'required',
-                Rule::in($key->getCachedProject()->getCachedLanguages()->pluck('id')->toArray()),
+                Rule::in($key->getProject()->languages->pluck('id')->toArray()),
             ],
             'form_id' => [
                 'numeric',
                 'required',
-                Rule::in($language->getCachedForms()->pluck('id')->toArray()),
+                Rule::in($language->forms->pluck('id')->toArray()),
             ],
         ];
     }

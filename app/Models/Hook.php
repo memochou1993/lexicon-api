@@ -47,10 +47,10 @@ class Hook extends Model
     /**
      * @return Project
      */
-    public function getCachedProject(): Project
+    public function getProject(): Project
     {
-        $cacheKey = sprintf('%s:%d:project', $this->getTable(), $this->getKey());
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 
-        return Cache::sear($cacheKey, fn() => $this->project);
+        return Cache::tags($tag)->sear('project', fn() => $this->project);
     }
 }

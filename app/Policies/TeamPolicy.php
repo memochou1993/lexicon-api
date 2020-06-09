@@ -44,7 +44,7 @@ class TeamPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $team->hasCachedUser($user)) {
+        if (! $team->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -77,7 +77,7 @@ class TeamPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $team->hasCachedUser($user)) {
+        if (! $team->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 
@@ -99,7 +99,7 @@ class TeamPolicy
             throw new PermissionDeniedException();
         }
 
-        if (! $team->hasCachedUser($user)) {
+        if (! $team->hasUser($user)) {
             throw new UserNotInTeamException();
         }
 

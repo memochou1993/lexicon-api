@@ -8,7 +8,6 @@ use App\Models\Traits\HasTokens;
 use App\Models\Traits\HasUsers;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,13 +24,6 @@ use Laravel\Sanctum\NewAccessToken;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Team $team
- * @property Collection $tokens
- * @property Collection $users
- * @property Collection $owners
- * @property Collection $languages
- * @property Collection $keys
- * @property Collection $values
- * @property Collection $hooks
  */
 class Project extends Model implements AuthenticatableContract
 {
@@ -124,10 +116,10 @@ class Project extends Model implements AuthenticatableContract
     /**
      * @return Team
      */
-    public function getCachedTeam(): Team
+    public function getTeam(): Team
     {
-        $cacheKey = sprintf('%s:%d:team', $this->getTable(), $this->getKey());
+        $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 
-        return Cache::sear($cacheKey, fn() => $this->team);
+        return Cache::tags($tag)->sear('team', fn() => $this->team);
     }
 }

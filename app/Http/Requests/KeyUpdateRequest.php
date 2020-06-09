@@ -31,7 +31,7 @@ class KeyUpdateRequest extends FormRequest
         return [
             'name' => [
                 Rule::unique('keys', 'name')->where(function ($query) use ($key) {
-                    $query->where('project_id', $key->getCachedProject()->id);
+                    $query->where('project_id', $key->getProject()->id);
                 })->ignore($key->id),
             ],
         ];

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\Cache;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Project $project
- * @property Collection $values
  */
 class Key extends Model
 {
@@ -60,10 +58,10 @@ class Key extends Model
     /**
      * @return Project
      */
-    public function getCachedProject(): Project
+    public function getProject(): Project
     {
-        $cacheKey = sprintf('%s:%d:project', $this->getTable(), $this->getKey());
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 
-        return Cache::sear($cacheKey, fn() => $this->project);
+        return Cache::tags($tag)->sear('project', fn() => $this->project);
     }
 }

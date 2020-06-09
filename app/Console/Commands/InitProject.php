@@ -92,7 +92,7 @@ class InitProject extends Command
         /** @var Role $admin */
         $admin = Role::query()->where('name', config('permission.roles.admin.name'))->first();
 
-        if ($admin->users->count()) {
+        if ($admin->users()->count()) {
             return;
         }
 

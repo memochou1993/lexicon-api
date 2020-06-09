@@ -33,7 +33,7 @@ class HookUpdateRequest extends FormRequest
                 'min:1',
                 'url',
                 Rule::unique('hooks', 'url')->where(function ($query) use ($hook) {
-                    $query->where('project_id', $hook->getCachedProject()->id);
+                    $query->where('project_id', $hook->getProject()->id);
                 })->ignore($hook->id),
             ],
         ];
