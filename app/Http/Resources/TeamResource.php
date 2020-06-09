@@ -23,7 +23,7 @@ class TeamResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'owner' => $this->whenLoaded('owners', function () {
-                return new UserResource($this->owners()->first());
+                return new UserResource($this->owners->first());
             }),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'projects' => ProjectResource::collection($this->whenLoaded('projects')),

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * @property Collection $users
+ * @property Collection $owners
  */
 trait HasUsers
 {

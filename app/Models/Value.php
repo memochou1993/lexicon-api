@@ -6,12 +6,15 @@ use App\Models\Traits\HasForms;
 use App\Models\Traits\HasLanguages;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
  * @property string $text
  * @property Key $key
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class Value extends Model
 {

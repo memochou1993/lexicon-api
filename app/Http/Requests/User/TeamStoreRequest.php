@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,13 +25,16 @@ class TeamStoreRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var User $user */
+        $user = $this->user();
+
         return [
             'name' => [
                 'required',
-                Rule::unique('teams', 'name')->where(function ($query) {
+                Rule::unique('teams', 'name')->where(function ($query) use ($user) {
                     $query->whereIn(
                         'id',
-                        $this->user()->teams()->where('is_owner', true)->pluck('id')->toArray()
+                        $user->teams()->where('is_owner', true)->pluck('id')->toArray()
                     );
                 }),
             ],

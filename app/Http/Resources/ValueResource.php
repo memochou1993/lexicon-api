@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Value;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Value
+ */
 class ValueResource extends JsonResource
 {
     /**
