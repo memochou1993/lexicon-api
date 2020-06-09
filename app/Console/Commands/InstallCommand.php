@@ -7,21 +7,21 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class InitProject extends Command
+class InstallCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'project:init';
+    protected $signature = 'localize:init';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Initialize the project';
+    protected $description = 'Install the Localize server';
 
     /**
      * Create a new command instance.
@@ -106,6 +106,7 @@ class InitProject extends Command
             'email' => $email,
             'password' => $password,
         ]);
+
         $user->roles()->attach($admin);
 
         $this->info('Admin account created successfully.');
