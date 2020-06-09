@@ -39,8 +39,10 @@ class UserRoleController extends Controller
     {
         $changes = $this->userService->attachRole($user, $request->input('role_ids'));
 
+        $success = count($changes['attached']) > 0;
+
         return response()->json([
-            'success' => count($changes['attached']) > 0,
+            'success' => $success,
         ]);
     }
 
@@ -58,8 +60,10 @@ class UserRoleController extends Controller
 
         $count = $this->userService->detachRole($user, $role);
 
+        $success = $count > 0;
+
         return response()->json([
-            'success' => $count > 0,
+            'success' => $success,
         ]);
     }
 }

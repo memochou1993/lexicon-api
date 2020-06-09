@@ -57,8 +57,10 @@ class ProjectTokenController extends Controller
 
         $count = $this->projectService->destroyToken($project, $token);
 
+        $success = $count > 0;
+
         return response()->json([
-            'success' => $count > 0,
+            'success' => $success,
         ]);
     }
 }

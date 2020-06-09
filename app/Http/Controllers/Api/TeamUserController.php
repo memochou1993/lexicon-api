@@ -39,8 +39,10 @@ class TeamUserController extends Controller
     {
         $changes = $this->teamService->attachUser($team, $request->input('user_ids'));
 
+        $success = count($changes['attached']) > 0;
+
         return response()->json([
-            'success' => count($changes['attached']) > 0,
+            'success' => $success,
         ]);
     }
 
@@ -62,8 +64,10 @@ class TeamUserController extends Controller
 
         $count = $this->teamService->detachUser($team, $user);
 
+        $success = $count > 0;
+
         return response()->json([
-            'success' => $count > 0,
+            'success' => $success,
         ]);
     }
 }
