@@ -38,11 +38,9 @@ class ProjectTokenController extends Controller
 
         $token = $this->projectService->createToken($project);
 
-        $payload = [
+        return response()->json([
             'access_token' => $token,
-        ];
-
-        return response()->json($payload);
+        ]);
     }
 
     /**

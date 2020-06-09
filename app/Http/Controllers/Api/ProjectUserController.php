@@ -58,7 +58,7 @@ class ProjectUserController extends Controller
     {
         $this->authorize('update', $project);
 
-        if ($project->users->count() === 1) {
+        if ($project->getOwner()->is($user)) {
             abort(422, __('validation.in', ['attribute' => 'user']));
         }
 

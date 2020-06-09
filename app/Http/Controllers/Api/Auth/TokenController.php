@@ -44,11 +44,9 @@ class TokenController extends Controller
             throw new AuthenticationException();
         }
 
-        $payload = [
+        return response()->json([
             'access_token' => $token,
-        ];
-
-        return response()->json($payload);
+        ]);
     }
 
     /**

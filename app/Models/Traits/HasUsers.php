@@ -5,6 +5,7 @@ namespace App\Models\Traits;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property Collection $users
@@ -39,5 +40,15 @@ trait HasUsers
     public function hasUser(User $user)
     {
         return $this->users->contains($user);
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner(): User
+    {
+        $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
+
+        return Cache::tags($tag)->sear('owner', fn() => $this->owners()->first());
     }
 }
