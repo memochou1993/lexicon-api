@@ -38,6 +38,7 @@ class TeamControllerTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     [
+                        'owner',
                         'users',
                         'projects',
                         'languages',

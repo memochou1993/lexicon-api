@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Api\Client;
 
+use App\Models\Form;
 use App\Models\Key;
+use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\Value;
@@ -24,6 +26,13 @@ class ProjectControllerTest extends TestCase
         /** @var Team $team */
         $team = factory(Team::class)->create();
 
+        /** @var Language $language */
+        $language = $team->languages()->save(factory(Language::class)->make());
+
+        /** @var Form $form */
+        $form = $team->forms()->save(factory(Form::class)->make());
+        $language->forms()->attach($form);
+
         /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
@@ -31,14 +40,30 @@ class ProjectControllerTest extends TestCase
 
         /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
+
+        /** @var Value $value */
         $key->values()->save(factory(Value::class)->make());
+
+        /** @var Value $value */
+        $value = $key->values()->save(factory(Value::class)->make());
+        $value->languages()->attach($language);
+        $value->forms()->attach($form);
 
         $this->json('GET', 'api/client/project')
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
                     'languages',
-                    'keys',
+                    'keys' => [
+                        [
+                            'values' => [
+                                [
+                                    'language',
+                                    'form',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ]);
 

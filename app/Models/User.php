@@ -22,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Collection $roles
+ * @property Collection $teams
  */
 class User extends Authenticatable
 {

@@ -25,7 +25,7 @@ class TeamControllerTest extends TestCase
         $team = factory(Team::class)->create();
 
         $this->json('GET', 'api/user/teams', [
-            'relations' => 'owner,users,projects,languages,forms',
+            'relations' => 'users,projects,languages,forms',
         ])
             ->assertOk()
             ->assertJsonStructure([

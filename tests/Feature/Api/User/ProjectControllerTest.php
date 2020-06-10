@@ -31,6 +31,7 @@ class ProjectControllerTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     [
+                        'owner',
                         'users',
                         'languages',
                     ],
