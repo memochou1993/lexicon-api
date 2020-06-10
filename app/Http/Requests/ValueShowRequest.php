@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\Relations;
-use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ValueShowRequest extends FormRequest
 {
+    use HasPreparation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,11 +29,7 @@ class ValueShowRequest extends FormRequest
     {
         return [
             'relations' => [
-                new Relations([
-                    'key',
-                    'languages',
-                    'forms',
-                ]),
+                new Relations([]),
             ],
         ];
     }
@@ -43,24 +41,6 @@ class ValueShowRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->prepareRelations();
-    }
-
-    /**
-     * @return void
-     */
-    private function prepareRelations()
-    {
-        $relations = Collection::make($this->input('relations'))
-            ->explode(',')
-            ->trim()
-            ->merge([
-                'languages',
-                'forms',
-            ]);
-
-        $this->merge([
-            'relations' => $relations->toArray(),
-        ]);
+        $this->explode('relations');
     }
 }

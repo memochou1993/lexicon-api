@@ -59,4 +59,34 @@ class Value extends Model
 
         return Cache::tags($tag)->sear('project', fn() => $this->key->project);
     }
+
+    /**
+     * @return Language
+     */
+    public function getCachedLanguage(): Language
+    {
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
+
+        return Cache::tags($tag)->sear('language', fn() => $this->languages->first());
+    }
+
+    /**
+     * @return Form
+     */
+    public function getCachedForm(): Form
+    {
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
+
+        return Cache::tags($tag)->sear('form', fn() => $this->forms->first());
+    }
+
+    /**
+     * @return Key
+     */
+    public function getCachedKey(): Key
+    {
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
+
+        return Cache::tags($tag)->sear('key', fn() => $this->key);
+    }
 }
