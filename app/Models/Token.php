@@ -12,13 +12,6 @@ use Laravel\Sanctum\PersonalAccessToken;
 class Token extends PersonalAccessToken
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'model_has_tokens';
-
-    /**
      * Get the model that the token belongs to.
      *
      * @return MorphTo
