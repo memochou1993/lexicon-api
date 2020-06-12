@@ -23,5 +23,8 @@ class ModelHasUserSeeder extends Seeder
         app(ProjectSeeder::class)->projects->each(function ($project) use ($users) {
             $project->users()->saveMany($users);
         });
+
+        $users->first()->teams()->update(['is_owner' => true]);
+        $users->first()->projects()->update(['is_owner' => true]);
     }
 }
