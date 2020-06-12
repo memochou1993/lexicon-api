@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 

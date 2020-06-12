@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\User;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 

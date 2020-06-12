@@ -5,7 +5,6 @@ namespace Tests\Feature\Api;
 use App\Enums\PermissionType;
 use App\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
