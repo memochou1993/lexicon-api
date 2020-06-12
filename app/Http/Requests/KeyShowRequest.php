@@ -28,7 +28,6 @@ class KeyShowRequest extends FormRequest
         return [
             'relations' => [
                 new Relations([
-                    'project',
                     'values',
                     'values.languages',
                     'values.forms',

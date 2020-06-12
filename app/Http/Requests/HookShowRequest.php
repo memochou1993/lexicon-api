@@ -29,9 +29,7 @@ class HookShowRequest extends FormRequest
     {
         return [
             'relations' => [
-                new Relations([
-                    'project',
-                ]),
+                new Relations([]),
             ],
         ];
     }

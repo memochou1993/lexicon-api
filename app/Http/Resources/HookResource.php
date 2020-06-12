@@ -22,7 +22,8 @@ class HookResource extends JsonResource
         return [
             'id' => $this->id,
             'url' => $this->url,
-            'project' => new ProjectResource($this->whenLoaded('project')),
+            'events' => $this->events,
+            'project' => new ProjectResource($this->getProject()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

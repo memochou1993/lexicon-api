@@ -99,7 +99,7 @@ class HookControllerTest extends TestCase
         $hook = $project->hooks()->save(factory(Hook::class)->make());
 
         $this->json('GET', 'api/hooks/'.$hook->id, [
-            'relations' => 'project',
+            'relations' => '',
         ])
             ->assertOk()
             ->assertJsonStructure([

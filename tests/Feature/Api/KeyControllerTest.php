@@ -131,7 +131,7 @@ class KeyControllerTest extends TestCase
         $key = $project->keys()->save(factory(Key::class)->make());
 
         $this->json('GET', 'api/keys/'.$key->id, [
-            'relations' => 'project,values',
+            'relations' => 'values',
         ])
             ->assertOk()
             ->assertJsonStructure([
