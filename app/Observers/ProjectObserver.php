@@ -20,7 +20,7 @@ class ProjectObserver
 
         $project->setting()->create([
             'settings' => [
-                'secret_key' => Str::random(40),
+                'api_key' => Str::random(40),
             ],
         ]);
     }

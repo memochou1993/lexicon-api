@@ -21,9 +21,9 @@ class VerifyClient
         /** @var Project $project */
         $project = $request->route('project');
 
-        $secretKey = $project->getSetting('secret_key');
+        $apiKey = $project->getSetting('api_key');
 
-        if (! ($request->header('X-Localize-Secret-Key') === $secretKey)) {
+        if (! ($request->header('X-Localize-API-Key') === $apiKey)) {
             throw new AuthenticationException();
         }
 

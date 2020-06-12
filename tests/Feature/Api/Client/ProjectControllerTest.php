@@ -47,7 +47,7 @@ class ProjectControllerTest extends TestCase
         $value->forms()->attach($form);
 
         $this->withHeaders([
-            'X-Localize-Secret-Key' => $project->getSetting('secret_key'),
+            'X-Localize-API-Key' => $project->getSetting('api_key'),
         ])
             ->json('GET', 'api/client/projects/'.$project->id)
             ->assertOk()
