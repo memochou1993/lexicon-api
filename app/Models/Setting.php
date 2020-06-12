@@ -2,27 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
  * @property array $settings
  */
-class Setting extends Pivot
+class Setting extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    public $table = 'settings';
-
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'settings',
+    ];
 
     /**
      * The attributes that should be cast.
