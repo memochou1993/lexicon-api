@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasForms;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasUsers;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Collection $projects
  */
 class Team extends Model
 {

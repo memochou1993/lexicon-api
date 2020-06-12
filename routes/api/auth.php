@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
-    'token:user',
     'auth:sanctum',
 ])->group(function () {
     Route::delete('tokens', 'TokenController@destroy');

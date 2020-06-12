@@ -64,10 +64,7 @@ class ProjectControllerTest extends TestCase
         $data = factory(Project::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data,
-            ]);
+            ->assertCreated();
 
         $this->assertCount(1, $team->refresh()->projects);
     }
@@ -117,7 +114,7 @@ class ProjectControllerTest extends TestCase
         $project = $team->projects()->save(factory(Project::class)->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
-            'relations' => 'team,users,languages,tokens,hooks',
+            'relations' => 'team,users,languages,hooks',
         ])
             ->assertOk()
             ->assertJsonStructure([
@@ -126,7 +123,6 @@ class ProjectControllerTest extends TestCase
                     'team',
                     'users',
                     'languages',
-                    'tokens',
                     'hooks',
                 ],
             ])
@@ -157,10 +153,7 @@ class ProjectControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/projects/'.$project->id, $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
+            ->assertOk();
 
         $this->assertDatabaseHas('projects', $data);
     }

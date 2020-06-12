@@ -11,7 +11,6 @@ use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ProjectControllerTest extends TestCase
@@ -36,8 +35,6 @@ class ProjectControllerTest extends TestCase
         /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        Sanctum::actingAs($project);
-
         /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
 
@@ -49,7 +46,10 @@ class ProjectControllerTest extends TestCase
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
-        $this->json('GET', 'api/client/project')
+        $this->withHeaders([
+            'X-Localize-Secret-Key' => $project->getSetting('secret_key'),
+        ])
+            ->json('GET', 'api/client/projects/'.$project->id)
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -68,5 +68,20 @@ class ProjectControllerTest extends TestCase
             ]);
 
         $this->assertTrue(Cache::has($project->cacheKey()));
+    }
+
+    /**
+     * @return void
+     */
+    public function testUnauthorized()
+    {
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('GET', 'api/client/projects/'.$project->id)
+            ->assertUnauthorized();
     }
 }

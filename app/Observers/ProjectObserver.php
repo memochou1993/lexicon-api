@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ProjectObserver
 {
@@ -16,6 +17,12 @@ class ProjectObserver
     public function created(Project $project)
     {
         $project->users()->attach(Auth::user(), ['is_owner' => true]);
+
+        $project->setting()->create([
+            'settings' => [
+                'secret_key' => Str::random(40),
+            ],
+        ]);
     }
 
     /**

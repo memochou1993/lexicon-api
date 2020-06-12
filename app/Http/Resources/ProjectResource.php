@@ -30,6 +30,7 @@ class ProjectResource extends JsonResource
             'values' => ValueResource::collection($this->whenLoaded('values')),
             'tokens' => TokenResource::collection($this->whenLoaded('tokens')),
             'hooks' => HookResource::collection($this->whenLoaded('hooks')),
+            'setting' => new SettingResource($this->whenLoaded('setting')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -7,7 +7,6 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Cache;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ProjectCacheControllerTest extends TestCase
@@ -25,14 +24,30 @@ class ProjectCacheControllerTest extends TestCase
         /** @var Project $project */
         $project = $team->projects()->save(factory(Project::class)->make());
 
-        Sanctum::actingAs($project);
-
         Cache::shouldReceive('forget')->once()->andReturn(true);
 
-        $this->json('DELETE', 'api/client/project/cache')
+        $this->withHeaders([
+            'X-Localize-Secret-Key' => $project->getSetting('secret_key'),
+        ])
+            ->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
             ->assertOk()
             ->assertJson([
                 'success' => true,
             ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUnauthorized()
+    {
+        /** @var Team $team */
+        $team = factory(Team::class)->create();
+
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
+        $this->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
+            ->assertUnauthorized();
     }
 }

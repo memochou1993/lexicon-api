@@ -4,19 +4,15 @@ namespace App\Models;
 
 use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
-use App\Models\Traits\HasTokens;
+use App\Models\Traits\HasSetting;
 use App\Models\Traits\HasUsers;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\NewAccessToken;
 
 /**
  * @property int $id
@@ -24,16 +20,14 @@ use Laravel\Sanctum\NewAccessToken;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Team $team
+ * @property Setting $setting
  */
-class Project extends Model implements AuthenticatableContract
+class Project extends Model
 {
-    use Authenticatable;
-    use HasApiTokens, HasTokens {
-        HasTokens::tokens insteadof HasApiTokens;
-    }
     use HasCache;
     use HasUsers;
     use HasLanguages;
+    use HasSetting;
 
     /**
      * The attributes that are mass assignable.
@@ -42,7 +36,6 @@ class Project extends Model implements AuthenticatableContract
      */
     protected $fillable = [
         'name',
-        'api_keys',
     ];
 
     /**
@@ -95,25 +88,6 @@ class Project extends Model implements AuthenticatableContract
     }
 
     /**
-     * Create a new personal access token for the user.
-     *
-     * @param  string  $name
-     * @param  array  $abilities
-     * @return NewAccessToken
-     */
-    public function createToken(string $name, array $abilities = ['*'])
-    {
-        /** @var Token $token */
-        $token = $this->tokens()->create([
-            'name' => $name,
-            'token' => hash('sha256', $plainTextToken = Str::random(40)),
-            'abilities' => $abilities,
-        ]);
-
-        return new NewAccessToken($token, $plainTextToken);
-    }
-
-    /**
      * @return Team
      */
     public function getTeam(): Team
@@ -121,5 +95,14 @@ class Project extends Model implements AuthenticatableContract
         $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 
         return Cache::tags($tag)->sear('team', fn() => $this->team);
+    }
+
+    /**
+     * @param  string  $key
+     * @return string|null
+     */
+    public function getSetting(string $key): ?string
+    {
+        return Arr::get($this->setting->settings, $key);
     }
 }

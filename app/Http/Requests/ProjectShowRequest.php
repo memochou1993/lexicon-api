@@ -35,6 +35,7 @@ class ProjectShowRequest extends FormRequest
                     'languages',
                     'tokens',
                     'hooks',
+                    'setting',
                 ]),
             ],
         ];
