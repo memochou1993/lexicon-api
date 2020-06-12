@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -95,14 +94,5 @@ class Project extends Model
         $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 
         return Cache::tags($tag)->sear('team', fn() => $this->team);
-    }
-
-    /**
-     * @param  string  $key
-     * @return string|null
-     */
-    public function getSetting(string $key): ?string
-    {
-        return Arr::get($this->setting->settings, $key);
     }
 }
