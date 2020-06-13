@@ -16,7 +16,7 @@ class CreateHooksTable extends Migration
         Schema::create('hooks', function (Blueprint $table) {
             $table->id();
             $table->string('url');
-            // $table->text('events')->nullable(); // TODO
+            $table->json('events')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

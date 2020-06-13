@@ -6,6 +6,7 @@ use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasSetting;
 use App\Models\Traits\HasUsers;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Cache;
  * @property Carbon $updated_at
  * @property Team $team
  * @property Setting $setting
+ * @property Collection $hooks
  */
 class Project extends Model
 {

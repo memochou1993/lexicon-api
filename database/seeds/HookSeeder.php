@@ -9,7 +9,7 @@ class HookSeeder extends Seeder
 {
     use HasStaticAttributes;
 
-    public const AMOUNT = 2;
+    public const AMOUNT = 1;
 
     /**
      * Run the database seeds.

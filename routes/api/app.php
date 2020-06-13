@@ -35,7 +35,6 @@ Route::middleware([
         'teams.users' => 'TeamUserController',
         'projects.users' => 'ProjectUserController',
         'projects.languages' => 'ProjectLanguageController',
-        'projects.tokens' => 'ProjectTokenController',
     ], [
         'only' => [
             'store',

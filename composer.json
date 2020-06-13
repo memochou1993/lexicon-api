@@ -21,7 +21,7 @@
         "laravel/framework": "^7.0",
         "laravel/sanctum": "^2.2",
         "laravel/tinker": "^2.0",
-        "memochou1993/localize-client-laravel": "dev-master"
+        "memochou1993/localize-client-laravel": "v0.2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
