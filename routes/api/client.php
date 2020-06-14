@@ -8,6 +8,6 @@ Route::middleware([
     Route::prefix('projects/{project}')->group(function () {
         Route::get('/', 'ProjectController@show');
         Route::delete('cache', 'ProjectCacheController@destroy');
-        Route::post('dispatch', 'EventController@index');
+        Route::post('events/dispatch', 'EventController@index');
     });
 });
