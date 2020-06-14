@@ -25,9 +25,10 @@ class ProjectCacheControllerTest extends TestCase
 
         Cache::shouldReceive('forget')->once()->andReturn(true);
 
-        $this->withHeaders([
-            'X-Localize-API-Key' => $project->getSetting('api_key'),
-        ])
+        $this
+            ->withHeaders([
+                'X-Localize-API-Key' => $project->getSetting('api_key'),
+            ])
             ->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
             ->assertOk()
             ->assertJson([
