@@ -35,7 +35,9 @@ class ProjectController extends Controller
      */
     public function show(ProjectShowRequest $request, Project $project)
     {
-        $project = $this->projectService->getCached($project, $request);
+        $project = $request->input('cached')
+            ? $this->projectService->getCached($project, $request)
+            : $this->projectService->get($project, $request);
 
         return new Resource($project);
     }
