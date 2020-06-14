@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Language;
 use App\Models\Project;
 use App\Models\Team;
-use App\Models\Token;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -53,16 +52,15 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  Request  $request
-     * @param  mixed  $ttl
      * @return Model|Project
      */
-    public function getCached(Project $project, Request $request, $ttl = null): Project
+    public function getCached(Project $project, Request $request): Project
     {
         $callback = function () use ($project, $request) {
             return $this->get($project, $request);
         };
 
-        return $project->remember($callback, $ttl);
+        return $project->remember($callback);
     }
 
     /**
@@ -192,24 +190,5 @@ class ProjectService
         return $project->values()->whereHas('languages', function ($query) use ($language_ids) {
             $query->whereIn('language_id', $language_ids);
         })->delete();
-    }
-
-    /**
-     * @param  Project  $project
-     * @return string
-     */
-    public function createToken(Project $project): string
-    {
-        return $project->createToken('')->plainTextToken;
-    }
-
-    /**
-     * @param  Project  $project
-     * @param  Token  $token
-     * @return int
-     */
-    public function destroyToken(Project $project, Token $token): int
-    {
-        return $project->tokens()->where('id', $token->id)->delete();
     }
 }
