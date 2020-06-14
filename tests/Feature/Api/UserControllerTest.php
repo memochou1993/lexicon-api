@@ -92,13 +92,10 @@ class UserControllerTest extends TestCase
         $data = factory(User::class)->make([
             'name' => 'New User',
             'role_ids' => $role->id,
-        ]);
+        ])->toArray();
 
-        $this->json('PATCH', 'api/users/'.$user->id, $data->toArray())
-            ->assertOk()
-            ->assertJson([
-                'data' => $data->makeHidden('role_ids')->toArray(),
-            ]);
+        $this->json('PATCH', 'api/users/'.$user->id, $data)
+            ->assertOk();
 
         $this->assertCount(1, $user->refresh()->roles);
     }

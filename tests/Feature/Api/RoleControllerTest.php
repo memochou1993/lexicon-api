@@ -55,15 +55,10 @@ class RoleControllerTest extends TestCase
 
         $data = factory(Role::class)->make([
             'permission_ids' => $permission->id,
-        ]);
+        ])->toArray();
 
-        $response = $this->json('POST', 'api/roles', $data->toArray())
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data->makeHidden('permission_ids')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('roles', $data->toArray());
+        $response = $this->json('POST', 'api/roles', $data)
+            ->assertCreated();
 
         /** @var Role $role */
         $role = Role::query()->find(json_decode($response->getContent())->data->id);
@@ -140,15 +135,10 @@ class RoleControllerTest extends TestCase
         $data = factory(Role::class)->make([
             'name' => 'New Role',
             'permission_ids' => $permission->id,
-        ]);
+        ])->toArray();
 
-        $this->json('PATCH', 'api/roles/'.$role->id, $data->toArray())
-            ->assertOk()
-            ->assertJson([
-                'data' => $data->makeHidden('permission_ids')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('roles', $data->toArray());
+        $this->json('PATCH', 'api/roles/'.$role->id, $data)
+            ->assertOk();
 
         $this->assertCount(1, $role->refresh()->permissions);
     }

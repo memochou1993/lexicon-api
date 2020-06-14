@@ -38,15 +38,10 @@ class LanguageControllerTest extends TestCase
 
         $data = factory(Language::class)->make([
             'form_ids' => $form->id,
-        ]);
+        ])->toArray();
 
-        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data->toArray())
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data->makeHidden('form_ids')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('languages', $data->toArray());
+        $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
+            ->assertCreated();
 
         $this->assertCount(1, $team->refresh()->languages);
 
@@ -135,15 +130,10 @@ class LanguageControllerTest extends TestCase
         $data = factory(Language::class)->make([
             'name' => 'New Language',
             'form_ids' => $form->id,
-        ]);
+        ])->toArray();
 
-        $this->json('PATCH', 'api/languages/'.$language->id, $data->toArray())
-            ->assertOk()
-            ->assertJson([
-                'data' => $data->makeHidden('form_ids')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('languages', $data->toArray());
+        $this->json('PATCH', 'api/languages/'.$language->id, $data)
+            ->assertOk();
 
         $this->assertCount(1, $language->refresh()->forms);
     }

@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Cache;
  * @property Carbon $updated_at
  * @property Team $team
  * @property Setting $setting
+ * @property Collection $keys
  * @property Collection $hooks
+ * @property Collection $values
  */
 class Project extends Model
 {

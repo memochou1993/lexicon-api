@@ -56,12 +56,7 @@ class TeamControllerTest extends TestCase
         $data = factory(Team::class)->make()->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('teams', $data);
+            ->assertCreated();
 
         $this->assertCount(1, $user->refresh()->teams);
     }

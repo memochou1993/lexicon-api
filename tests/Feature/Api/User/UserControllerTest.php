@@ -54,10 +54,7 @@ class UserControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/user', $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
+            ->assertOk();
     }
 
     /**

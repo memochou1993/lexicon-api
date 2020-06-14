@@ -153,8 +153,6 @@ class ProjectControllerTest extends TestCase
 
         $this->json('PATCH', 'api/projects/'.$project->id, $data)
             ->assertOk();
-
-        $this->assertDatabaseHas('projects', $data);
     }
 
     /**

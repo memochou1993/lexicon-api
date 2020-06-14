@@ -51,12 +51,7 @@ class ValueControllerTest extends TestCase
         ]);
 
         $this->json('POST', 'api/keys/'.$key->id.'/values', $value->toArray())
-            ->assertCreated()
-            ->assertJson([
-                'data' => $value->makeHidden('language_id', 'form_id')->toArray(),
-            ]);
-
-        $this->assertDatabaseHas('values', $value->toArray());
+            ->assertCreated();
 
         $this->assertCount(1, $key->refresh()->values);
     }
@@ -144,12 +139,7 @@ class ValueControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/values/'.$value->id, $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('values', $data);
+            ->assertOk();
 
         $this->assertCount(1, $key->refresh()->values);
     }

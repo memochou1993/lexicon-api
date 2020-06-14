@@ -69,12 +69,7 @@ class KeyControllerTest extends TestCase
         $data = factory(Key::class)->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('keys', $data);
+            ->assertCreated();
 
         $this->assertCount(1, $project->refresh()->keys);
     }
@@ -167,12 +162,7 @@ class KeyControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/keys/'.$key->id, $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('keys', $data);
+            ->assertOk();
     }
 
     /**

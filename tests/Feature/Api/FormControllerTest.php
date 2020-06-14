@@ -36,12 +36,7 @@ class FormControllerTest extends TestCase
         $data = factory(Form::class)->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('forms', $data);
+            ->assertCreated();
 
         $this->assertCount(1, $team->refresh()->forms);
     }
@@ -122,12 +117,7 @@ class FormControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/forms/'.$form->id, $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('forms', $data);
+            ->assertOk();
     }
 
     /**

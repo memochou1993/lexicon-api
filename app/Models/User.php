@@ -21,6 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Collection $tokens
  * @property Collection $roles
  * @property Collection $teams
  */

@@ -18,13 +18,10 @@ class UserControllerTest extends TestCase
     {
         $data = factory(User::class)->make([
             'email_verified_at' => null,
-        ])->makeVisible('password');
+        ])->makeVisible('password')->toArray();
 
-        $this->json('POST', 'api/auth/users', $data->toArray())
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data->makeHidden('password')->toArray(),
-            ]);
+        $this->json('POST', 'api/auth/users', $data)
+            ->assertCreated();
     }
 
     /**
@@ -38,9 +35,9 @@ class UserControllerTest extends TestCase
 
         $data = factory(User::class)->make([
             'email' => 'unique@email.com',
-        ])->makeVisible('password');
+        ])->makeVisible('password')->toArray();
 
-        $this->json('POST', 'api/auth/users', $data->toArray())
+        $this->json('POST', 'api/auth/users', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'email',

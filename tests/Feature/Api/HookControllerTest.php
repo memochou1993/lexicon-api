@@ -36,12 +36,7 @@ class HookControllerTest extends TestCase
         $data = factory(Hook::class)->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/hooks', $data)
-            ->assertCreated()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('hooks', $data);
+            ->assertCreated();
 
         $this->assertCount(1, $project->refresh()->hooks);
     }
@@ -135,12 +130,7 @@ class HookControllerTest extends TestCase
         ])->toArray();
 
         $this->json('PATCH', 'api/hooks/'.$hook->id, $data)
-            ->assertOk()
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('hooks', $data);
+            ->assertOk();
     }
 
     /**

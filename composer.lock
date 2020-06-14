@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c61235e1efa591038b914beb5c64b1e",
+    "content-hash": "272d3b7ac67d4972487b2d7f7982d7e6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1136,16 +1136,16 @@
         },
         {
             "name": "memochou1993/localize-client-laravel",
-            "version": "v0.2.0",
+            "version": "v0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/memochou1993/localize-client-laravel.git",
-                "reference": "786794eaf5e1b87ecf96f4481c099981c1532baf"
+                "reference": "8a559e0d2547c0facc310a8de74ea6cf174fb274"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/memochou1993/localize-client-laravel/zipball/786794eaf5e1b87ecf96f4481c099981c1532baf",
-                "reference": "786794eaf5e1b87ecf96f4481c099981c1532baf",
+                "url": "https://api.github.com/repos/memochou1993/localize-client-laravel/zipball/8a559e0d2547c0facc310a8de74ea6cf174fb274",
+                "reference": "8a559e0d2547c0facc310a8de74ea6cf174fb274",
                 "shasum": ""
             },
             "require": {
@@ -1192,7 +1192,7 @@
             "keywords": [
                 "localization"
             ],
-            "time": "2020-06-13T06:10:00+00:00"
+            "time": "2020-06-13T19:16:27+00:00"
         },
         {
             "name": "memochou1993/localize-client-php",
