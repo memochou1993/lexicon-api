@@ -42,7 +42,7 @@ class Key extends Model
      *
      * @return BelongsTo
      */
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
@@ -52,7 +52,7 @@ class Key extends Model
      *
      * @return HasMany
      */
-    public function values()
+    public function values(): HasMany
     {
         return $this->hasMany(Value::class);
     }

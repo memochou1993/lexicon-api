@@ -77,7 +77,7 @@ class User extends Authenticatable
      *
      * @return BelongsToMany
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
@@ -87,7 +87,7 @@ class User extends Authenticatable
      *
      * @return MorphToMany
      */
-    public function teams()
+    public function teams(): MorphToMany
     {
         return $this->morphedByMany(Team::class, 'model', 'model_has_users')
             ->withPivot([
@@ -100,7 +100,7 @@ class User extends Authenticatable
      *
      * @return MorphToMany
      */
-    public function projects()
+    public function projects(): MorphToMany
     {
         return $this->morphedByMany(Project::class, 'model', 'model_has_users')
             ->withPivot([
@@ -114,7 +114,7 @@ class User extends Authenticatable
      * @param  Role|array|string  $roles
      * @return bool
      */
-    public function hasRole(...$roles)
+    public function hasRole(...$roles): bool
     {
         return collect($roles)
             ->flatten()
@@ -133,7 +133,7 @@ class User extends Authenticatable
      * @param  Permission|array|string  $permissions
      * @return bool
      */
-    public function hasPermission(...$permissions)
+    public function hasPermission(...$permissions): bool
     {
         return collect($permissions)
             ->flatten()

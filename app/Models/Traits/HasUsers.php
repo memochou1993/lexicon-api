@@ -24,9 +24,11 @@ trait HasUsers
     }
 
     /**
+     * Get all of the owners for the model.
+     *
      * @return MorphToMany
      */
-    public function owners()
+    public function owners(): MorphToMany
     {
         return $this->users()->where('is_owner', true);
     }
@@ -37,7 +39,7 @@ trait HasUsers
      * @param  User  $user
      * @return bool
      */
-    public function hasUser(User $user)
+    public function hasUser(User $user): bool
     {
         return $this->users->contains($user);
     }

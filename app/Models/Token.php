@@ -16,7 +16,7 @@ class Token extends PersonalAccessToken
      *
      * @return MorphTo
      */
-    public function model()
+    public function model(): MorphTo
     {
         return $this->morphTo('model');
     }

@@ -12,7 +12,7 @@ trait HasTokens
      *
      * @return MorphMany
      */
-    public function tokens()
+    public function tokens(): MorphMany
     {
         return $this->morphMany(Token::class, 'model');
     }

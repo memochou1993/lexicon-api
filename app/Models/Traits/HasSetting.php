@@ -3,7 +3,7 @@
 namespace App\Models\Traits;
 
 use App\Models\Setting;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Arr;
 
 trait HasSetting
@@ -11,9 +11,9 @@ trait HasSetting
     /**
      * Get the model's setting.
      *
-     * @return MorphMany
+     * @return MorphOne
      */
-    public function setting()
+    public function setting(): MorphOne
     {
         return $this->morphOne(Setting::class, 'model');
     }

@@ -55,7 +55,7 @@ class Project extends Model
      *
      * @return BelongsTo
      */
-    public function team()
+    public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
@@ -65,7 +65,7 @@ class Project extends Model
      *
      * @return HasMany
      */
-    public function keys()
+    public function keys(): HasMany
     {
         return $this->hasMany(Key::class);
     }
@@ -75,7 +75,7 @@ class Project extends Model
      *
      * @return HasManyThrough
      */
-    public function values()
+    public function values(): HasManyThrough
     {
         return $this->hasManyThrough(Value::class, Key::class);
     }
@@ -85,7 +85,7 @@ class Project extends Model
      *
      * @return HasMany
      */
-    public function hooks()
+    public function hooks(): HasMany
     {
         return $this->hasMany(Hook::class);
     }

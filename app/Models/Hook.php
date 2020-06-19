@@ -49,7 +49,7 @@ class Hook extends Model
      *
      * @return BelongsTo
      */
-    public function project()
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }

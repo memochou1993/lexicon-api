@@ -45,7 +45,7 @@ class Value extends Model
      *
      * @return BelongsTo
      */
-    public function key()
+    public function key(): BelongsTo
     {
         return $this->belongsTo(Key::class);
     }

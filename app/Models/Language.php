@@ -38,7 +38,7 @@ class Language extends Model
      *
      * @return MorphToMany
      */
-    public function teams()
+    public function teams(): MorphToMany
     {
         return $this->morphedByMany(Team::class, 'model', 'model_has_languages');
     }
@@ -48,7 +48,7 @@ class Language extends Model
      *
      * @return MorphToMany
      */
-    public function values()
+    public function values(): MorphToMany
     {
         return $this->morphedByMany(Value::class, 'model', 'model_has_languages');
     }
