@@ -23,7 +23,7 @@ class VerifyClient
 
         $apiKey = $project->getSetting('api_key');
 
-        if (! ($request->header('X-Localize-API-Key') === $apiKey)) {
+        if (! ($request->header('X-Lexicon-API-Key') === $apiKey)) {
             throw new AuthenticationException();
         }
 

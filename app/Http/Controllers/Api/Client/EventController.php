@@ -39,7 +39,7 @@ class EventController extends Controller
         $project->hooks->each(function (/** @var Hook $hook */ $hook) use ($project) {
             Http::retry(3, 500)
                 ->withHeaders([
-                    'X-Localize-API-Key' => $project->getSetting('api_key'),
+                    'X-Lexicon-API-Key' => $project->getSetting('api_key'),
                 ])
                 ->post($hook->url, [
                     'events' => $hook->events,

@@ -11,7 +11,7 @@ $factory->define(Hook::class, function (Faker $faker) {
     $index++;
 
     return [
-        'url' => config('app.url').'/api/'.config('localize.path'),
+        'url' => config('app.url').'/api/'.config('lexicon.path'),
         'events' => [
             'sync',
         ],

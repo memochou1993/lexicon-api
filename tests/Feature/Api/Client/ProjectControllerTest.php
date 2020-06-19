@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\Value;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class ProjectControllerTest extends TestCase
@@ -47,7 +46,7 @@ class ProjectControllerTest extends TestCase
 
         $this
             ->withHeaders([
-                'X-Localize-API-Key' => $project->getSetting('api_key'),
+                'X-Lexicon-API-Key' => $project->getSetting('api_key'),
             ])
             ->json('GET', 'api/client/projects/'.$project->id)
             ->assertOk()
@@ -66,8 +65,6 @@ class ProjectControllerTest extends TestCase
                     ],
                 ],
             ]);
-
-        $this->assertTrue(Cache::has($project->cacheKey()));
     }
 
     /**

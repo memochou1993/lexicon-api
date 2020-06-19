@@ -14,14 +14,14 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'localize:init';
+    protected $signature = 'lexicon:init';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install the Localize server';
+    protected $description = 'Install the Lexicon server';
 
     /**
      * Create a new command instance.
@@ -97,7 +97,7 @@ class InstallCommand extends Command
         }
 
         $name = $this->ask('Enter admin name', 'Admin');
-        $email = $this->ask('Enter admin email address', 'admin@localize.com');
+        $email = $this->ask('Enter admin email address', 'admin@lexicon.com');
         $password = $this->askForPassword();
 
         /** @var User $user */
