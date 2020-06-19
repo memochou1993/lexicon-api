@@ -34,7 +34,7 @@ class Language extends Model
     ];
 
     /**
-     * Get all of the teams that are assigned this languages.
+     * Get all of the teams that are assigned this language.
      *
      * @return MorphToMany
      */
@@ -44,7 +44,7 @@ class Language extends Model
     }
 
     /**
-     * Get all of the values that are assigned this languages.
+     * Get all of the values that are assigned this language.
      *
      * @return MorphToMany
      */
