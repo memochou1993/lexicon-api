@@ -158,16 +158,16 @@ class FormControllerTest extends TestCase
         /** @var Team $team */
         $team = factory(Team::class)->create();
 
+        /** @var Project $project */
+        $project = $team->projects()->save(factory(Project::class)->make());
+
         /** @var Language $language */
         $language = $team->languages()->save(factory(Language::class)->make());
+        $project->languages()->attach($language);
 
         /** @var Form $form */
         $form = $team->forms()->save(factory(Form::class)->make());
         $language->forms()->attach($form);
-
-        /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->languages()->attach($language);
 
         /** @var Key $key */
         $key = $project->keys()->save(factory(Key::class)->make());
