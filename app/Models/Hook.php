@@ -57,7 +57,7 @@ class Hook extends Model
     /**
      * @return Project
      */
-    public function getProject(): Project
+    public function getCachedProject(): Project
     {
         $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 

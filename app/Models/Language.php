@@ -56,7 +56,7 @@ class Language extends Model
     /**
      * @return Team
      */
-    public function getTeam(): Team
+    public function getCachedTeam(): Team
     {
         $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 

@@ -22,7 +22,7 @@ class ProjectResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'owner' => new UserResource($this->getOwner()),
+            'owner' => new UserResource($this->getCachedOwner()),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'team' => new TeamResource($this->whenLoaded('team')),
             'languages' => LanguageResource::collection($this->whenLoaded('languages')),

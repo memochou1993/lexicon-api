@@ -31,7 +31,7 @@ class ProjectUpdateRequest extends FormRequest
         return [
             'name' => [
                 Rule::unique('projects', 'name')->where(function ($query) use ($project) {
-                    $query->where('team_id', $project->getTeam()->id);
+                    $query->where('team_id', $project->getCachedTeam()->id);
                 })->ignore($project->id),
             ],
         ];

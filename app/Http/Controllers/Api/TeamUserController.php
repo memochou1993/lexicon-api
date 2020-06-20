@@ -58,7 +58,7 @@ class TeamUserController extends Controller
     {
         $this->authorize('update', $team);
 
-        if ($team->getOwner()->is($user)) {
+        if ($team->getCachedOwner()->is($user)) {
             abort(422, __('validation.in', ['attribute' => 'user']));
         }
 

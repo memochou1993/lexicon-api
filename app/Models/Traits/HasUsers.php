@@ -47,7 +47,7 @@ trait HasUsers
     /**
      * @return User
      */
-    public function getOwner(): User
+    public function getCachedOwner(): User
     {
         $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 

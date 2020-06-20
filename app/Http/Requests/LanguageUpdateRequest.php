@@ -36,7 +36,7 @@ class LanguageUpdateRequest extends FormRequest
                 Rule::unique('languages', 'name')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $language->getTeam()->languages->pluck('id')->toArray()
+                        $language->getCachedTeam()->languages->pluck('id')->toArray()
                     );
                 })->ignore($language->id),
             ],
@@ -45,7 +45,7 @@ class LanguageUpdateRequest extends FormRequest
                 Rule::exists('forms', 'id')->where(function ($query) use ($language) {
                     $query->whereIn(
                         'id',
-                        $language->getTeam()->forms->pluck('id')->toArray()
+                        $language->getCachedTeam()->forms->pluck('id')->toArray()
                     );
                 }),
             ],

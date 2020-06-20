@@ -93,7 +93,7 @@ class Project extends Model
     /**
      * @return Team
      */
-    public function getTeam(): Team
+    public function getCachedTeam(): Team
     {
         $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
 

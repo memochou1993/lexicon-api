@@ -22,7 +22,7 @@ class TeamResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'owner' => new UserResource($this->getOwner()),
+            'owner' => new UserResource($this->getCachedOwner()),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'projects' => ProjectResource::collection($this->whenLoaded('projects')),
             'languages' => LanguageResource::collection($this->whenLoaded('languages')),
