@@ -40,7 +40,7 @@ class Relations implements Rule
      */
     public function message()
     {
-        return __('validation.relations', [
+        return trans_choice('validation.relations', count($this->values), [
             'values' => implode(', ', $this->values),
         ]);
     }

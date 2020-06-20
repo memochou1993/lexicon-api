@@ -138,7 +138,7 @@ return [
         ],
     ],
 
-    'relations' => 'Invalid relations. Valid relations: :values.',
+    'relations' => '[0]No available relations.|[1]Invalid relations. Valid relations: :values.',
 
     /*
     |--------------------------------------------------------------------------
