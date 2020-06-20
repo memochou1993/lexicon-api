@@ -93,7 +93,6 @@ class ValueControllerTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    'key',
                     'language',
                     'form',
                 ],

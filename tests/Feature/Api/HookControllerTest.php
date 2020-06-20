@@ -96,11 +96,6 @@ class HookControllerTest extends TestCase
             'relations' => '',
         ])
             ->assertOk()
-            ->assertJsonStructure([
-                'data' => [
-                    'project',
-                ],
-            ])
             ->assertJson([
                 'data' => $hook->toArray(),
             ]);

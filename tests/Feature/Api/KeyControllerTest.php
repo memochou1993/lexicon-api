@@ -130,7 +130,6 @@ class KeyControllerTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    'project',
                     'values',
                 ],
             ])

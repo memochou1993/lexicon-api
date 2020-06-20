@@ -22,7 +22,7 @@ class ValueResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
-            'key' => new KeyResource($this->getCachedKey()),
+            'key' => new KeyResource($this->whenLoaded('key')),
             'language' => new LanguageResource($this->getCachedLanguage()),
             'form' => new FormResource($this->getCachedForm()),
             'created_at' => $this->created_at,
