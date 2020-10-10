@@ -1,3 +1,0 @@
-[submodule "resources/js"]
-	path = resources/js
-	url = git@github.com:memochou1993/lexicon-client.git
