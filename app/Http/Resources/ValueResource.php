@@ -23,8 +23,12 @@ class ValueResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'key' => new KeyResource($this->whenLoaded('key')),
-            'language' => new LanguageResource($this->getCachedLanguage()),
-            'form' => new FormResource($this->getCachedForm()),
+            'language' => $this->whenLoaded('languages', function () {
+                return new LanguageResource($this->languages->first());
+            }),
+            'form' => $this->whenLoaded('forms', function () {
+                return new FormResource($this->forms->first());
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
