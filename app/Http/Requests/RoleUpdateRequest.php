@@ -34,7 +34,8 @@ class RoleUpdateRequest extends FormRequest
         return [
             'name' => [
                 'min:1',
-                Rule::unique('roles', 'name')->ignore($role->id),
+                Rule::unique('roles', 'name')
+                    ->ignore($role->id),
             ],
             'permission_ids' => [
                 'array',

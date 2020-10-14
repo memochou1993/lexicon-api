@@ -34,9 +34,8 @@ class ProjectStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('projects', 'name')->where(function ($query) use ($team) {
-                    $query->where('team_id', $team->id);
-                }),
+                Rule::unique('projects', 'name')
+                    ->where('team_id', $team->id),
             ],
         ];
     }

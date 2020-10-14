@@ -34,9 +34,8 @@ class KeyStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('keys', 'name')->where(function ($query) use ($project) {
-                    $query->where('project_id', $project->id);
-                }),
+                Rule::unique('keys', 'name')
+                    ->where('project_id', $project->id),
             ],
         ];
     }

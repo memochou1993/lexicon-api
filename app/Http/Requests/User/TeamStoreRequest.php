@@ -31,12 +31,11 @@ class TeamStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('teams', 'name')->where(function ($query) use ($user) {
-                    $query->whereIn(
+                Rule::unique('teams', 'name')
+                    ->whereIn(
                         'id',
                         $user->teams()->where('is_owner', true)->pluck('id')->toArray()
-                    );
-                }),
+                    ),
             ],
         ];
     }

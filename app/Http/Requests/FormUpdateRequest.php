@@ -30,12 +30,12 @@ class FormUpdateRequest extends FormRequest
 
         return [
             'name' => [
-                Rule::unique('forms', 'name')->where(function ($query) use ($form) {
-                    $query->whereIn(
+                Rule::unique('forms', 'name')
+                    ->whereIn(
                         'id',
                         $form->getCachedTeam()->forms->pluck('id')->toArray()
-                    );
-                })->ignore($form->id),
+                    )
+                    ->ignore($form->id),
             ],
         ];
     }

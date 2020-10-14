@@ -35,9 +35,8 @@ class HookStoreRequest extends FormRequest
             'url' => [
                 'required',
                 'url',
-                Rule::unique('hooks', 'url')->where(function ($query) use ($project) {
-                    $query->where('project_id', $project->id);
-                }),
+                Rule::unique('hooks', 'url')
+                    ->where('project_id', $project->id),
             ],
         ];
     }

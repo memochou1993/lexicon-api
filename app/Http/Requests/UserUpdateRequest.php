@@ -37,7 +37,8 @@ class UserUpdateRequest extends FormRequest
             ],
             'email' => [
                 'email',
-                Rule::unique('users', 'email')->ignore($user->id),
+                Rule::unique('users', 'email')
+                    ->ignore($user->id),
             ],
             'password' => [
                 'min:8',

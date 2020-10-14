@@ -30,7 +30,8 @@ class TeamUpdateRequest extends FormRequest
 
         return [
             'name' => [
-                Rule::unique('teams', 'name')->ignore($team->id),
+                Rule::unique('teams', 'name')
+                    ->ignore($team->id),
             ],
         ];
     }

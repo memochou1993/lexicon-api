@@ -34,12 +34,11 @@ class FormStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('forms', 'name')->where(function ($query) use ($team) {
-                    $query->whereIn(
+                Rule::unique('forms', 'name')
+                    ->whereIn(
                         'id',
                         $team->forms->pluck('id')->toArray()
-                    );
-                }),
+                    ),
             ],
             'range_min' => [
                 'numeric',
