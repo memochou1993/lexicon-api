@@ -212,7 +212,7 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestCreate()
+    public function testCreateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
@@ -238,7 +238,7 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestView()
+    public function testViewByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::LANGUAGE_VIEW,
@@ -264,7 +264,7 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestUpdate()
+    public function testUpdateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::LANGUAGE_UPDATE,
@@ -290,7 +290,7 @@ class LanguageControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestDelete()
+    public function testDeleteByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::LANGUAGE_DELETE,

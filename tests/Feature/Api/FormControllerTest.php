@@ -188,7 +188,7 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestCreate()
+    public function testCreateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::TEAM_VIEW,
@@ -214,7 +214,7 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestView()
+    public function testViewByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::FORM_VIEW,
@@ -240,7 +240,7 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestUpdate()
+    public function testUpdateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::FORM_UPDATE,
@@ -266,7 +266,7 @@ class FormControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestDelete()
+    public function testDeleteByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::FORM_DELETE,

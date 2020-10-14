@@ -220,7 +220,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestViewAll()
+    public function testViewAllByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::PROJECT_VIEW,
@@ -248,7 +248,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestCreate()
+    public function testCreateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::PROJECT_VIEW,
@@ -277,7 +277,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestView()
+    public function testViewByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::KEY_VIEW,
@@ -306,7 +306,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestUpdate()
+    public function testUpdateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::KEY_UPDATE,
@@ -335,7 +335,7 @@ class KeyControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestDelete()
+    public function testDeleteByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::KEY_DELETE,

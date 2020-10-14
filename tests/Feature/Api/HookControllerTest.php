@@ -186,7 +186,7 @@ class HookControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestCreate()
+    public function testCreateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::PROJECT_VIEW,
@@ -215,7 +215,7 @@ class HookControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestView()
+    public function testViewByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::HOOK_VIEW,
@@ -244,7 +244,7 @@ class HookControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestUpdate()
+    public function testUpdateByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::HOOK_UPDATE,
@@ -273,7 +273,7 @@ class HookControllerTest extends TestCase
     /**
      * @return void
      */
-    public function testGuestDelete()
+    public function testDeleteByGuest()
     {
         Sanctum::actingAs($this->user, [
             PermissionType::HOOK_DELETE,
