@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Project;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +14,7 @@ class ProjectSeeder extends Seeder
     public const AMOUNT = 5;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -21,7 +23,7 @@ class ProjectSeeder extends Seeder
         $teams = app(TeamSeeder::class)->teams;
 
         $projects = $teams->reduce(function ($carry, $team) {
-            $projects = factory(Project::class, self::AMOUNT)->make();
+            $projects = Project::factory()->count(self::AMOUNT)->make();
 
             return $carry->merge($team->projects()->saveMany($projects));
         }, app(Collection::class));

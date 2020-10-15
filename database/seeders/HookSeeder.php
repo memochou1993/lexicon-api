@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Hook;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +14,7 @@ class HookSeeder extends Seeder
     public const AMOUNT = 1;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -21,7 +23,7 @@ class HookSeeder extends Seeder
         $projects = app(ProjectSeeder::class)->projects;
 
         $hooks = $projects->reduce(function ($carry, $project) {
-            $hooks = factory(Hook::class, self::AMOUNT)->make();
+            $hooks = Hook::factory()->count(self::AMOUNT)->make();
 
             return $carry->merge($project->hooks()->saveMany($hooks));
         }, app(Collection::class));

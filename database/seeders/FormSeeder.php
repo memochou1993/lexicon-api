@@ -1,24 +1,26 @@
 <?php
 
-use App\Models\Team;
+namespace Database\Seeders;
+
+use App\Models\Form;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Seeder;
 
-class TeamSeeder extends Seeder
+class FormSeeder extends Seeder
 {
     use HasStaticAttributes;
 
     public const AMOUNT = 2;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
     public function run()
     {
-        $teams = factory(Team::class, self::AMOUNT)->create();
+        $forms = Form::factory()->count(self::AMOUNT)->create();
 
-        $this->set('teams', $teams);
+        $this->set('forms', $forms);
     }
 }

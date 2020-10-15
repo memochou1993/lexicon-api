@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\HasStaticAttributes;
@@ -12,7 +14,7 @@ class UserSeeder extends Seeder
     public const AMOUNT = 5;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -34,7 +36,7 @@ class UserSeeder extends Seeder
                 return $user;
             })
             ->merge(
-                factory(User::class, self::AMOUNT)->create()
+                User::factory()->count(self::AMOUNT)->create()
             );
 
         $this->set('users', $users);

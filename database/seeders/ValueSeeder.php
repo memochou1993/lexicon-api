@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Value;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,7 +12,7 @@ class ValueSeeder extends Seeder
     use HasStaticAttributes;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -19,7 +21,7 @@ class ValueSeeder extends Seeder
         $keys = app(KeySeeder::class)->keys;
 
         $values = $keys->reduce(function ($carry, $key) {
-            $values = factory(Value::class, LanguageSeeder::AMOUNT * FormSeeder::AMOUNT)->make();
+            $values = Value::factory()->count(LanguageSeeder::AMOUNT * FormSeeder::AMOUNT)->make();
 
             return $carry->merge($key->values()->saveMany($values));
         }, app(Collection::class));

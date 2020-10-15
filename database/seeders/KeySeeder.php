@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Key;
 use App\Traits\HasStaticAttributes;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +14,7 @@ class KeySeeder extends Seeder
     public const AMOUNT = 5;
 
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -21,7 +23,7 @@ class KeySeeder extends Seeder
         $projects = app(ProjectSeeder::class)->projects;
 
         $keys = $projects->reduce(function ($carry, $project) {
-            $keys = factory(Key::class, self::AMOUNT)->make();
+            $keys = Key::factory()->count(self::AMOUNT)->make();
 
             return $carry->merge($project->keys()->saveMany($keys));
         }, app(Collection::class));
