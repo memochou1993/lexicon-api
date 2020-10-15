@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasForms;
 use App\Models\Traits\HasLanguages;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class Value extends Model
 {
+    use HasFactory;
     use HasLanguages;
     use HasForms;
 
