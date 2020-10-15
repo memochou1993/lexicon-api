@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\HasPreparation;
 use App\Rules\Relations;
+use App\Support\Facades\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ValueShowRequest extends FormRequest
@@ -29,7 +30,10 @@ class ValueShowRequest extends FormRequest
     {
         return [
             'relations' => [
-                new Relations([]),
+                new Relations([
+                    'languages',
+                    'forms',
+                ]),
             ],
         ];
     }
@@ -41,6 +45,16 @@ class ValueShowRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $this->explode('relations');
+        $relations = Collection::make($this->input('relations'))
+            ->explode(',')
+            ->trim()
+            ->merge([
+                'languages',
+                'forms',
+            ]);
+
+        $this->merge([
+            'relations' => $relations->toArray(),
+        ]);
     }
 }

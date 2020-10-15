@@ -21,7 +21,7 @@ class TeamControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $this->json('GET', 'api/user/teams', [
             'relations' => 'users,projects,languages,forms',
@@ -53,7 +53,7 @@ class TeamControllerTest extends TestCase
         /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
-        $data = factory(Team::class)->make()->toArray();
+        $data = Team::factory()->make()->toArray();
 
         $this->json('POST', 'api/user/teams', $data)
             ->assertCreated();
@@ -69,11 +69,11 @@ class TeamControllerTest extends TestCase
         /** @var User $user */
         $user = Sanctum::actingAs($this->user);
 
-        factory(Team::class)->create([
+        Team::factory()->create([
             'name' => 'Unique Team',
         ]);
 
-        $data = factory(Team::class)->make([
+        $data = Team::factory()->make([
             'name' => 'Unique Team',
         ])->toArray();
 

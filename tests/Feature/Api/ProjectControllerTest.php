@@ -29,8 +29,8 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
-        $team->projects()->save(factory(Project::class)->make());
+        $team = Team::factory()->create();
+        $team->projects()->save(Project::factory()->make());
 
         $this->json('GET', 'api/teams/'.$team->id.'/projects', [
             'relations' => 'users,languages',
@@ -58,9 +58,9 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Project::class)->make()->toArray();
+        $data = Project::factory()->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertCreated();
@@ -79,12 +79,12 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
-        $team->projects()->save(factory(Project::class)->make([
+        $team = Team::factory()->create();
+        $team->projects()->save(Project::factory()->make([
             'name' => 'Unique Project',
         ]));
 
-        $data = factory(Project::class)->make([
+        $data = Project::factory()->make([
             'name' => 'Unique Project',
         ])->toArray();
 
@@ -107,10 +107,10 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $this->json('GET', 'api/projects/'.$project->id, [
             'relations' => 'team,users,languages,languages.forms,hooks,setting',
@@ -143,12 +143,12 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Project::class)->make([
+        $data = Project::factory()->make([
             'name' => 'New Project',
         ])->toArray();
 
@@ -166,12 +166,12 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Collection $projects */
-        $projects = $team->projects()->saveMany(factory(Project::class, 2)->make());
+        $projects = $team->projects()->saveMany(Project::factory()->count(2)->make());
 
-        $data = factory(Project::class)->make([
+        $data = Project::factory()->make([
             'name' => $projects->last()->name,
         ])->toArray();
 
@@ -193,13 +193,13 @@ class ProjectControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $project->languages()->save(factory(Language::class)->make());
+        $language = $project->languages()->save(Language::factory()->make());
 
         $this->assertCount(1, $project->users);
         $this->assertCount(1, $project->languages);
@@ -235,7 +235,7 @@ class ProjectControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
@@ -259,9 +259,9 @@ class ProjectControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Project::class)->make()->toArray();
+        $data = Project::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
@@ -284,10 +284,10 @@ class ProjectControllerTest extends TestCase
         $this->flushEventListeners(Team::class, Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -310,10 +310,10 @@ class ProjectControllerTest extends TestCase
         $this->flushEventListeners(Team::class, Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -336,10 +336,10 @@ class ProjectControllerTest extends TestCase
         $this->flushEventListeners(Team::class, Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -358,7 +358,7 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('GET', 'api/teams/'.$team->id.'/projects')
             ->assertForbidden();
@@ -377,9 +377,9 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Project::class)->make()->toArray();
+        $data = Project::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/projects', $data)
             ->assertForbidden();
@@ -398,10 +398,10 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -420,10 +420,10 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('PATCH', 'api/projects/'.$project->id)
             ->assertForbidden();
@@ -442,10 +442,10 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id)
             ->assertForbidden();

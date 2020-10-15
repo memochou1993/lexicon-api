@@ -20,18 +20,17 @@ class EventControllerTest extends TestCase
     public function testIndex()
     {
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->hooks()->save(factory(Hook::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->hooks()->save(Hook::factory()->make());
 
         Http::fake(function () {
             return Http::response(null, Response::HTTP_ACCEPTED);
         });
 
-        $this
-            ->withHeaders([
+        $this->withHeaders([
                 'X-Lexicon-API-Key' => $project->getSetting('api_key'),
             ])
             ->json('POST', 'api/client/projects/'.$project->id.'/events/dispatch')

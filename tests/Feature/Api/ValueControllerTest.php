@@ -29,23 +29,23 @@ class ValueControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
-        $value = factory(Value::class)->make([
+        $value = Value::factory()->make([
             'language_id' => $language->id,
             'form_id' => $form->id,
         ]);
@@ -66,24 +66,24 @@ class ValueControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
@@ -112,28 +112,28 @@ class ValueControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
-        $data = factory(Value::class)->make([
+        $data = Value::factory()->make([
             'text' => 'New Value',
         ])->toArray();
 
@@ -153,24 +153,24 @@ class ValueControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
@@ -208,21 +208,21 @@ class ValueControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
-        $value = factory(Value::class)->make([
+        $value = Value::factory()->make([
             'language_id' => $language->id,
             'form_id' => $form->id,
         ]);
@@ -248,16 +248,16 @@ class ValueControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('GET', 'api/values/'.$value->id)
             ->assertForbidden();
@@ -280,16 +280,16 @@ class ValueControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('PATCH', 'api/values/'.$value->id)
             ->assertForbidden();
@@ -312,16 +312,16 @@ class ValueControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('DELETE', 'api/values/'.$value->id)
             ->assertForbidden();
@@ -340,21 +340,21 @@ class ValueControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
-        $value = factory(Value::class)->make([
+        $value = Value::factory()->make([
             'language_id' => $language->id,
             'form_id' => $form->id,
         ]);
@@ -376,16 +376,16 @@ class ValueControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('GET', 'api/values/'.$value->id)
             ->assertForbidden();
@@ -404,16 +404,16 @@ class ValueControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('PATCH', 'api/values/'.$value->id)
             ->assertForbidden();
@@ -432,16 +432,16 @@ class ValueControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
 
         $response = $this->json('DELETE', 'api/values/'.$value->id)
             ->assertForbidden();

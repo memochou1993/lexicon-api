@@ -21,32 +21,31 @@ class ProjectControllerTest extends TestCase
     public function testShow()
     {
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $key->values()->save(factory(Value::class)->make());
+        $key->values()->save(Value::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
-        $this
-            ->withHeaders([
+        $this->withHeaders([
                 'X-Lexicon-API-Key' => $project->getSetting('api_key'),
             ])
             ->json('GET', 'api/client/projects/'.$project->id)
@@ -74,10 +73,10 @@ class ProjectControllerTest extends TestCase
     public function testUnauthorized()
     {
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $this->json('GET', 'api/client/projects/'.$project->id)
             ->assertUnauthorized();

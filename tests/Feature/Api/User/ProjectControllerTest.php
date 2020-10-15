@@ -20,8 +20,8 @@ class ProjectControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
-        $team->projects()->save(factory(Project::class)->make());
+        $team = Team::factory()->create();
+        $team->projects()->save(Project::factory()->make());
 
         $this->json('GET', 'api/user/projects', [
             'relations' => 'users,languages',

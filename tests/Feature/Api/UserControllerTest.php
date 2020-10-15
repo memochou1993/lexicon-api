@@ -24,7 +24,7 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [
             PermissionType::USER_VIEW_ANY,
         ]);
-        $user->roles()->save(factory(Role::class)->make());
+        $user->roles()->save(Role::factory()->make());
 
         $this->json('GET', 'api/users', [
             'relations' => 'roles,roles.permissions,teams,projects',
@@ -54,7 +54,7 @@ class UserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user, [
             PermissionType::USER_VIEW,
         ]);
-        $user->roles()->save(factory(Role::class)->make());
+        $user->roles()->save(Role::factory()->make());
 
         $this->json('GET', 'api/users/'.$user->id, [
             'relations' => 'roles,roles.permissions,teams,projects',
@@ -87,9 +87,9 @@ class UserControllerTest extends TestCase
         ]);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
-        $data = factory(User::class)->make([
+        $data = User::factory()->make([
             'name' => 'New User',
             'role_ids' => $role->id,
         ])->toArray();
@@ -110,7 +110,7 @@ class UserControllerTest extends TestCase
             PermissionType::USER_UPDATE,
         ]);
 
-        $data = factory(User::class)->create()->toArray();
+        $data = User::factory()->create()->toArray();
 
         $this->json('PATCH', 'api/users/'.$user->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -129,7 +129,7 @@ class UserControllerTest extends TestCase
         ]);
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->json('DELETE', 'api/users/'.$user->id)
             ->assertNoContent();
@@ -195,7 +195,7 @@ class UserControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->json('DELETE', 'api/users/'.$user->id)
             ->assertForbidden();

@@ -31,9 +31,9 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = Form::factory()->make()->toArray();
 
         $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertCreated();
@@ -52,12 +52,12 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
-        $team->forms()->save(factory(Form::class)->make([
+        $team = Team::factory()->create();
+        $team->forms()->save(Form::factory()->make([
             'name' => 'Unique Form',
         ]));
 
-        $data = factory(Form::class)->make([
+        $data = Form::factory()->make([
             'name' => 'Unique Form',
         ])->toArray();
 
@@ -80,10 +80,10 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $this->json('GET', 'api/forms/'.$form->id, [
             'relations' => '',
@@ -107,12 +107,12 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
-        $data = factory(Form::class)->make([
+        $data = Form::factory()->make([
             'name' => 'New Form',
         ])->toArray();
 
@@ -130,12 +130,12 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Collection $forms */
-        $forms = $team->forms()->saveMany(factory(Form::class, 2)->make());
+        $forms = $team->forms()->saveMany(Form::factory()->count(2)->make());
 
-        $data = factory(Form::class)->make([
+        $data = Form::factory()->make([
             'name' => $forms->last()->name,
         ])->toArray();
 
@@ -156,24 +156,24 @@ class FormControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
@@ -198,9 +198,9 @@ class FormControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = Form::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertForbidden();
@@ -223,10 +223,10 @@ class FormControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('GET', 'api/forms/'.$form->id)
             ->assertForbidden();
@@ -249,10 +249,10 @@ class FormControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('PATCH', 'api/forms/'.$form->id)
             ->assertForbidden();
@@ -275,10 +275,10 @@ class FormControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertForbidden();
@@ -297,9 +297,9 @@ class FormControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Form::class)->make()->toArray();
+        $data = Form::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/forms', $data)
             ->assertForbidden();
@@ -318,10 +318,10 @@ class FormControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('GET', 'api/forms/'.$form->id)
             ->assertForbidden();
@@ -340,10 +340,10 @@ class FormControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('PATCH', 'api/forms/'.$form->id)
             ->assertForbidden();
@@ -362,10 +362,10 @@ class FormControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
         $response = $this->json('DELETE', 'api/forms/'.$form->id)
             ->assertForbidden();

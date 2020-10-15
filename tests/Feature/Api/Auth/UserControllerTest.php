@@ -16,7 +16,7 @@ class UserControllerTest extends TestCase
      */
     public function testStore()
     {
-        $data = factory(User::class)->make([
+        $data = User::factory()->make([
             'email_verified_at' => null,
         ])->makeVisible('password')->toArray();
 
@@ -29,11 +29,11 @@ class UserControllerTest extends TestCase
      */
     public function testStoreDuplicate()
     {
-        factory(User::class)->create([
+        User::factory()->create([
             'email' => 'unique@email.com',
         ]);
 
-        $data = factory(User::class)->make([
+        $data = User::factory()->make([
             'email' => 'unique@email.com',
         ])->makeVisible('password')->toArray();
 

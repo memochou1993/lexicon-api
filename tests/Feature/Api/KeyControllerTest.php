@@ -28,11 +28,11 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->keys()->save(Key::factory()->make());
 
         $this->json('GET', 'api/projects/'.$project->id.'/keys', [
             'relations' => 'values',
@@ -61,12 +61,12 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = Key::factory()->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertCreated();
@@ -85,15 +85,15 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make([
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->keys()->save(Key::factory()->make([
             'name' => 'Unique Key',
         ]));
 
-        $data = factory(Key::class)->make([
+        $data = Key::factory()->make([
             'name' => 'Unique Key',
         ])->toArray();
 
@@ -116,13 +116,13 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $this->json('GET', 'api/keys/'.$key->id, [
             'relations' => 'values',
@@ -148,15 +148,15 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
-        $data = factory(Key::class)->make([
+        $data = Key::factory()->make([
             'name' => 'New Key',
         ])->toArray();
 
@@ -174,15 +174,15 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Collection $keys */
-        $keys = $project->keys()->saveMany(factory(Key::class, 2)->make());
+        $keys = $project->keys()->saveMany(Key::factory()->count(2)->make());
 
-        $data = factory(Key::class)->make([
+        $data = Key::factory()->make([
             'name' => $keys->last()->name,
         ])->toArray();
 
@@ -203,13 +203,13 @@ class KeyControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $this->json('DELETE', 'api/keys/'.$key->id)
             ->assertNoContent();
@@ -230,11 +230,11 @@ class KeyControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
             ->assertForbidden();
@@ -258,12 +258,12 @@ class KeyControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = Key::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertForbidden();
@@ -286,13 +286,13 @@ class KeyControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('GET', 'api/keys/'.$key->id)
             ->assertForbidden();
@@ -315,13 +315,13 @@ class KeyControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('PATCH', 'api/keys/'.$key->id)
             ->assertForbidden();
@@ -344,13 +344,13 @@ class KeyControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('DELETE', 'api/keys/'.$key->id)
             ->assertForbidden();
@@ -369,11 +369,11 @@ class KeyControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->keys()->save(factory(Key::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('GET', 'api/projects/'.$project->id.'/keys')
             ->assertForbidden();
@@ -392,12 +392,12 @@ class KeyControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Key::class)->make()->toArray();
+        $data = Key::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/keys', $data)
             ->assertForbidden();
@@ -416,13 +416,13 @@ class KeyControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('GET', 'api/keys/'.$key->id)
             ->assertForbidden();
@@ -441,13 +441,13 @@ class KeyControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('PATCH', 'api/keys/'.$key->id)
             ->assertForbidden();
@@ -467,13 +467,13 @@ class KeyControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         $response = $this->json('DELETE', 'api/keys/'.$key->id)
             ->assertForbidden();

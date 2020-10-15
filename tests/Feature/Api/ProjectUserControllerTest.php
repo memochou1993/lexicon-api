@@ -25,13 +25,13 @@ class ProjectUserControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->assertCount(1, $project->users);
 
@@ -56,13 +56,13 @@ class ProjectUserControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var User $user */
-        $user = $project->users()->save(factory(User::class)->make());
+        $user = $project->users()->save(User::factory()->make());
 
         $this->assertCount(2, $project->users);
 
@@ -87,10 +87,10 @@ class ProjectUserControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/users')
             ->assertForbidden();
@@ -114,10 +114,10 @@ class ProjectUserControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
             ->assertForbidden();
@@ -136,10 +136,10 @@ class ProjectUserControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/users')
             ->assertForbidden();
@@ -159,10 +159,10 @@ class ProjectUserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/users/'.$user->id)
             ->assertForbidden();

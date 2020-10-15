@@ -24,10 +24,10 @@ class TeamUserControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->assertCount(1, $team->users);
 
@@ -52,10 +52,10 @@ class TeamUserControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var User $user */
-        $user = $team->users()->save(factory(User::class)->make());
+        $user = $team->users()->save(User::factory()->make());
 
         $this->assertCount(2, $team->users);
 
@@ -81,7 +81,7 @@ class TeamUserControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/users', [
             'user_ids' => $user->id,
@@ -107,7 +107,7 @@ class TeamUserControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertForbidden();
@@ -126,7 +126,7 @@ class TeamUserControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/users')
             ->assertForbidden();
@@ -146,7 +146,7 @@ class TeamUserControllerTest extends TestCase
         $user = Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         $response = $this->json('DELETE', 'api/teams/'.$team->id.'/users/'.$user->id)
             ->assertForbidden();

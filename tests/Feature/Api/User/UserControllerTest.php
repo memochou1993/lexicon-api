@@ -20,7 +20,7 @@ class UserControllerTest extends TestCase
     {
         /** @var User $user */
         $user = Sanctum::actingAs($this->user);
-        $user->roles()->save(factory(Role::class)->make());
+        $user->roles()->save(Role::factory()->make());
 
         $this->json('GET', 'api/user', [
             'relations' => 'roles,roles.permissions,teams,projects',
@@ -49,7 +49,7 @@ class UserControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $data = factory(User::class)->make([
+        $data = User::factory()->make([
             'name' => 'New User',
         ])->toArray();
 
@@ -64,7 +64,7 @@ class UserControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $data = factory(User::class)->create()->toArray();
+        $data = User::factory()->create()->toArray();
 
         $this->json('PATCH', 'api/user', $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

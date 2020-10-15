@@ -31,12 +31,12 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
-        $data = factory(Language::class)->make([
+        $data = Language::factory()->make([
             'form_ids' => $form->id,
         ])->toArray();
 
@@ -62,12 +62,12 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
-        $team->languages()->save(factory(Language::class)->make([
+        $team = Team::factory()->create();
+        $team->languages()->save(Language::factory()->make([
             'name' => 'Unique Language',
         ]));
 
-        $data = factory(Language::class)->make([
+        $data = Language::factory()->make([
             'name' => 'Unique Language',
         ])->toArray();
 
@@ -90,10 +90,10 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $this->json('GET', 'api/languages/'.$language->id, [
             'relations' => 'forms',
@@ -119,15 +119,15 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
 
-        $data = factory(Language::class)->make([
+        $data = Language::factory()->make([
             'name' => 'New Language',
             'form_ids' => $form->id,
         ])->toArray();
@@ -148,12 +148,12 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Collection $languages */
-        $languages = $team->languages()->saveMany(factory(Language::class, 2)->make());
+        $languages = $team->languages()->saveMany(Language::factory()->count(2)->make());
 
-        $data = factory(Language::class)->make([
+        $data = Language::factory()->make([
             'name' => $languages->last()->name,
         ])->toArray();
 
@@ -174,24 +174,24 @@ class LanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
@@ -222,9 +222,9 @@ class LanguageControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Language::class)->make()->toArray();
+        $data = Language::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
@@ -247,10 +247,10 @@ class LanguageControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
@@ -273,10 +273,10 @@ class LanguageControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
@@ -299,10 +299,10 @@ class LanguageControllerTest extends TestCase
         $this->flushEventListeners(Team::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();
@@ -321,9 +321,9 @@ class LanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
-        $data = factory(Language::class)->make()->toArray();
+        $data = Language::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/teams/'.$team->id.'/languages', $data)
             ->assertForbidden();
@@ -342,10 +342,10 @@ class LanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('GET', 'api/languages/'.$language->id)
             ->assertForbidden();
@@ -364,10 +364,10 @@ class LanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('PATCH', 'api/languages/'.$language->id)
             ->assertForbidden();
@@ -386,10 +386,10 @@ class LanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $response = $this->json('DELETE', 'api/languages/'.$language->id)
             ->assertForbidden();

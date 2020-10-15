@@ -25,7 +25,7 @@ class RoleControllerTest extends TestCase
             PermissionType::ROLE_VIEW_ANY,
         ]);
 
-        factory(Role::class)->create();
+        Role::factory()->create();
 
         $this->json('GET', 'api/roles', [
             'relations' => 'users,permissions',
@@ -51,9 +51,9 @@ class RoleControllerTest extends TestCase
         ]);
 
         /** @var Permission $permission */
-        $permission = factory(Permission::class)->create();
+        $permission = Permission::factory()->create();
 
-        $data = factory(Role::class)->make([
+        $data = Role::factory()->make([
             'permission_ids' => $permission->id,
         ])->toArray();
 
@@ -75,11 +75,11 @@ class RoleControllerTest extends TestCase
             PermissionType::ROLE_CREATE,
         ]);
 
-        factory(Role::class)->create([
+        Role::factory()->create([
             'name' => 'Unique Role',
         ]);
 
-        $data = factory(Role::class)->make([
+        $data = Role::factory()->make([
             'name' => 'Unique Role',
         ])->toArray();
 
@@ -100,7 +100,7 @@ class RoleControllerTest extends TestCase
         ]);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
         $this->json('GET', 'api/roles/'.$role->id, [
             'relations' => 'users,permissions',
@@ -127,12 +127,12 @@ class RoleControllerTest extends TestCase
         ]);
 
         /** @var Permission $permission */
-        $permission = factory(Permission::class)->create();
+        $permission = Permission::factory()->create();
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
-        $data = factory(Role::class)->make([
+        $data = Role::factory()->make([
             'name' => 'New Role',
             'permission_ids' => $permission->id,
         ])->toArray();
@@ -153,9 +153,9 @@ class RoleControllerTest extends TestCase
         ]);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
-        $data = factory(Role::class)->create()->toArray();
+        $data = Role::factory()->create()->toArray();
 
         $this->json('PATCH', 'api/roles/'.$role->id, $data)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -175,7 +175,7 @@ class RoleControllerTest extends TestCase
         ]);
 
         /** @var Role $role */
-        $role = $user->roles()->save(factory(Role::class)->make());
+        $role = $user->roles()->save(Role::factory()->make());
 
         $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertNoContent();
@@ -212,7 +212,7 @@ class RoleControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $data = factory(Role::class)->make()->toArray();
+        $data = Role::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/roles', $data)
             ->assertForbidden();
@@ -231,7 +231,7 @@ class RoleControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
         $response = $this->json('GET', 'api/roles/'.$role->id)
             ->assertForbidden();
@@ -250,7 +250,7 @@ class RoleControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
         $response = $this->json('PATCH', 'api/roles/'.$role->id)
             ->assertForbidden();
@@ -269,7 +269,7 @@ class RoleControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Role $role */
-        $role = factory(Role::class)->create();
+        $role = Role::factory()->create();
 
         $response = $this->json('DELETE', 'api/roles/'.$role->id)
             ->assertForbidden();

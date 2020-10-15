@@ -28,13 +28,13 @@ class ProjectLanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
 
         $this->assertCount(0, $project->languages);
 
@@ -59,24 +59,24 @@ class ProjectLanguageControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         /** @var Form $form */
-        $form = $team->forms()->save(factory(Form::class)->make());
+        $form = $team->forms()->save(Form::factory()->make());
         $language->forms()->attach($form);
 
         /** @var Key $key */
-        $key = $project->keys()->save(factory(Key::class)->make());
+        $key = $project->keys()->save(Key::factory()->make());
 
         /** @var Value $value */
-        $value = $key->values()->save(factory(Value::class)->make());
+        $value = $key->values()->save(Value::factory()->make());
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
@@ -106,10 +106,10 @@ class ProjectLanguageControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
             ->assertForbidden();
@@ -132,13 +132,13 @@ class ProjectLanguageControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)
@@ -158,10 +158,10 @@ class ProjectLanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/languages')
             ->assertForbidden();
@@ -180,13 +180,13 @@ class ProjectLanguageControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Language $language */
-        $language = $team->languages()->save(factory(Language::class)->make());
+        $language = $team->languages()->save(Language::factory()->make());
         $project->languages()->attach($language);
 
         $response = $this->json('DELETE', 'api/projects/'.$project->id.'/languages/'.$language->id)

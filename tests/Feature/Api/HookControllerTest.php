@@ -28,12 +28,12 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Hook::class)->make()->toArray();
+        $data = Hook::factory()->make()->toArray();
 
         $this->json('POST', 'api/projects/'.$project->id.'/hooks', $data)
             ->assertCreated();
@@ -52,15 +52,15 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
-        $project->hooks()->save(factory(Hook::class)->make([
+        $project = $team->projects()->save(Project::factory()->make());
+        $project->hooks()->save(Hook::factory()->make([
             'url' => 'http://unique.test',
         ]));
 
-        $data = factory(Hook::class)->make([
+        $data = Hook::factory()->make([
             'url' => 'http://unique.test',
         ])->toArray();
 
@@ -84,13 +84,13 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
         $this->json('GET', 'api/hooks/'.$hook->id, [
             'relations' => '',
@@ -112,15 +112,15 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
-        $data = factory(Hook::class)->make([
+        $data = Hook::factory()->make([
             'url' => 'http://new.test',
         ])->toArray();
 
@@ -139,15 +139,15 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Collection $hooks */
-        $hooks = $project->hooks()->saveMany(factory(Hook::class, 2)->make());
+        $hooks = $project->hooks()->saveMany(Hook::factory()->count(2)->make());
 
-        $data = factory(Hook::class)->make([
+        $data = Hook::factory()->make([
             'url' => $hooks->last()->url,
         ])->toArray();
 
@@ -169,13 +169,13 @@ class HookControllerTest extends TestCase
         ]);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
         $this->json('DELETE', 'api/hooks/'.$hook->id)
             ->assertNoContent();
@@ -196,12 +196,12 @@ class HookControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
-        $data = factory(Hook::class)->make()->toArray();
+        $data = Hook::factory()->make()->toArray();
 
         $response = $this->json('POST', 'api/projects/'.$project->id.'/hooks', $data)
             ->assertForbidden();
@@ -224,13 +224,13 @@ class HookControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
         $response = $this->json('GET', 'api/hooks/'.$hook->id)
             ->assertForbidden();
@@ -253,13 +253,13 @@ class HookControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
         $response = $this->json('PATCH', 'api/hooks/'.$hook->id)
             ->assertForbidden();
@@ -282,13 +282,13 @@ class HookControllerTest extends TestCase
         $this->flushEventListeners(Project::class);
 
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         /** @var Hook $hook */
-        $hook = $project->hooks()->save(factory(Hook::class)->make());
+        $hook = $project->hooks()->save(Hook::factory()->make());
 
         $response = $this->json('DELETE', 'api/hooks/'.$hook->id)
             ->assertForbidden();

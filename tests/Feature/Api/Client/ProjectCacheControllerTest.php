@@ -18,15 +18,14 @@ class ProjectCacheControllerTest extends TestCase
     public function testDestroy()
     {
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         Cache::shouldReceive('forget')->once()->andReturn(true);
 
-        $this
-            ->withHeaders([
+        $this->withHeaders([
                 'X-Lexicon-API-Key' => $project->getSetting('api_key'),
             ])
             ->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
@@ -42,10 +41,10 @@ class ProjectCacheControllerTest extends TestCase
     public function testUnauthorized()
     {
         /** @var Team $team */
-        $team = factory(Team::class)->create();
+        $team = Team::factory()->create();
 
         /** @var Project $project */
-        $project = $team->projects()->save(factory(Project::class)->make());
+        $project = $team->projects()->save(Project::factory()->make());
 
         $this->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
             ->assertUnauthorized();

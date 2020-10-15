@@ -21,7 +21,7 @@ class PermissionControllerTest extends TestCase
             PermissionType::PERMISSION_VIEW_ANY,
         ]);
 
-        factory(Permission::class)->create();
+        Permission::factory()->create();
 
         $this->json('GET', 'api/permissions', [
             'relations' => '',
@@ -42,7 +42,7 @@ class PermissionControllerTest extends TestCase
         ]);
 
         /** @var Permission $permission */
-        $permission = factory(Permission::class)->create();
+        $permission = Permission::factory()->create();
 
         $this->json('GET', 'api/permissions/'.$permission->id, [
             'relations' => '',
