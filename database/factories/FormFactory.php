@@ -1,18 +1,34 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Form;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Form::class, function (Faker $faker) {
-    static $index = 0;
+class FormFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Form::class;
 
-    $index++;
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        static $index = 0;
 
-    return [
-        'name' => 'Form '.$index,
-        'range_min' => pow(10, $index - 1) + ((int) $index > 1),
-        'range_max' => pow(10, $index),
-    ];
-});
+        $index++;
+
+        return [
+            'name' => 'Form '.$index,
+            'range_min' => pow(10, $index - 1) + ((int) $index > 1),
+            'range_max' => pow(10, $index),
+        ];
+    }
+}

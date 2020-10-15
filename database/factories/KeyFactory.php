@@ -1,16 +1,32 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Key;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Key::class, function (Faker $faker) {
-    static $index = 0;
+class KeyFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Key::class;
 
-    $index++;
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        static $index = 0;
 
-    return [
-        'name' => 'Key '.$index,
-    ];
-});
+        $index++;
+
+        return [
+            'name' => 'Key '.$index,
+        ];
+    }
+}

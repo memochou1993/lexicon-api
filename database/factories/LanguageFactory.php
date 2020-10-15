@@ -1,16 +1,32 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Language;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Language::class, function (Faker $faker) {
-    static $index = 0;
+class LanguageFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Language::class;
 
-    $index++;
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        static $index = 0;
 
-    return [
-        'name' => 'Language '.$index,
-    ];
-});
+        $index++;
+
+        return [
+            'name' => 'Language '.$index,
+        ];
+    }
+}
