@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d54bdb643a37fcefd76b193733c51550",
+    "content-hash": "b18a972d5f0c0d5ec51410f3e46757c2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1324,23 +1324,23 @@
         },
         {
             "name": "memochou1993/lexicon-api-client-laravel",
-            "version": "v0.2.7",
+            "version": "v0.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/memochou1993/lexicon-api-laravel-client.git",
-                "reference": "99c17ab3f5ab2dd7593efeec9ed7f5a9d930fef1"
+                "reference": "76029f5714f12d898f287a1c0be210315c6618d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/memochou1993/lexicon-api-laravel-client/zipball/99c17ab3f5ab2dd7593efeec9ed7f5a9d930fef1",
-                "reference": "99c17ab3f5ab2dd7593efeec9ed7f5a9d930fef1",
+                "url": "https://api.github.com/repos/memochou1993/lexicon-api-laravel-client/zipball/76029f5714f12d898f287a1c0be210315c6618d7",
+                "reference": "76029f5714f12d898f287a1c0be210315c6618d7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.2",
                 "laravel/framework": "^8.0",
-                "memochou1993/lexicon-api-php-client": "^0.1.9",
+                "memochou1993/lexicon-api-php-client": "^0.2.0",
                 "php": "^7.4",
                 "symfony/var-exporter": "^5.0"
             },
@@ -1380,20 +1380,20 @@
             "keywords": [
                 "localization"
             ],
-            "time": "2020-10-15T15:32:25+00:00"
+            "time": "2020-10-16T15:15:59+00:00"
         },
         {
             "name": "memochou1993/lexicon-api-php-client",
-            "version": "v0.1.9",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/memochou1993/lexicon-api-php-client.git",
-                "reference": "56879df19122a07dbccea2bc1df5857af00e4a5b"
+                "reference": "d2b96267b3d8fae57a6feb551bea77a69de27bb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/memochou1993/lexicon-api-php-client/zipball/56879df19122a07dbccea2bc1df5857af00e4a5b",
-                "reference": "56879df19122a07dbccea2bc1df5857af00e4a5b",
+                "url": "https://api.github.com/repos/memochou1993/lexicon-api-php-client/zipball/d2b96267b3d8fae57a6feb551bea77a69de27bb5",
+                "reference": "d2b96267b3d8fae57a6feb551bea77a69de27bb5",
                 "shasum": ""
             },
             "require": {
@@ -1425,7 +1425,7 @@
             "keywords": [
                 "localization"
             ],
-            "time": "2020-10-15T15:10:23+00:00"
+            "time": "2020-10-16T10:38:27+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4961,25 +4961,25 @@
         },
         {
             "name": "facade/ignition-contracts",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition-contracts.git",
-                "reference": "aeab1ce8b68b188a43e81758e750151ad7da796b"
+                "reference": "3c921a1cdba35b68a7f0ccffc6dffc1995b18267"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition-contracts/zipball/aeab1ce8b68b188a43e81758e750151ad7da796b",
-                "reference": "aeab1ce8b68b188a43e81758e750151ad7da796b",
+                "url": "https://api.github.com/repos/facade/ignition-contracts/zipball/3c921a1cdba35b68a7f0ccffc6dffc1995b18267",
+                "reference": "3c921a1cdba35b68a7f0ccffc6dffc1995b18267",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
-                "phpunit/phpunit": "^7.5|^8.0",
-                "vimeo/psalm": "^3.12"
+                "friendsofphp/php-cs-fixer": "^v2.15.8",
+                "phpunit/phpunit": "^9.3.11",
+                "vimeo/psalm": "^3.17.1"
             },
             "type": "library",
             "autoload": {
@@ -5006,7 +5006,7 @@
                 "flare",
                 "ignition"
             ],
-            "time": "2020-07-14T10:10:28+00:00"
+            "time": "2020-10-16T08:27:54+00:00"
         },
         {
             "name": "filp/whoops",
