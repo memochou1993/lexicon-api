@@ -7,7 +7,7 @@ use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 
-class ProjectCacheController extends Controller
+class CacheController extends Controller
 {
     /**
      * @var ProjectService

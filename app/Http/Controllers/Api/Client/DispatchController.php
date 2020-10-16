@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
-class EventController extends Controller
+class DispatchController extends Controller
 {
     /**
      * @var ProjectService
@@ -34,7 +34,7 @@ class EventController extends Controller
      * @param  Project  $project
      * @return JsonResponse
      */
-    public function index(Project $project)
+    public function __invoke(Project $project)
     {
         $project->hooks->each(function (/** @var Hook $hook */ $hook) use ($project) {
             Http::retry(3, 500)

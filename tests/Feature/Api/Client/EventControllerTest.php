@@ -33,7 +33,7 @@ class EventControllerTest extends TestCase
         $this->withHeaders([
                 'X-Lexicon-API-Key' => $project->getSetting('api_key'),
             ])
-            ->json('POST', 'api/client/projects/'.$project->id.'/events/dispatch')
+            ->json('POST', 'api/client/projects/'.$project->id.'/dispatch')
             ->assertStatus(Response::HTTP_ACCEPTED);
     }
 }

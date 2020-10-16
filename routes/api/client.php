@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\Client\EventController;
-use App\Http\Controllers\Api\Client\ProjectCacheController;
+use App\Http\Controllers\Api\Client\DispatchController;
+use App\Http\Controllers\Api\Client\CacheController;
 use App\Http\Controllers\Api\Client\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,7 +10,7 @@ Route::middleware([
 ])->group(function () {
     Route::prefix('projects/{project}')->group(function () {
         Route::get('/', [ProjectController::class, 'show']);
-        Route::delete('cache', [ProjectCacheController::class, 'destroy']);
-        Route::post('events/dispatch', [EventController::class, 'index']);
+        Route::delete('cache', [CacheController::class, 'destroy']);
+        Route::post('dispatch', DispatchController::class);
     });
 });
