@@ -24,9 +24,7 @@ class ValueUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => [
-                'min:1',
-            ],
+            //
         ];
     }
 }
