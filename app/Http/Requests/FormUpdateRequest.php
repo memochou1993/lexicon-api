@@ -30,6 +30,7 @@ class FormUpdateRequest extends FormRequest
 
         return [
             'name' => [
+                'min:1',
                 Rule::unique('forms', 'name')
                     ->whereIn(
                         'id',

@@ -33,6 +33,7 @@ class LanguageUpdateRequest extends FormRequest
 
         return [
             'name' => [
+                'min:1',
                 Rule::unique('languages', 'name')
                     ->whereIn(
                         'id',

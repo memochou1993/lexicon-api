@@ -30,6 +30,7 @@ class KeyUpdateRequest extends FormRequest
 
         return [
             'name' => [
+                'min:1',
                 Rule::unique('keys', 'name')
                     ->where('project_id', $key->getCachedProject()->id)
                     ->ignore($key->id),

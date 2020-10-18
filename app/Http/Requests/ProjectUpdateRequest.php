@@ -30,6 +30,7 @@ class ProjectUpdateRequest extends FormRequest
 
         return [
             'name' => [
+                'min:1',
                 Rule::unique('projects', 'name')
                     ->where('team_id', $project->getCachedTeam()->id)
                     ->ignore($project->id),
