@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Client;
+namespace Tests\Feature\Api\Project;
 
 use App\Models\Form;
 use App\Models\Key;
@@ -45,10 +45,8 @@ class ProjectControllerTest extends TestCase
         $value->languages()->attach($language);
         $value->forms()->attach($form);
 
-        $this->withHeaders([
-                'X-Lexicon-API-Key' => $project->getSetting('api_key'),
-            ])
-            ->json('GET', 'api/client/projects/'.$project->id)
+        $this->withToken($project->getSetting('api_key'))
+            ->json('GET', 'api/project')
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -72,13 +70,7 @@ class ProjectControllerTest extends TestCase
      */
     public function testUnauthorized()
     {
-        /** @var Team $team */
-        $team = Team::factory()->create();
-
-        /** @var Project $project */
-        $project = $team->projects()->save(Project::factory()->make());
-
-        $this->json('GET', 'api/client/projects/'.$project->id)
+        $this->json('GET', 'api/project')
             ->assertUnauthorized();
     }
 }

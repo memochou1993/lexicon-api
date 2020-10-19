@@ -51,7 +51,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapUserRoutes();
 
-        $this->mapClientRoutes();
+        $this->mapProjectRoutes();
 
         $this->mapAppRoutes();
 
@@ -89,18 +89,18 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "client" routes for the application.
+     * Define the "project" routes for the application.
      *
      * These routes are typically stateless.
      *
      * @return void
      */
-    protected function mapClientRoutes()
+    protected function mapProjectRoutes()
     {
-        Route::prefix('api/client')
+        Route::prefix('api/project')
             ->middleware('api')
             ->namespace($this->namespace)
-            ->group(base_path('routes/api/client.php'));
+            ->group(base_path('routes/api/project.php'));
     }
 
     /**

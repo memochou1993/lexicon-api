@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'auth:sanctum',
+    'token:user',
 ])->group(function () {
     Route::get('/', [UserController::class, 'show']);
     Route::patch('/', [UserController::class, 'update']);

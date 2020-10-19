@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Client;
+namespace App\Http\Controllers\Api\Project;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Client\ProjectShowRequest;
-use App\Http\Resources\Client\ProjectResource as Resource;
-use App\Models\Project;
+use App\Http\Requests\Project\ProjectShowRequest;
+use App\Http\Resources\Project\ProjectResource as Resource;
 use App\Services\ProjectService;
 
 class ProjectController extends Controller
@@ -30,14 +29,15 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      *
      * @param  ProjectShowRequest  $request
-     * @param  Project  $project
      * @return Resource
      */
-    public function show(ProjectShowRequest $request, Project $project)
+    public function show(ProjectShowRequest $request)
     {
-        $project = $request->input('cached')
-            ? $this->projectService->getCached($project, $request)
-            : $this->projectService->get($project, $request);
+        $project = $this->projectService->get(
+            $request->user(),
+            $request,
+            $request->input('cached', false)
+        );
 
         return new Resource($project);
     }

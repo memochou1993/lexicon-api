@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Resources\Client;
+namespace App\Http\Resources\Project;
 
-use App\Models\Form;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin Form
+ * @mixin Project
  */
-class FormResource extends JsonResource
+class ProjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,8 @@ class FormResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'range_min' => $this->range_min,
-            'range_max' => $this->range_max,
+            'languages' => LanguageResource::collection($this->whenLoaded('languages')),
+            'keys' => KeyResource::collection($this->whenLoaded('keys')),
         ];
     }
 }

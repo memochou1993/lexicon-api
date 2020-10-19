@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Client;
+namespace App\Http\Requests\Project;
 
 use App\Rules\Relations;
 use App\Support\Facades\Collection;

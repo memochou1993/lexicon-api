@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Client;
+namespace App\Http\Controllers\Api\Project;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CacheController extends Controller
 {
@@ -28,11 +29,14 @@ class CacheController extends Controller
     /**
      * Remove the specified resource from the cache.
      *
-     * @param  Project  $project
+     * @param  Request  $request
      * @return JsonResponse
      */
-    public function destroy(Project $project)
+    public function destroy(Request $request)
     {
+        /** @var Project $project */
+        $project = $request->user();
+
         $success = $this->projectService->destroyCached($project);
 
         return response()->json([

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Client;
+namespace App\Http\Resources\Project;
 
 use App\Models\Value;
 use Illuminate\Http\Request;

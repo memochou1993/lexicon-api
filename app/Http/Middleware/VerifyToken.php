@@ -2,28 +2,25 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Project;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
-class VerifyClient
+class VerifyToken
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param  string  $model
      * @return mixed
      * @throws AuthenticationException
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, string $model)
     {
-        /** @var Project $project */
-        $project = $request->route('project');
-
-        $apiKey = $project->getSetting('api_key');
-
-        if (! ($request->header('X-Lexicon-API-Key') === $apiKey)) {
+        if (! (class_basename($request->user()) === Str::ucfirst($model))) {
             throw new AuthenticationException();
         }
 

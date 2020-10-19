@@ -40,10 +40,15 @@ class ProjectService
     /**
      * @param  Project  $project
      * @param  Request  $request
+     * @param  bool  $cached
      * @return Model|Project
      */
-    public function get(Project $project, Request $request): Project
+    public function get(Project $project, Request $request, bool $cached = false): Project
     {
+        if ($cached) {
+            return $this->getCached($project, $request);
+        }
+
         return $this->project
             ->with($request->input('relations', []))
             ->find($project->id);

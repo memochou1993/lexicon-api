@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class ProjectObserver
 {
@@ -18,9 +17,11 @@ class ProjectObserver
     {
         $project->users()->attach(Auth::user(), ['is_owner' => true]);
 
+        $token = $project->createToken('', []);
+
         $project->setting()->create([
             'settings' => [
-                'api_key' => Str::random(40),
+                'api_key' => $token->plainTextToken,
             ],
         ]);
     }

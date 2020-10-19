@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Client;
+namespace Tests\Feature\Api\Project;
 
 use App\Models\Project;
 use App\Models\Team;
@@ -25,10 +25,8 @@ class ProjectCacheControllerTest extends TestCase
 
         Cache::shouldReceive('forget')->once()->andReturn(true);
 
-        $this->withHeaders([
-                'X-Lexicon-API-Key' => $project->getSetting('api_key'),
-            ])
-            ->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
+        $this->withToken($project->getSetting('api_key'))
+            ->json('DELETE', 'api/project/cache')
             ->assertOk()
             ->assertJson([
                 'success' => true,
@@ -40,13 +38,7 @@ class ProjectCacheControllerTest extends TestCase
      */
     public function testUnauthorized()
     {
-        /** @var Team $team */
-        $team = Team::factory()->create();
-
-        /** @var Project $project */
-        $project = $team->projects()->save(Project::factory()->make());
-
-        $this->json('DELETE', 'api/client/projects/'.$project->id.'/cache')
+        $this->json('DELETE', 'api/project/cache')
             ->assertUnauthorized();
     }
 }

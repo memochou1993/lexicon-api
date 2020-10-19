@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Client;
+namespace Tests\Feature\Api\Project;
 
 use App\Models\Hook;
 use App\Models\Project;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class EventControllerTest extends TestCase
+class DispatchControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -30,10 +30,8 @@ class EventControllerTest extends TestCase
             return Http::response(null, Response::HTTP_ACCEPTED);
         });
 
-        $this->withHeaders([
-                'X-Lexicon-API-Key' => $project->getSetting('api_key'),
-            ])
-            ->json('POST', 'api/client/projects/'.$project->id.'/dispatch')
+        $this->withToken($project->getSetting('api_key'))
+            ->json('POST', 'api/project/dispatch')
             ->assertStatus(Response::HTTP_ACCEPTED);
     }
 }

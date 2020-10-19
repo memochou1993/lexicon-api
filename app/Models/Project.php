@@ -5,15 +5,17 @@ namespace App\Models;
 use App\Models\Traits\HasCache;
 use App\Models\Traits\HasLanguages;
 use App\Models\Traits\HasSetting;
+use App\Models\Traits\HasTokens;
 use App\Models\Traits\HasUsers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
@@ -26,9 +28,12 @@ use Illuminate\Support\Facades\Cache;
  * @property Collection $hooks
  * @property Collection $values
  */
-class Project extends Model
+class Project extends Authenticatable
 {
     use HasFactory;
+    use HasApiTokens, HasTokens {
+        HasTokens::tokens insteadof HasApiTokens;
+    }
     use HasCache;
     use HasUsers;
     use HasLanguages;
