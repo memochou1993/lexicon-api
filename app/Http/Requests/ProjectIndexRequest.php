@@ -41,6 +41,8 @@ class ProjectIndexRequest extends FormRequest
             'sort' => [
                 Rule::in([
                     'name',
+                    'created_at',
+                    'updated_at',
                 ]),
             ],
             'direction' => [

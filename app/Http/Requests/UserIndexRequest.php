@@ -41,6 +41,8 @@ class UserIndexRequest extends FormRequest
                 Rule::in([
                     'name',
                     'email',
+                    'created_at',
+                    'updated_at',
                 ]),
             ],
             'direction' => [
