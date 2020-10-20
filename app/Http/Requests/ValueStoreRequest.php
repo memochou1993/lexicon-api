@@ -36,9 +36,6 @@ class ValueStoreRequest extends FormRequest
         $language = Language::query()->findOrFail($this->input('language_id'));
 
         return [
-            'text' => [
-                'required',
-            ],
             'language_id' => [
                 'numeric',
                 'required',
