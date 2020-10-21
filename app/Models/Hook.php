@@ -27,6 +27,7 @@ class Hook extends Model
      */
     protected $fillable = [
         'url',
+        'events',
     ];
 
     /**
