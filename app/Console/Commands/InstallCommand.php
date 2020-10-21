@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Console\Command;
 
 class InstallCommand extends Command
@@ -36,7 +38,7 @@ class InstallCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      */
     public function handle()
     {
@@ -44,6 +46,8 @@ class InstallCommand extends Command
         $this->seedPermission();
         $this->seedRole();
         $this->setupAdmin();
+
+        return 1;
     }
 
     /**
@@ -65,7 +69,7 @@ class InstallCommand extends Command
 
         $this->callSilent('db:seed', [
             '--force' => true,
-            '--class' => 'PermissionSeeder',
+            '--class' => PermissionSeeder::class,
         ]);
     }
 
@@ -80,7 +84,7 @@ class InstallCommand extends Command
 
         $this->callSilent('db:seed', [
             '--force' => true,
-            '--class' => 'RoleSeeder',
+            '--class' => RoleSeeder::class,
         ]);
     }
 
