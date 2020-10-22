@@ -41,7 +41,7 @@ class DemoCommand extends Command
      */
     public function handle()
     {
-        $this->call('lexicon:init');
+        $this->call(InstallCommand::class);
         $this->seed();
 
         return 1;
@@ -102,7 +102,7 @@ class DemoCommand extends Command
             $team->forms()->create([
                 'name' => 'plural',
                 'range_min' => 2,
-                'range_max' => 2,
+                'range_max' => '*',
             ])
         );
 
