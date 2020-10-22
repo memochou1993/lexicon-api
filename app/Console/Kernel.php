@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use MemoChou1993\Lexicon\Console\ClearCommand;
+use MemoChou1993\Lexicon\Console\SyncCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        SyncCommand::class,
+        ClearCommand::class,
     ];
 
     /**
