@@ -16,8 +16,8 @@ class CreateFormsTable extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('range_min')->default(0);
-            $table->integer('range_max')->default(0);
+            $table->string('range_min')->default(0);
+            $table->string('range_max')->default(0);
         });
     }
 
