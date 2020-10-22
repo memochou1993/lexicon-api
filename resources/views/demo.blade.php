@@ -3,14 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Lexicon Demo</title>
+        <title>New Project</title>
         <link rel="icon" href="icon.png">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
         <nav class="navbar navbar-dark bg-dark">
             <a class="navbar-brand" href="demo">
-                Lexicon Demo
+                New Project
             </a>
             @if($language == 'en')
             <button onclick="javascript:location.href='?language=tw'" class="btn btn-sm btn-outline-light">
@@ -25,7 +25,7 @@
         </nav>
         <div class="container mb-5">
             <div class="mt-4">
-                <div class="card">
+                <div class="card bg-light">
                     <div class="card-body">
                         <span class="mr-2">
                             <button onclick="javascript:location.href='?language={{ $language  }}&sync=true'" class="btn btn-sm btn-info my-1 my-md-0">
@@ -49,27 +49,50 @@
             </div>
             <div class="my-4">
                 @if(count($keys))
-                <table class="table table-responsive-sm table-bordered table-hover table-striped">
+                <table class="table table-bordered table-responsive-sm bg-light">
                     <thead>
                     <tr class="text-center">
                         <th>PHP Code in Blade Template</th>
-                        <th>PHP Code in Language File</th>
                         <th>Translation</th>
+                        <th>PHP Code in Language File</th>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach($keys as $key => $value)
-                        <tr>
-                            <td>
-                                ___('{{ $key }}')
-                            </td>
-                            <td>
-                                '{{ $key }}' => '{{ $value }}',
-                            </td>
-                            <td>
-                                {{ ___($key) }}
-                            </td>
-                        </tr>
+                            @if($language == 'en')
+                            <tr>
+                                <td>
+                                    ___('{{ $key }}')
+                                </td>
+                                <td>
+                                    {{ ___($key) }}
+                                </td>
+                                <td rowspan="2">
+                                    '{{ $key }}' => '{{ $value }}',
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ___('{{ $key }}', 2)
+                                </td>
+                                <td>
+                                    {{ ___($key, 2) }}
+                                </td>
+                            </tr>
+                            @endif
+                            @if($language == 'tw')
+                                <tr>
+                                    <td>
+                                        ___('{{ $key }}')
+                                    </td>
+                                    <td>
+                                        {{ ___($key) }}
+                                    </td>
+                                    <td>
+                                        '{{ $key }}' => '{{ $value }}',
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -78,3 +101,14 @@
         </div>
     </body>
 </html>
+
+<style>
+body {
+    font-family: 'Microsoft Jhenghei';
+    font-size: 0.75rem;
+}
+
+table {
+    table-layout: fixed;
+}
+</style>
