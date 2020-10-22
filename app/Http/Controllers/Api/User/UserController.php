@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserShowRequest;
-use App\Http\Requests\Auth\UserUpdateRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\UserResource as Resource;
 use App\Services\UserService;
 

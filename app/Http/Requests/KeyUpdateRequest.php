@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Key;
+use App\Rules\NotNumeric;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,6 +32,7 @@ class KeyUpdateRequest extends FormRequest
         return [
             'name' => [
                 'min:1',
+                new NotNumeric(),
                 Rule::unique('keys', 'name')
                     ->where('project_id', $key->getCachedProject()->id)
                     ->ignore($key->id),

@@ -138,6 +138,7 @@ return [
         ],
     ],
 
+    'not_numeric' => 'The :attribute must be at least 1 letter.',
     'relations' => '[0]No available relations.|[1]Invalid relations. Valid relations: :values.',
 
     /*

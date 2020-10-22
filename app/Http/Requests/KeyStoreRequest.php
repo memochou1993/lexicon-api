@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Project;
+use App\Rules\NotNumeric;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,7 @@ class KeyStoreRequest extends FormRequest
         return [
             'name' => [
                 'required',
+                new NotNumeric(),
                 Rule::unique('keys', 'name')
                     ->where('project_id', $project->id),
             ],
