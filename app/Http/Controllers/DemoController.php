@@ -22,7 +22,7 @@ class DemoController extends Controller
     {
         $language = App::getLocale();
 
-        if (! in_array($language, ['en', 'tw'])) {
+        if (! in_array($language, ['en', 'zh'])) {
             return redirect('demo');
         }
 
