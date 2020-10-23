@@ -107,7 +107,7 @@
                 @endif
             </div>
             <div class="my-5 text-center" id="loading" hidden>
-                <h5 class="py-3" id="message"></h5>
+                <h5 class="py-5" id="message"></h5>
                 <div style="width: 4rem; height: 4rem;" class="spinner-grow text-warning" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -120,16 +120,20 @@
 document.getElementById('sync').addEventListener('click', () => {
     document.getElementById('table').hidden = true;
     document.getElementById('loading').hidden = false;
-    document.getElementById('message').innerHTML = 'Fetching resources...';
     setTimeout(() => {
-        document.getElementById('message').innerHTML = 'Generating language files...';
+        document.getElementById('message').innerHTML = 'Fetching Resources...';
+    }, 0);
+    setTimeout(() => {
+        document.getElementById('message').innerHTML = 'Generating Language Files...';
     }, 1000);
 });
 
 document.getElementById('clear').addEventListener('click', () => {
     document.getElementById('table').hidden = true;
     document.getElementById('loading').hidden = false;
-    document.getElementById('message').innerHTML = 'Deleting language files...';
+    setTimeout(() => {
+        document.getElementById('message').innerHTML = 'Deleting Language Files...';
+    }, 0);
 });
 </script>
 
@@ -139,7 +143,11 @@ body {
     font-size: 0.75rem;
 }
 
-table {
+#table > table {
     table-layout: fixed;
+}
+
+#table > table > tbody > tr > td {
+    vertical-align: middle;
 }
 </style>
