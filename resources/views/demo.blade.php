@@ -14,18 +14,18 @@
             </a>
             <div>
                 @if($language == 'en')
-                <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm btn-outline-light">
+                <button onclick="location.href='?language=zh'" class="btn btn-sm btn-outline-light ml-1">
                     ZH
                 </button>
-                <button onclick="javascript:location.href='?language=en'" class="btn btn-sm bg-light">
+                <button onclick="location.href='?language=en'" class="btn btn-sm bg-light ml-1">
                     EN
                 </button>
                 @endif
                 @if($language == 'zh')
-                <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm bg-light">
+                <button onclick="location.href='?language=zh'" class="btn btn-sm bg-light ml-1">
                     ZH
                 </button>
-                <button onclick="javascript:location.href='?language=en'" class="btn btn-sm btn-outline-light">
+                <button onclick="location.href='?language=en'" class="btn btn-sm btn-outline-light ml-1">
                     EN
                 </button>
                 @endif
@@ -36,18 +36,18 @@
                 <div class="card bg-light">
                     <div class="card-body">
                         <span class="mr-2">
-                            <button onclick="javascript:location.href='?language={{ $language  }}&sync=true'" class="btn btn-sm btn-info my-1 my-md-0" id="sync">
+                            <button onclick="location.href='?language={{ $language  }}&sync=true'" class="btn btn-sm btn-info my-1 my-md-0" id="sync">
                                 {{ ___('action.sync') }}
                             </button>
                         </span>
                         <span class="mr-2">
-                            <button onclick="javascript:location.href='?language={{ $language  }}&clear=true'" class="btn btn-sm btn-danger my-1 my-md-0" id="clear">
+                            <button onclick="location.href='?language={{ $language  }}&clear=true'" class="btn btn-sm btn-danger my-1 my-md-0" id="clear">
                                 {{ ___('action.clear') }}
                             </button>
                         </span>
                         @if(count($keys))
                         <span class="mr-2">
-                            <button onclick="javascript:window.open('?language={{ $language  }}&dump=true')" class="btn btn-sm btn-secondary my-1 my-md-0">
+                            <button onclick="window.open('?language={{ $language  }}&dump=true')" class="btn btn-sm btn-secondary my-1 my-md-0">
                                 {{ ___('action.dump') }}
                             </button>
                         </span>
@@ -139,7 +139,7 @@ document.getElementById('clear').addEventListener('click', () => {
 
 <style>
 body {
-    font-family: 'Microsoft Jhenghei';
+    font-family: 'Microsoft Jhenghei', sans-serif;
     font-size: 0.75rem;
 }
 
