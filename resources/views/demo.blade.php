@@ -13,11 +13,11 @@
                 New Project
             </a>
             @if($language == 'en')
-            <button onclick="javascript:location.href='?language=tw'" class="btn btn-sm btn-outline-light">
-                TW
+            <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm btn-outline-light">
+                ZH
             </button>
             @endif
-            @if($language == 'tw')
+            @if($language == 'zh')
             <button onclick="javascript:location.href='?language=en'" class="btn btn-sm btn-outline-light">
                 EN
             </button>
@@ -80,7 +80,7 @@
                                 </td>
                             </tr>
                             @endif
-                            @if($language == 'tw')
+                            @if($language == 'zh')
                                 <tr>
                                     <td>
                                         ___('{{ $key }}')

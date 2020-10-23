@@ -107,13 +107,13 @@ class DemoCommand extends Command
         );
 
         $project->languages()->attach(
-        /** @var Language $tw */
-            $tw = $team->languages()->create([
-                'name' => 'tw',
+        /** @var Language $zh */
+            $zh = $team->languages()->create([
+                'name' => 'zh',
             ])
         );
 
-        $tw->forms()->attach(
+        $zh->forms()->attach(
             $team->forms()->create([
                 'name' => 'default',
             ])
