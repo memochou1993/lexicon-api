@@ -3,25 +3,33 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>New Project</title>
+        <title>{{ ___('project.name') }}</title>
         <link rel="icon" href="icon.png">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
         <nav class="navbar navbar-dark bg-dark">
             <a class="navbar-brand" href="demo">
-                New Project
+                {{ ___('project.name') }}
             </a>
-            @if($language == 'en')
-            <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm btn-outline-light">
-                ZH
-            </button>
-            @endif
-            @if($language == 'zh')
-            <button onclick="javascript:location.href='?language=en'" class="btn btn-sm btn-outline-light">
-                EN
-            </button>
-            @endif
+            <div>
+                @if($language == 'en')
+                <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm btn-outline-light">
+                    ZH
+                </button>
+                <button onclick="javascript:location.href='?language=en'" class="btn btn-sm bg-light">
+                    EN
+                </button>
+                @endif
+                @if($language == 'zh')
+                <button onclick="javascript:location.href='?language=zh'" class="btn btn-sm bg-light">
+                    ZH
+                </button>
+                <button onclick="javascript:location.href='?language=en'" class="btn btn-sm btn-outline-light">
+                    EN
+                </button>
+                @endif
+            </div>
         </nav>
         <div class="container mb-5">
             <div class="mt-4">
@@ -29,18 +37,18 @@
                     <div class="card-body">
                         <span class="mr-2">
                             <button onclick="javascript:location.href='?language={{ $language  }}&sync=true'" class="btn btn-sm btn-info my-1 my-md-0" id="sync">
-                                Sync Language Files
+                                {{ ___('action.sync') }}
                             </button>
                         </span>
                         <span class="mr-2">
                             <button onclick="javascript:location.href='?language={{ $language  }}&clear=true'" class="btn btn-sm btn-danger my-1 my-md-0" id="clear">
-                                Clear Language Files
+                                {{ ___('action.clear') }}
                             </button>
                         </span>
                         @if(count($keys))
                         <span class="mr-2">
                             <button onclick="javascript:window.open('?language={{ $language  }}&dump=true')" class="btn btn-sm btn-secondary my-1 my-md-0">
-                                Dump Language File
+                                {{ ___('action.dump') }}
                             </button>
                         </span>
                         @endif
@@ -52,9 +60,9 @@
                 <table class="table table-bordered table-responsive-sm bg-light">
                     <thead>
                     <tr class="text-center">
-                        <th>PHP Code in Blade Template</th>
-                        <th>Translation</th>
-                        <th>PHP Code in Language File</th>
+                        <th>{{ ___('table.header.helper') }}</th>
+                        <th>{{ ___('table.header.translation') }}</th>
+                        <th>{{ ___('table.header.code') }}</th>
                     </tr>
                     </thead>
                     <tbody>
