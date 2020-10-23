@@ -27,9 +27,6 @@ class HookFactory extends Factory
 
         return [
             'url' => config('app.url').'/api/'.config('lexicon.path'),
-            'events' => [
-                'sync',
-            ],
         ];
     }
 }

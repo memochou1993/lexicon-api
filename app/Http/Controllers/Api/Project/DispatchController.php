@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\Project;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Project\ProjectDispatchRequest;
 use App\Models\Hook;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,10 +32,10 @@ class DispatchController extends Controller
     /**
      * Dispatch events to client.
      *
-     * @param  Request  $request
+     * @param  ProjectDispatchRequest  $request
      * @return JsonResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(ProjectDispatchRequest $request)
     {
         /** @var Project $project */
         $project = $request->user();
@@ -46,7 +46,7 @@ class DispatchController extends Controller
                     'Authorization' => sprintf('Bearer %s', $request->bearerToken())
                 ])
                 ->post($hook->url, [
-                    'events' => $hook->events,
+                    'events' => $request->input('events'),
                 ])
                 ->throw();
         });

@@ -30,8 +30,14 @@ class DispatchControllerTest extends TestCase
             return Http::response(null, Response::HTTP_ACCEPTED);
         });
 
+        $data = [
+            'events' => [
+                'sync',
+            ],
+        ];
+
         $this->withToken($project->getSetting('api_key'))
-            ->json('POST', 'api/project/dispatch')
+            ->json('POST', 'api/project/dispatch', $data)
             ->assertStatus(Response::HTTP_ACCEPTED);
     }
 }

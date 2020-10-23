@@ -161,9 +161,6 @@ class DemoCommand extends Command
 
         $project->hooks()->create([
             'url' => config('app.url').'/api/'.config('lexicon.path'),
-            'events' => [
-                'sync',
-            ],
         ]);
 
         $this->info('API Token: '.$project->getSetting('api_key'));

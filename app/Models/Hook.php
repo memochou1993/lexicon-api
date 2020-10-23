@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Cache;
 /**
  * @property int $id
  * @property string $url
- * @property array $events
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Project $project
@@ -27,7 +26,6 @@ class Hook extends Model
      */
     protected $fillable = [
         'url',
-        'events',
     ];
 
     /**
@@ -37,15 +35,6 @@ class Hook extends Model
      */
     protected $hidden = [
         'project_id',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'events' => 'array',
     ];
 
     /**
