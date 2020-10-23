@@ -155,9 +155,9 @@ class DemoCommand extends Command
         $createKey('action.sync', 'Sync Language Files', '同步語系檔');
         $createKey('action.clear', 'Clear Language Files', '清除語系檔');
         $createKey('action.dump', 'Dump Language File', '查看語系檔');
-        $createKey('table.header.code_in_blade_template', 'PHP Code in Blade Template', '模板引擎程式碼');
+        $createKey('table.header.code_in_blade_template', 'PHP Code in Blade Template', '模板引擎中的程式碼');
         $createKey('table.header.translation', 'Translation', '翻譯');
-        $createKey('table.header.code_in_language_file', 'PHP Code in Language File', '語系檔程式碼');
+        $createKey('table.header.code_in_language_file', 'PHP Code in Language File', '語系檔中的程式碼');
 
         $project->hooks()->create([
             'url' => config('app.url').'/api/'.config('lexicon.path'),

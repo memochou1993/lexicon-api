@@ -60,9 +60,9 @@
                 <table class="table table-bordered table-responsive-sm bg-light">
                     <thead>
                     <tr class="text-center">
-                        <th>{{ ___('table.header.helper') }}</th>
+                        <th>{{ ___('table.header.code_in_blade_template') }}</th>
                         <th>{{ ___('table.header.translation') }}</th>
-                        <th>{{ ___('table.header.code') }}</th>
+                        <th>{{ ___('table.header.code_in_language_file') }}</th>
                     </tr>
                     </thead>
                     <tbody>
