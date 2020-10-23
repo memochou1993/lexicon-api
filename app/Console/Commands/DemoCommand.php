@@ -160,7 +160,7 @@ class DemoCommand extends Command
         $createKey('table.header.code_in_language_file', 'PHP Code in Language File', '語系檔中的程式碼');
 
         $project->hooks()->create([
-            'url' => config('app.url').'/api/'.config('lexicon.path'),
+            'url' => env('LEXICON_DEMO_HOOK_URL'),
         ]);
 
         $this->info('API Token: '.$project->getSetting('api_key'));
