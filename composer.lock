@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef46291c66c12a37f202b1a06184a9d4",
+    "content-hash": "7950f5fd25a820bdc5c294d9ebebb9fd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1321,111 +1321,6 @@
                 }
             ],
             "time": "2020-10-18T11:50:25+00:00"
-        },
-        {
-            "name": "memochou1993/lexicon-api-laravel-client",
-            "version": "v0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/memochou1993/lexicon-api-laravel-client.git",
-                "reference": "1f4b2377f508a3d1b1f679fd88f6abc4d4be72b7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/memochou1993/lexicon-api-laravel-client/zipball/1f4b2377f508a3d1b1f679fd88f6abc4d4be72b7",
-                "reference": "1f4b2377f508a3d1b1f679fd88f6abc4d4be72b7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "^7.2",
-                "laravel/framework": "^8.0",
-                "memochou1993/lexicon-api-php-client": "^0.2.2",
-                "php": "^7.4",
-                "symfony/var-exporter": "^5.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^6.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "MemoChou1993\\Lexicon\\Providers\\LexiconServiceProvider"
-                    ],
-                    "aliases": {
-                        "Lexicon": "MemoChou1993\\Lexicon\\Facades\\Lexicon"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "MemoChou1993\\Lexicon\\": "src/"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Memo Chou",
-                    "email": "memochou1993@gmail.com"
-                }
-            ],
-            "description": "Lexicon API Client Library for Laravel",
-            "keywords": [
-                "localization"
-            ],
-            "time": "2020-10-24T12:19:05+00:00"
-        },
-        {
-            "name": "memochou1993/lexicon-api-php-client",
-            "version": "v0.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/memochou1993/lexicon-api-php-client.git",
-                "reference": "b3a2fe217720d131b4a972211761602297154fb9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/memochou1993/lexicon-api-php-client/zipball/b3a2fe217720d131b4a972211761602297154fb9",
-                "reference": "b3a2fe217720d131b4a972211761602297154fb9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "^7.2",
-                "php": "^7.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.4",
-                "vlucas/phpdotenv": "^4.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MemoChou1993\\Lexicon\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Memo Chou",
-                    "email": "memochou1993@gmail.com"
-                }
-            ],
-            "description": "Lexicon API Client Library for PHP",
-            "keywords": [
-                "localization"
-            ],
-            "time": "2020-10-19T15:04:56+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4569,67 +4464,6 @@
             "time": "2020-09-18T14:27:32+00:00"
         },
         {
-            "name": "symfony/var-exporter",
-            "version": "v5.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "8b858508e49beb257fd635104c3d449a8113e8fe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/8b858508e49beb257fd635104c3d449a8113e8fe",
-                "reference": "8b858508e49beb257fd635104c3d449a8113e8fe",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-php80": "^1.15"
-            },
-            "require-dev": {
-                "symfony/var-dumper": "^4.4.9|^5.0.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\VarExporter\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A blend of var_export() + serialize() to turn any serializable data structure to plain PHP code",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "clone",
-                "construct",
-                "export",
-                "hydrate",
-                "instantiate",
-                "serialize"
-            ],
-            "time": "2020-09-08T14:19:54+00:00"
-        },
-        {
             "name": "tijsverkoyen/css-to-inline-styles",
             "version": "2.2.3",
             "source": {
@@ -7277,5 +7111,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
