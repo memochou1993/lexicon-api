@@ -164,6 +164,8 @@ class DemoCommand extends Command
         $createKey('table.header.code_in_blade_template', 'PHP Code in Blade Template', '模板引擎中的程式碼');
         $createKey('table.header.translation', 'Translation', '翻譯');
         $createKey('table.header.code_in_language_file', 'PHP Code in Language File', '語系檔中的程式碼');
+        $createKey('message.syncing', 'Syncing language files...', '正在同步語系檔...');
+        $createKey('message.clearing', 'Clearing language files...', '正在清除語系檔...');
 
         $project->hooks()->create([
             'url' => env('LEXICON_DEMO_HOOK_URL'),
