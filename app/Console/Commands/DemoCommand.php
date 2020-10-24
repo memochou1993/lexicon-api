@@ -63,8 +63,12 @@ class DemoCommand extends Command
         $user = User::query()->first();
 
         /** @var Team $team */
-        $team = $user->teams()->create([
+        $team = Team::query()->create([
             'name' => 'New Team',
+        ]);
+
+        $user->teams()->attach($team, [
+            'is_owner' => true,
         ]);
 
         /** @var Project $project */
@@ -72,7 +76,9 @@ class DemoCommand extends Command
             'name' => 'New Project',
         ]);
 
-        $user->projects()->attach($project);
+        $user->projects()->attach($project, [
+            'is_owner' => true,
+        ]);
 
         /** @var Language $en */
         $en = $team->languages()->create([
