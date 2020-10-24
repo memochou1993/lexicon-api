@@ -4,6 +4,8 @@
 /public/js
 /public/css
 /public/img
+/public/fonts
+/resources/js
 /resources/views/app.blade.php
 /storage/*.key
 /vendor

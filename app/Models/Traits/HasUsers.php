@@ -49,7 +49,7 @@ trait HasUsers
      */
     public function getCachedOwner(): User
     {
-        $tag = sprintf('%s:%', $this->getTable(), $this->getKey());
+        $tag = sprintf('%s:%d', $this->getTable(), $this->getKey());
 
         return Cache::tags($tag)->sear('owner', fn() => $this->owners->first());
     }
