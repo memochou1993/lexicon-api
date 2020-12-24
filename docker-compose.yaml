@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  app:
+    container_name: lexicon-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./:/var/www
+    env_file: .env
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: lexicon-nginx
+    restart: always
+    volumes:
+      - ./public:/var/www/public
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    ports:
+      - "8001:80"
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:latest
+    container_name: lexicon-mysql
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    container_name: lexicon-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mysql:
