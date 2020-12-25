@@ -11,7 +11,6 @@ services:
       - ./:/var/www
     env_file: .env
     depends_on:
-      - mysql
       - redis
     networks:
       - backend
