@@ -30,7 +30,7 @@ services:
       - backend
 
   mysql:
-    image: mysql:latest
+    image: mysql:5.7.32
     container_name: lexicon-mysql
     restart: always
     volumes:
