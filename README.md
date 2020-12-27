@@ -3,6 +3,12 @@ Lexicon Server
 
 ## Installation
 
+Download project.
+
+```
+git clone --recursive git@github.com:memochou1993/lexicon-server
+```
+
 Start server.
 
 ```
@@ -30,11 +36,11 @@ Enter `resources/js` folder.
 cd resources/js
 ```
 
-Create `.env.production.local` file.
+Create `.env` file.
 
 ```
-echo VUE_APP_API_URL="http://localhost:8001/api" >> .env.production.local
-echo "VUE_APP_API_DEMO_TOKEN=2|..." >> .env.production.local
+echo VUE_APP_API_URL="http://localhost:8001/api" >> .env
+echo "VUE_APP_API_DEMO_TOKEN=2|..." >> .env
 ```
 
 Build static files.
