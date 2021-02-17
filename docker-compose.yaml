@@ -2,7 +2,7 @@ version: "3"
 
 services:
   app:
-    container_name: lexicon-server
+    container_name: lexicon
     build: .
     restart: always
     env_file: .env
