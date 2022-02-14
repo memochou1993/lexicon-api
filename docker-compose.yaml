@@ -6,8 +6,6 @@ services:
     build: .
     restart: always
     env_file: .env
-    depends_on:
-      - redis
     ports:
       - "${APP_PORT}:80"
     networks:
